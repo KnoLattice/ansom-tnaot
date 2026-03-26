@@ -1,7 +1,6 @@
 export interface ILearner {
   id: string;
-  fullname: string;
+  fullName: string;
   email: string;
-  avatar?: string;
-  isActive: boolean;
+  avatarUrl?: string;
 }

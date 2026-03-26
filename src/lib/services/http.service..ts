@@ -26,9 +26,9 @@ class HttpService {
 
   constructor() {
     this.http = axios.create({
-      baseURL: this.baseUrl,
+      baseURL: `${this.baseUrl}api/v1`,
       timeout: 30000,
-      withCredentials: true,
+      // withCredentials: true,
       headers: this.headers(),
     });
 
