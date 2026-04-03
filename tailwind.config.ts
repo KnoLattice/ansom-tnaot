@@ -127,7 +127,7 @@ const config: Config = {
             'text-xl': '20px',
             'text-2xl': '24px',
             'text-3xl': '30px',
-            'text-4xl': '36',
+            'text-4xl': '36px',
         },
     },
     plugins: [require('tailwindcss-animate')],
