@@ -25,6 +25,12 @@ const config: Config = {
         "node-developing": "var(--color-node-developing)",
         "node-low": "var(--color-node-low)",
         "node-locked": "var(--color-node-locked)",
+        // 5-tier mastery gradient (blueprint spec)
+        "mastery-0": "#ef4444", // red-500 — struggling
+        "mastery-1": "#f97316", // orange-500 — emerging
+        "mastery-2": "#eab308", // yellow-500 — developing
+        "mastery-3": "#84cc16", // lime-500 — proficient
+        "mastery-4": "#22c55e", // green-500 — mastered
       },
       borderColor: {
         DEFAULT: "var(--color-border-subtle)",

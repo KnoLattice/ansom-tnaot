@@ -56,7 +56,7 @@ export function useAuth() {
         applyAuthResponse(data);
         toast.success(successMessage);
         if (options?.redirectTo !== false) {
-          router.replace(options?.redirectTo ?? "/space");
+          router.replace(options?.redirectTo ?? "/");
         }
         return true;
       } catch (error: unknown) {
@@ -118,7 +118,7 @@ export function useAuth() {
     async ({ accessToken }: { accessToken: string }) => {
       setToken(accessToken);
       await fetchCurrentLearner();
-      router.replace("/space");
+      router.replace("/");
     },
     [fetchCurrentLearner, router, setToken],
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { formatMastery, getMasteryColor } from "@/lib/utils/mastery";
 import type { MasteryBand } from "@/lib/types/api";
