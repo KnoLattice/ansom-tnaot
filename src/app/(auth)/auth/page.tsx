@@ -15,11 +15,10 @@ export default function AuthPage() {
   const router = useRouter();
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#03040c]">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(99,102,241,0.25),_transparent_55%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,_rgba(20,184,166,0.18),_transparent_60%)]" />
+    <div className="relative min-h-screen overflow-hidden bg-canvas">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--glow-accent),_transparent_55%)]" />
       <div className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col items-center justify-center px-4 py-12">
-        <p className="mb-6 text-xs uppercase tracking-[0.4em] text-white/50">
+        <p className="mb-6 text-xs uppercase tracking-[0.4em] text-text-muted">
           Knowledge as a living universe
         </p>
         <AuthCard

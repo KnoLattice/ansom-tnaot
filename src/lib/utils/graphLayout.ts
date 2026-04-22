@@ -7,11 +7,11 @@ interface PositionedNode extends GraphNode {
 
 export function layoutGraph(nodes: GraphNode[], edges: GraphEdge[]): PositionedNode[] {
   const g = new dagre.graphlib.Graph();
-  g.setGraph({ rankdir: "TB", nodesep: 80, ranksep: 140, marginx: 60, marginy: 60 });
+  g.setGraph({ rankdir: "TB", nodesep: 50, ranksep: 80, marginx: 40, marginy: 40 });
   g.setDefaultEdgeLabel(() => ({}));
 
   nodes.forEach((node) => {
-    g.setNode(node.id, { width: 220, height: 120 });
+    g.setNode(node.id, { width: 160, height: 40 });
   });
 
   edges.forEach((edge) => {

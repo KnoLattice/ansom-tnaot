@@ -45,48 +45,48 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
       <Button
         type="button"
         variant="outline"
-        className="w-full border-white/20 bg-white/5 text-white hover:bg-white/10"
+        className="w-full border-border-default bg-white/5 text-text-primary hover:bg-white/10"
         onClick={googleLogin}
       >
         Continue with Google
       </Button>
-      <div className="text-center text-xs uppercase tracking-[0.3em] text-white/40">
+      <div className="text-center text-xs uppercase tracking-[0.3em] text-text-muted">
         or
       </div>
       <div className="space-y-2">
-        <Label htmlFor="fullName" className="text-white/80">
+        <Label htmlFor="fullName" className="text-text-secondary">
           Full name
         </Label>
         <Input
           id="fullName"
           placeholder="Aurora Chen"
-          className="bg-white/10 text-white placeholder:text-white/40"
+          className="border-border-default bg-white/5 text-text-primary placeholder:text-text-muted"
           {...form.register("fullName")}
         />
         <FieldError message={form.formState.errors.fullName?.message} />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="email" className="text-white/80">
+        <Label htmlFor="email" className="text-text-secondary">
           Email
         </Label>
         <Input
           id="email"
           type="email"
           placeholder="you@example.com"
-          className="bg-white/10 text-white placeholder:text-white/40"
+          className="border-border-default bg-white/5 text-text-primary placeholder:text-text-muted"
           {...form.register("email")}
         />
         <FieldError message={form.formState.errors.email?.message} />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="password" className="text-white/80">
+        <Label htmlFor="password" className="text-text-secondary">
           Password
         </Label>
         <Input
           id="password"
           type="password"
           placeholder="Create a password"
-          className="bg-white/10 text-white placeholder:text-white/40"
+          className="border-border-default bg-white/5 text-text-primary placeholder:text-text-muted"
           {...form.register("password")}
         />
         <FieldError message={form.formState.errors.password?.message} />
@@ -94,7 +94,7 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
       <Button
         type="submit"
         disabled={disabled}
-        className="w-full bg-[var(--color-accent-primary)] text-white shadow-glow hover:opacity-90"
+        className="w-full bg-accent-primary text-white shadow-glow hover:opacity-90"
       >
         Create account
       </Button>

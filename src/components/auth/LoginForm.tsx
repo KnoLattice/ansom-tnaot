@@ -41,39 +41,39 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
       <Button
         type="button"
         variant="outline"
-        className="w-full border-white/20 bg-white/5 text-white hover:bg-white/10"
+        className="w-full border-border-default bg-white/5 text-text-primary hover:bg-white/10"
         onClick={googleLogin}
       >
         Continue with Google
       </Button>
-      <div className="text-center text-xs uppercase tracking-[0.3em] text-white/40">
+      <div className="text-center text-xs uppercase tracking-[0.3em] text-text-muted">
         or
       </div>
       <div className="space-y-2">
-        <Label htmlFor="email" className="text-white/80">
+        <Label htmlFor="email" className="text-text-secondary">
           Email
         </Label>
         <Input
           id="email"
           type="email"
           placeholder="you@example.com"
-          className="bg-white/10 text-white placeholder:text-white/40"
+          className="border-border-default bg-white/5 text-text-primary placeholder:text-text-muted"
           {...form.register("email")}
         />
         <FieldError message={form.formState.errors.email?.message} />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="password" className="text-white/80">
+        <Label htmlFor="password" className="text-text-secondary">
           Password
         </Label>
         <Input
           id="password"
           type="password"
           placeholder="••••••••"
-          className="bg-white/10 text-white placeholder:text-white/40"
+          className="border-border-default bg-white/5 text-text-primary placeholder:text-text-muted"
           {...form.register("password")}
         />
-        <div className="flex items-center justify-between text-xs text-white/60">
+        <div className="flex items-center justify-between text-xs text-text-muted">
           <FieldError message={form.formState.errors.password?.message} />
           <button
             type="button"
@@ -87,7 +87,7 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
       <Button
         type="submit"
         disabled={disabled}
-        className="w-full bg-[var(--color-accent-primary)] text-white shadow-glow hover:opacity-90"
+        className="w-full bg-accent-primary text-white shadow-glow hover:opacity-90"
       >
         Sign in
       </Button>

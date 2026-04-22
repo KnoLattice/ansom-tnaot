@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Sans, JetBrains_Mono, Syne } from "next/font/google";
+import { Inter, JetBrains_Mono, Syne } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { ClientToaster } from "@/components/providers/ClientToaster";
 import "./globals.css";
@@ -10,9 +10,9 @@ const display = Syne({
   variable: "--font-display",
 });
 
-const body = DM_Sans({
+const body = Inter({
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400", "500", "600"],
   variable: "--font-body",
 });
 
@@ -35,7 +35,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      data-theme="deep-space"
+      data-theme="ink"
       className={`${display.variable} ${body.variable} ${mono.variable} antialiased`}
     >
       <body className="min-h-screen bg-canvas text-text-primary">

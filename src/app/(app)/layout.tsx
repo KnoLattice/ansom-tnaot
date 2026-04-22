@@ -6,15 +6,17 @@ import { useRouter } from "next/navigation";
 import { MotionConfig } from "framer-motion";
 import { toast } from "sonner";
 import { useAuthStore } from "@/store/auth.store";
+import { useHydrated } from "@/lib/hooks";
 import { AppShell } from "@/components/layout/AppShell";
 
 export default function AppLayout({ children }: PropsWithChildren) {
   const token = useAuthStore((state) => state.token);
+  const hydrated = useHydrated();
   const router = useRouter();
 
   useEffect(() => {
-    if (!token) router.replace("/auth");
-  }, [router, token]);
+    if (hydrated && !token) router.replace("/auth");
+  }, [hydrated, router, token]);
 
   useEffect(() => {
     const handleOffline = () =>
@@ -27,6 +29,15 @@ export default function AppLayout({ children }: PropsWithChildren) {
       window.removeEventListener("online", handleOnline);
     };
   }, []);
+
+  // Before hydration, render children to match SSR (avoids mismatch)
+  if (!hydrated) {
+    return (
+      <MotionConfig reducedMotion="user">
+        <AppShell>{children}</AppShell>
+      </MotionConfig>
+    );
+  }
 
   if (!token) return null;
 

@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import {
   ReactFlow,
   Background,
+  BackgroundVariant,
   ReactFlowProvider,
   type Node,
   type Edge,
@@ -13,7 +14,6 @@ import "@xyflow/react/dist/style.css";
 import type { GraphResponse } from "@/lib/types/api";
 import { layoutGraph } from "@/lib/utils/graphLayout";
 import { MasteryMapNode } from "./MasteryMapNode";
-import { cn } from "@/lib/utils";
 
 interface GraphViewProps {
   data: GraphResponse;
@@ -37,10 +37,7 @@ function InnerGraphView({
       position: node.position,
       draggable: true,
       selectable: !node.isLocked,
-      className: cn(
-        "transition-all duration-300",
-        node.id === selectedNodeId && "ring-4 ring-accent-primary/60 rounded-full",
-      ),
+      selected: node.id === selectedNodeId,
     }));
   }, [data, selectedNodeId]);
 
@@ -49,16 +46,15 @@ function InnerGraphView({
       id: edge.id,
       source: edge.sourceNodeId,
       target: edge.targetNodeId,
-      type: "smoothstep",
-      animated: edge.relationshipType === "prerequisite",
+      type: "default",
       style: {
         stroke:
           edge.relationshipType === "prerequisite"
-            ? "rgba(255,255,255,0.2)"
-            : "rgba(255,255,255,0.08)",
+            ? "rgba(255,255,255,0.15)"
+            : "rgba(255,255,255,0.06)",
+        strokeWidth: 1,
         strokeDasharray:
-          edge.relationshipType === "prerequisite" ? undefined : "6 4",
-        strokeWidth: edge.relationshipType === "prerequisite" ? 1.5 : 1,
+          edge.relationshipType === "prerequisite" ? undefined : "4 4",
       },
     }));
   }, [data]);
@@ -68,8 +64,9 @@ function InnerGraphView({
       nodes={nodes}
       edges={edges}
       fitView
-      minZoom={0.3}
-      maxZoom={1.5}
+      fitViewOptions={{ padding: 0.2 }}
+      minZoom={0.2}
+      maxZoom={2}
       nodeTypes={nodeTypes}
       proOptions={{ hideAttribution: true }}
       nodesConnectable={false}
@@ -77,7 +74,12 @@ function InnerGraphView({
       zoomOnScroll
       onNodeClick={(_, node) => onSelectNode(node.id)}
     >
-      <Background color="rgba(255,255,255,0.04)" gap={24} />
+      <Background
+        variant={BackgroundVariant.Dots}
+        color="rgba(255,255,255,0.04)"
+        gap={20}
+        size={1}
+      />
     </ReactFlow>
   );
 }

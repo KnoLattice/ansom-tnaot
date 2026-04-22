@@ -47,7 +47,7 @@ interface ThemeState {
 export const useThemeStore = create<ThemeState>()(
   persist(
     (set) => ({
-      currentTheme: "deep-space",
+      currentTheme: "ink",
       userOverrides: {},
       layoutPreferences: cloneLayoutPreferences(),
       graphPreferences: cloneGraphPreferences(),

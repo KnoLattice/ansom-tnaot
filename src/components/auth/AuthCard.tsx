@@ -20,26 +20,25 @@ export function AuthCard({
   return (
     <div
       className={cn(
-        "relative w-full max-w-md overflow-hidden rounded-3xl border border-white/5 bg-white/5 p-8 text-white shadow-[0_20px_80px_rgba(0,0,0,0.45)]",
+        "relative w-full max-w-md overflow-hidden rounded-3xl border border-border-default bg-surface p-8 text-text-primary shadow-panel",
         "backdrop-blur-2xl",
         className,
       )}
     >
       <div className="space-y-2">
-        <p className="text-sm uppercase tracking-[0.35em] text-white/60">
+        <p className="text-sm uppercase tracking-[0.35em] text-text-muted">
           {accent ?? "KnowLattice"}
         </p>
-        <h1 className="font-display text-3xl font-semibold text-white">
+        <h1 className="font-display text-3xl font-semibold text-text-primary">
           {title}
         </h1>
         {description && (
-          <p className="text-sm text-white/70">{description}</p>
+          <p className="text-sm text-text-secondary">{description}</p>
         )}
       </div>
-      <div className="mt-8 space-y-6 text-white">{children}</div>
-      {footer && <div className="mt-8 text-center text-sm text-white/70">{footer}</div>}
-      <div className="pointer-events-none absolute inset-0 border border-white/[0.02]" />
-      <div className="pointer-events-none absolute -top-24 right-10 h-72 w-72 rounded-full bg-gradient-to-br from-white/20 to-transparent blur-3xl" />
+      <div className="mt-8 space-y-6">{children}</div>
+      {footer && <div className="mt-8 text-center text-sm text-text-secondary">{footer}</div>}
+      <div className="pointer-events-none absolute -top-24 right-10 h-72 w-72 rounded-full bg-gradient-to-br from-accent-primary/10 to-transparent blur-3xl" />
     </div>
   );
 }

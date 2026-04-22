@@ -36,12 +36,12 @@ const config: Config = {
         DEFAULT: "var(--color-border-subtle)",
       },
       fontFamily: {
-        sans: ["var(--font-body)", "DM Sans", "system-ui", "sans-serif"],
+        sans: ["var(--font-body)", "Inter", "system-ui", "sans-serif"],
         display: ["var(--font-display)", "Syne", "sans-serif"],
         mono: ["var(--font-mono)", "\"JetBrains Mono\"", "monospace"],
       },
       boxShadow: {
-        glow: "0 0 40px rgba(99, 102, 241, 0.25)",
+        glow: "0 0 40px rgba(124, 92, 252, 0.25)",
         panel: "0 30px 80px rgba(0, 0, 0, 0.45)",
       },
       borderRadius: {

@@ -1,14 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Spinner } from "@/components/ui/Spinner";
 
-/**
- * Legacy `/session` route — redirects to the new session flow.
- * If a documentId is provided, starts a new session via `/session/new`.
- */
-export default function SessionRedirectPage() {
+function SessionRedirect() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const documentId = searchParams.get("documentId");
@@ -25,5 +21,22 @@ export default function SessionRedirectPage() {
     <div className="flex min-h-[60vh] items-center justify-center">
       <Spinner />
     </div>
+  );
+}
+
+/**
+ * Legacy `/session` route — redirects to the new session flow.
+ */
+export default function SessionRedirectPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-[60vh] items-center justify-center">
+          <Spinner />
+        </div>
+      }
+    >
+      <SessionRedirect />
+    </Suspense>
   );
 }

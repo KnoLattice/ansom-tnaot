@@ -1,6 +1,6 @@
 import type { MasteryBand } from "@/lib/types/api";
 
-export type ThemePreset = "deep-space" | "aurora" | "solar" | "obsidian" | "custom";
+export type ThemePreset = "deep-space" | "aurora" | "solar" | "obsidian" | "custom" | "ink";
 
 export type MasteryColorMap = Record<MasteryBand | "locked", string>;
 

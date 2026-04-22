@@ -1,0 +1,28 @@
+/* Base defaults — presets override these via [data-theme] selectors */
+:root {
+  --color-canvas: var(--raw-space-950);
+  --color-surface: var(--raw-space-900);
+  --color-surface-elevated: var(--raw-space-850);
+  --color-halo: var(--raw-space-925);
+  --color-text-primary: var(--raw-text-primary);
+  --color-text-secondary: var(--raw-text-secondary);
+  --color-text-muted: var(--raw-text-muted);
+  --color-accent-primary: var(--raw-indigo-500);
+  --color-accent-secondary: var(--raw-teal-500);
+  --color-border-subtle: var(--raw-border-subtle);
+  --color-border-default: var(--raw-border-default);
+  --color-node-mastered: var(--raw-mastery-mastered);
+  --color-node-proficient: var(--raw-mastery-proficient);
+  --color-node-developing: var(--raw-mastery-developing);
+  --color-node-low: var(--raw-mastery-low);
+  --color-node-locked: var(--raw-mastery-locked);
+  --glow-accent: var(--raw-accent-glow);
+  --panel-blur: var(--raw-panel-blur-md);
+  --panel-opacity: 0.78;
+  --panel-border: var(--raw-panel-border);
+  --panel-bg: var(--raw-panel-glass);
+  --space-starfield-opacity: 1;
+  --space-nebula-opacity: 1;
+  --space-nebula-primary: var(--raw-nebula-indigo);
+  --space-nebula-secondary: var(--raw-nebula-teal);
+}
