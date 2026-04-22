@@ -2,15 +2,14 @@
 
 import type { PropsWithChildren } from "react";
 import { useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { MotionConfig } from "framer-motion";
 import { toast } from "sonner";
 import { useAuthStore } from "@/store/auth.store";
-import { Navbar } from "@/components/layout/Navbar";
-import { cn } from "@/lib/utils";
+import { AppShell } from "@/components/layout/AppShell";
 
 export default function AppLayout({ children }: PropsWithChildren) {
   const token = useAuthStore((state) => state.token);
-  const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
@@ -18,7 +17,8 @@ export default function AppLayout({ children }: PropsWithChildren) {
   }, [router, token]);
 
   useEffect(() => {
-    const handleOffline = () => toast.error("You're offline — changes may not be saved.");
+    const handleOffline = () =>
+      toast.error("You're offline — changes may not be saved.");
     const handleOnline = () => toast.success("Back online.");
     window.addEventListener("offline", handleOffline);
     window.addEventListener("online", handleOnline);
@@ -30,19 +30,9 @@ export default function AppLayout({ children }: PropsWithChildren) {
 
   if (!token) return null;
 
-  const isSpaceRoute = pathname === "/space";
-
   return (
-    <div className="relative min-h-screen bg-canvas text-text-primary">
-      <Navbar />
-      <main
-        className={cn(
-          "mx-auto w-full max-w-6xl px-6 pb-12 pt-28",
-          isSpaceRoute && "max-w-none px-0 pb-0",
-        )}
-      >
-        {children}
-      </main>
-    </div>
+    <MotionConfig reducedMotion="user">
+      <AppShell>{children}</AppShell>
+    </MotionConfig>
   );
 }

@@ -1,30 +1,19 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ArrowUpDown, Plus } from "lucide-react";
 import { toast } from "sonner";
-import { UploadZone } from "@/components/library/UploadZone";
-import { StorageQuotaBar } from "@/components/library/StorageQuotaBar";
-import { DocumentGrid } from "@/components/library/DocumentGrid";
-import { ProcessingStatus } from "@/components/library/ProcessingStatus";
 import { Button } from "@/components/ui/button";
-import { useDocuments, useDocumentStatus, useUploadDocument } from "@/lib/hooks";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ActiveDocumentStrip } from "@/components/surfaces/library/ActiveDocumentStrip";
+import { DocumentRow } from "@/components/surfaces/library/DocumentRow";
+import { StorageQuotaBar } from "@/components/library/StorageQuotaBar";
+import { useDocuments } from "@/lib/hooks";
 import { apiClient } from "@/lib/api/client";
 import { API_ROUTES } from "@/lib/api/routes";
-import { cn } from "@/lib/utils";
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
-
-function validateFile(file?: File) {
-  if (!file) return "No file selected";
-  if (!(file.type === "application/pdf" || file.type === "text/plain")) {
-    return "Only PDF or text files are supported";
-  }
-  if (file.size > MAX_FILE_SIZE) {
-    return "File exceeds the 10 MB limit";
-  }
-  return null;
-}
+type SortKey = "recency" | "name";
 
 export default function LibraryPage() {
   const router = useRouter();
@@ -33,85 +22,24 @@ export default function LibraryPage() {
     quota,
     isLoading,
     activeDocumentId,
+    activeDocument,
     setActiveDocument,
     invalidateDocuments,
   } = useDocuments();
-  const uploadDocument = useUploadDocument();
-  const [uploadError, setUploadError] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [processingId, setProcessingId] = useState<string | null>(null);
-  const [uploadStartedAt, setUploadStartedAt] = useState<number | null>(null);
-  const [elapsedSeconds, setElapsedSeconds] = useState(0);
-  const statusQuery = useDocumentStatus(processingId);
+  const [sortBy, setSortBy] = useState<SortKey>("recency");
 
-  const shouldShowFullZone = documents.length === 0;
-
-  const handleFileSelect = useCallback(
-    async (file: File) => {
-      const validation = validateFile(file);
-      setUploadError(validation);
-      if (validation) return;
-
-      setUploading(true);
-      try {
-        const response = await uploadDocument(file);
-        setProcessingId(response.documentId);
-        setUploadStartedAt(Date.now());
-        setElapsedSeconds(0);
-        setActiveDocument(response.documentId);
-        toast.success("Upload received — building knowledge graph");
-      } catch (error) {
-        const message =
-          (typeof error === "object" &&
-            error !== null &&
-            "response" in error &&
-            typeof (error as { response?: { data?: { message?: string } } }).response?.data
-              ?.message === "string" &&
-            (error as { response?: { data?: { message?: string } } }).response?.data?.message) ||
-          "Upload failed";
-        setUploadError(message);
-      } finally {
-        setUploading(false);
-      }
-    },
-    [setActiveDocument, uploadDocument],
-  );
-
-  useEffect(() => {
-    if (!processingId || !uploadStartedAt) return;
-    setElapsedSeconds(Math.floor((Date.now() - uploadStartedAt) / 1000));
-    const interval = window.setInterval(() => {
-      setElapsedSeconds(Math.floor((Date.now() - uploadStartedAt) / 1000));
-    }, 1000);
-    return () => window.clearInterval(interval);
-  }, [processingId, uploadStartedAt]);
-
-  useEffect(() => {
-    const status = statusQuery.data?.processingStatus;
-    if (!status || !processingId) return;
-
-    if (status === "completed") {
-      toast.success("Knowledge graph ready");
-      invalidateDocuments();
-      const timeout = window.setTimeout(() => {
-        setProcessingId(null);
-        setUploadStartedAt(null);
-        setElapsedSeconds(0);
-      }, 1500);
-      return () => window.clearTimeout(timeout);
+  const sortedDocuments = useMemo(() => {
+    const sorted = [...documents];
+    if (sortBy === "name") {
+      sorted.sort((a, b) => a.originalName.localeCompare(b.originalName));
+    } else {
+      sorted.sort(
+        (a, b) =>
+          new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime(),
+      );
     }
-
-    if (status === "failed") {
-      toast.error(statusQuery.data?.errorMessage ?? "Processing failed");
-      invalidateDocuments();
-      const timeout = window.setTimeout(() => {
-        setProcessingId(null);
-        setUploadStartedAt(null);
-        setElapsedSeconds(0);
-      }, 2500);
-      return () => window.clearTimeout(timeout);
-    }
-  }, [invalidateDocuments, processingId, statusQuery.data?.errorMessage, statusQuery.data?.processingStatus]);
+    return sorted;
+  }, [documents, sortBy]);
 
   const handleDelete = useCallback(
     async (documentId: string) => {
@@ -127,9 +55,10 @@ export default function LibraryPage() {
           (typeof error === "object" &&
             error !== null &&
             "response" in error &&
-            typeof (error as { response?: { data?: { message?: string } } }).response?.data
-              ?.message === "string" &&
-            (error as { response?: { data?: { message?: string } } }).response?.data?.message) ||
+            typeof (error as { response?: { data?: { message?: string } } })
+              .response?.data?.message === "string" &&
+            (error as { response?: { data?: { message?: string } } }).response
+              ?.data?.message) ||
           "Unable to delete document";
         toast.error(message);
       }
@@ -137,93 +66,99 @@ export default function LibraryPage() {
     [activeDocumentId, invalidateDocuments, setActiveDocument],
   );
 
-  const goToSpace = useCallback(
+  const handleViewMastery = useCallback(
     (documentId: string) => {
       setActiveDocument(documentId);
-      const search = new URLSearchParams({ documentId });
-      router.push(`/space?${search.toString()}`);
+      router.push(`/mastery/${documentId}`);
     },
     [router, setActiveDocument],
   );
 
-  const goToProgress = useCallback(
-    (documentId: string) => {
-      const search = new URLSearchParams({ documentId });
-      router.push(`/progress?${search.toString()}`);
-    },
-    [router],
-  );
-
-  const heroCopy = useMemo(() => {
-    if (documents.length === 0) {
-      return "Upload your first document to light up the constellation.";
-    }
-    if (documents.some((doc) => doc.processingStatus !== "completed")) {
-      return "We're weaving concepts together. New galaxies coming online soon.";
-    }
-    return "All documents processed — jump back into your learning universe.";
-  }, [documents]);
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-24 rounded-2xl bg-white/5" />
+        <Skeleton className="h-10 w-48 rounded-lg bg-white/5" />
+        {Array.from({ length: 3 }).map((_, i) => (
+          <Skeleton key={i} className="h-16 rounded-xl bg-white/5" />
+        ))}
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-10 text-white">
-      <section className="rounded-3xl border border-white/10 bg-gradient-to-br from-[#0f1021] via-[#0c0d17] to-[#090912] p-8 shadow-panel">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="text-xs uppercase tracking-[0.4em] text-white/50">Library</p>
-            <h1 className="mt-3 font-display text-4xl text-white">Your observatory</h1>
-            <p className="mt-2 max-w-2xl text-sm text-white/70">{heroCopy}</p>
-          </div>
-          <Button
-            variant="secondary"
-            className="border border-white/20 bg-white/10 text-white"
-            onClick={() => router.push("/space")}
-          >
-            Return to universe
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="font-display text-2xl font-bold text-white">
+            Library
+          </h1>
+          <p className="mt-1 text-sm text-text-secondary">
+            {documents.length > 0
+              ? `${documents.length} document${documents.length !== 1 ? "s" : ""}`
+              : "No documents yet"}
+          </p>
+        </div>
+        <Button onClick={() => router.push("/upload")}>
+          <Plus className="mr-2 h-4 w-4" />
+          Upload new document
+        </Button>
+      </div>
+
+      {/* Active document strip */}
+      {activeDocument && activeDocument.processingStatus === "completed" && (
+        <ActiveDocumentStrip document={activeDocument} />
+      )}
+
+      {/* Documents list */}
+      {documents.length === 0 ? (
+        <div className="flex min-h-[40vh] flex-col items-center justify-center rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-12 text-center">
+          <p className="text-lg font-medium text-white">
+            No documents yet
+          </p>
+          <p className="mt-2 max-w-md text-sm text-text-secondary">
+            Upload your first study document to get started. We&apos;ll
+            extract concepts and build your personal knowledge map.
+          </p>
+          <Button className="mt-6" onClick={() => router.push("/upload")}>
+            <Plus className="mr-2 h-4 w-4" />
+            Upload your first document
           </Button>
         </div>
-      </section>
-
-      <section className={cn(
-        "rounded-3xl border border-white/10 bg-white/5 p-6",
-        shouldShowFullZone && "border-none bg-transparent p-0",
-      )}
-      >
-        {shouldShowFullZone ? (
-          <UploadZone onFileSelect={handleFileSelect} isUploading={uploading} error={uploadError} />
-        ) : (
-          <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
-            <UploadZone onFileSelect={handleFileSelect} isUploading={uploading} error={uploadError} compact />
-            {processingId && (
-              <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-                <p className="text-sm uppercase tracking-[0.4em] text-white/50">Processing</p>
-                <h3 className="mt-2 text-lg font-semibold text-white">
-                  {statusQuery.data?.originalName ?? "New document"}
-                </h3>
-                <p className="text-sm text-white/60">{elapsedSeconds}s elapsed</p>
-                <div className="mt-4">
-                  <ProcessingStatus
-                    status={statusQuery.data?.processingStatus ?? "pending"}
-                    errorMessage={statusQuery.data?.errorMessage}
-                  />
-                </div>
-              </div>
-            )}
+      ) : (
+        <div className="space-y-3">
+          {/* Sort controls */}
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-xs text-text-muted"
+              onClick={() =>
+                setSortBy((s) => (s === "recency" ? "name" : "recency"))
+              }
+            >
+              <ArrowUpDown className="mr-1.5 h-3 w-3" />
+              Sort by {sortBy === "recency" ? "name" : "recency"}
+            </Button>
           </div>
-        )}
-        <div className="mt-6">
-          <StorageQuotaBar quota={quota} />
-        </div>
-      </section>
 
-      <DocumentGrid
-        documents={documents}
-        isLoading={isLoading}
-        activeDocumentId={activeDocumentId}
-        onSelect={setActiveDocument}
-        onViewSpace={goToSpace}
-        onViewProgress={goToProgress}
-        onDelete={handleDelete}
-      />
+          {/* Document rows */}
+          {sortedDocuments.map((doc) => (
+            <DocumentRow
+              key={doc.id}
+              document={doc}
+              isActive={doc.id === activeDocumentId}
+              onSetActive={setActiveDocument}
+              onViewMastery={handleViewMastery}
+              onDelete={handleDelete}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Storage quota */}
+      {quota && <StorageQuotaBar quota={quota} />}
     </div>
   );
 }

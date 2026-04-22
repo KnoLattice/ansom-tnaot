@@ -3,6 +3,7 @@
 import type { PropsWithChildren } from "react";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { MotionConfig } from "framer-motion";
 import { useAuthStore } from "@/store/auth.store";
 
 export default function AuthLayout({ children }: PropsWithChildren) {
@@ -10,10 +11,14 @@ export default function AuthLayout({ children }: PropsWithChildren) {
   const router = useRouter();
 
   useEffect(() => {
-    if (token) router.replace("/space");
+    if (token) router.replace("/");
   }, [router, token]);
 
   if (token) return null;
 
-  return <>{children}</>;
+  return (
+    <MotionConfig reducedMotion="user">
+      {children}
+    </MotionConfig>
+  );
 }

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { DM_Sans, JetBrains_Mono, Syne } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { ClientToaster } from "@/components/providers/ClientToaster";
-import { ThemeProvider } from "@/themes/ThemeProvider";
 import "./globals.css";
 
 const display = Syne({
@@ -40,10 +39,8 @@ export default function RootLayout({
       className={`${display.variable} ${body.variable} ${mono.variable} antialiased`}
     >
       <body className="min-h-screen bg-canvas text-text-primary">
-        <ThemeProvider>
-          <Providers>{children}</Providers>
-          <ClientToaster />
-        </ThemeProvider>
+        <Providers>{children}</Providers>
+        <ClientToaster />
       </body>
     </html>
   );

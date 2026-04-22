@@ -39,7 +39,7 @@ export default function AuthPage() {
             <OnboardingFlow
               defaultWorkspaceName={workspaceName}
               onComplete={() => {
-                router.replace("/space");
+                router.replace("/");
               }}
             />
           ) : (
