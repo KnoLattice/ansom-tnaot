@@ -20,7 +20,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/auth.store";
-import { useDocuments } from "@/lib/hooks";
+import { useDocuments, useHydrated } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
@@ -31,6 +31,7 @@ const NAV_ITEMS = [
 export function AppShell({ children }: PropsWithChildren) {
   const pathname = usePathname();
   const router = useRouter();
+  const hydrated = useHydrated();
   const learner = useAuthStore((s) => s.learner);
   const logout = useAuthStore((s) => s.logout);
   const { activeDocument, activeDocumentId } = useDocuments();
@@ -49,7 +50,7 @@ export function AppShell({ children }: PropsWithChildren) {
     <div className="relative min-h-screen bg-canvas text-text-primary">
       {/* ─── Top bar ─────────────────────────────────── */}
       <header className="pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-4">
-        <nav className="pointer-events-auto flex w-full max-w-6xl items-center justify-between rounded-2xl border border-white/10 bg-[rgba(10,10,18,0.78)] px-5 py-3 shadow-panel backdrop-blur-2xl">
+        <nav className="pointer-events-auto flex w-full max-w-6xl items-center justify-between rounded-2xl border border-border-default bg-[var(--panel-bg)] px-5 py-3 shadow-panel backdrop-blur-2xl">
           {/* Logo */}
           <Link
             href="/"
@@ -60,12 +61,12 @@ export function AppShell({ children }: PropsWithChildren) {
 
           {/* Center — page label or active document */}
           <div className="hidden flex-1 items-center justify-center px-6 sm:flex">
-            {activeDocument && (isMasteryRoute || isSessionRoute) ? (
-              <p className="max-w-[240px] truncate text-xs uppercase tracking-[0.3em] text-white/50">
+            {hydrated && activeDocument && (isMasteryRoute || isSessionRoute) ? (
+              <p className="max-w-[240px] truncate text-xs uppercase tracking-[0.3em] text-text-muted">
                 {activeDocument.originalName.replace(/\.[^.]+$/, "")}
               </p>
             ) : (
-              <p className="text-xs uppercase tracking-[0.4em] text-white/40">
+              <p className="text-xs uppercase tracking-[0.4em] text-text-muted">
                 {NAV_ITEMS.find((n) => n.href === pathname)?.label ?? "KnowLattice"}
               </p>
             )}
@@ -91,7 +92,7 @@ export function AppShell({ children }: PropsWithChildren) {
             ))}
 
             {/* Mastery Map shortcut (only if active doc exists) */}
-            {activeDocumentId && (
+            {hydrated && activeDocumentId && (
               <Button
                 variant="ghost"
                 size="icon"
@@ -109,7 +110,7 @@ export function AppShell({ children }: PropsWithChildren) {
             )}
 
             {/* Session shortcut */}
-            {activeDocumentId && (
+            {hydrated && activeDocumentId && (
               <Button
                 variant="ghost"
                 size="icon"
@@ -135,17 +136,19 @@ export function AppShell({ children }: PropsWithChildren) {
                 >
                   <Avatar className="h-9 w-9 border border-white/10 text-black">
                     <AvatarFallback className="bg-white font-semibold">
-                      {initials || "KL"}
+                      {hydrated ? (initials || "KL") : "KL"}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="hidden text-left text-xs text-white/70 sm:block">
-                    <p className="font-medium text-white">
-                      {learner?.fullName ?? "Learner"}
-                    </p>
-                    <p className="text-white/60">
-                      {learner?.email ?? ""}
-                    </p>
-                  </div>
+                  {hydrated && (
+                    <div className="hidden text-left text-xs text-text-secondary sm:block">
+                      <p className="font-medium text-text-primary">
+                        {learner?.fullName ?? "Learner"}
+                      </p>
+                      <p className="text-text-muted">
+                        {learner?.email ?? ""}
+                      </p>
+                    </div>
+                  )}
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-48 border border-white/10 bg-surface text-white">
