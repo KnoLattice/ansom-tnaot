@@ -1,0 +1,13 @@
+[data-theme="solar"] {
+  --color-canvas: #140a06;
+  --color-surface: #1e0e08;
+  --color-surface-elevated: #30140c;
+  --color-halo: #1d0a05;
+  --color-text-primary: #fff5ec;
+  --color-text-secondary: #ffd7af;
+  --color-text-muted: #a9785e;
+  --color-accent-primary: var(--raw-solar-orange);
+  --color-accent-secondary: #fcd34d;
+  --space-nebula-primary: var(--raw-nebula-solar);
+  --space-nebula-secondary: rgba(250, 204, 21, 0.12);
+}

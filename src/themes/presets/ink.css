@@ -1,0 +1,31 @@
+:root[data-theme="ink"] {
+  /* Canvas & surfaces — warm charcoal, no blue tint */
+  --color-canvas: #121218;
+  --color-surface: #1a1a24;
+  --color-surface-elevated: #22222e;
+  --color-halo: #0e0e14;
+
+  /* Text — bumped secondary contrast for readability */
+  --color-text-primary: #f0f0f6;
+  --color-text-secondary: #a8a8c0;
+  --color-text-muted: #5c5c78;
+
+  /* Accent — violet-blue, warmer than pure indigo */
+  --color-accent-primary: #7c5cfc;
+  --color-accent-secondary: #14b8a6;
+
+  /* Borders — slightly more visible for card definition */
+  --color-border-subtle: rgba(255, 255, 255, 0.07);
+  --color-border-default: rgba(255, 255, 255, 0.14);
+
+  /* Panel overrides */
+  --panel-bg: rgba(26, 26, 36, 0.85);
+  --panel-border: rgba(255, 255, 255, 0.09);
+
+  /* Kill the space effects — clean flat background */
+  --space-starfield-opacity: 0;
+  --space-nebula-opacity: 0;
+
+  /* Glow uses the new accent */
+  --glow-accent: rgba(124, 92, 252, 0.18);
+}

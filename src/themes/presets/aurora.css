@@ -1,0 +1,13 @@
+[data-theme="aurora"] {
+  --color-canvas: #050712;
+  --color-surface: #0c1023;
+  --color-surface-elevated: #111531;
+  --color-halo: #05070f;
+  --color-text-primary: #f4fff7;
+  --color-text-secondary: #96b6a6;
+  --color-text-muted: #5f6f66;
+  --color-accent-primary: #7c3aed;
+  --color-accent-secondary: var(--raw-aurora-green);
+  --space-nebula-primary: rgba(124, 58, 237, 0.22);
+  --space-nebula-secondary: rgba(94, 244, 188, 0.15);
+}
