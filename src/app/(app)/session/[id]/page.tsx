@@ -8,6 +8,7 @@ import { Spinner } from "@/components/ui/Spinner";
 import { SessionHeader } from "@/components/surfaces/session/SessionHeader";
 import { QuestionCard } from "@/components/surfaces/session/QuestionCard";
 import { ConceptTransition } from "@/components/surfaces/session/ConceptTransition";
+import { QuestionTypeDialog } from "@/components/surfaces/session/QuestionTypeDialog";
 import { ThresholdCallout } from "@/components/shared/ThresholdCallout";
 import { apiClient } from "@/lib/api/client";
 import { API_ROUTES } from "@/lib/api/routes";
@@ -15,14 +16,18 @@ import type {
   EndSessionResponse,
   FeedbackResult,
   Question,
+  QuestionType,
   RespondResponse,
   StartSessionResponse,
   TargetNode,
 } from "@/lib/types/api";
 
+const MAX_SESSION_QUESTIONS = 12;
+
 interface SessionState {
   sessionId: string | null;
   documentId: string | null;
+  questionType: QuestionType;
   currentNode: TargetNode | null;
   currentQuestion: Question | null;
   feedback: FeedbackResult | null;
@@ -36,6 +41,7 @@ interface SessionState {
 const initialState: SessionState = {
   sessionId: null,
   documentId: null,
+  questionType: "qcm",
   currentNode: null,
   currentQuestion: null,
   feedback: null,
@@ -46,17 +52,20 @@ const initialState: SessionState = {
   isTransitioning: false,
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- id is the URL param; session uses documentId from searchParams
 function SessionContent({ id }: { id: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const documentId = searchParams.get("documentId");
   const [state, setState] = useState<SessionState>(initialState);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const questionStartTime = useRef<number>(Date.now());
   const startedRef = useRef(false);
   const nodeTitles = useRef<Record<string, string>>({});
+
+  // Question type selection
+  const [showTypeDialog, setShowTypeDialog] = useState(true);
+  const questionTypeRef = useRef<QuestionType>("qcm");
 
   // Pending next node/question to show after transition
   const pendingNext = useRef<{
@@ -64,19 +73,20 @@ function SessionContent({ id }: { id: string }) {
     question: Question | null;
   } | null>(null);
 
-  // Start session
+  // Start session — sends questionType to backend
   const startSession = useCallback(async () => {
     if (!documentId) return;
     setLoading(true);
     try {
       const { data } = await apiClient.get<StartSessionResponse>(
         API_ROUTES.SESSIONS.START,
-        { params: { documentId } },
+        { params: { documentId, questionType: questionTypeRef.current } },
       );
       nodeTitles.current = { [data.targetNode.id]: data.targetNode.title };
       setState({
         sessionId: data.sessionId,
         documentId,
+        questionType: data.questionType ?? questionTypeRef.current,
         currentNode: data.targetNode,
         currentQuestion: data.question,
         feedback: null,
@@ -98,18 +108,26 @@ function SessionContent({ id }: { id: string }) {
   useEffect(() => {
     if (!documentId) {
       router.replace("/");
-      return;
     }
-    if (!startedRef.current) {
-      startedRef.current = true;
-      startSession();
-    }
-  }, [documentId, router, startSession]);
+  }, [documentId, router]);
+
+  const handleTypeSelect = useCallback(
+    (type: QuestionType) => {
+      questionTypeRef.current = type;
+      setShowTypeDialog(false);
+      if (!startedRef.current) {
+        startedRef.current = true;
+        startSession();
+      }
+    },
+    [startSession],
+  );
 
   // Submit answer
   const handleSubmit = useCallback(
     async (answer: string) => {
-      if (!state.sessionId || !state.currentNode || !state.currentQuestion) return;
+      if (!state.sessionId || !state.currentNode || !state.currentQuestion)
+        return;
       setIsSubmitting(true);
       try {
         const { data } = await apiClient.post<RespondResponse>(
@@ -120,6 +138,7 @@ function SessionContent({ id }: { id: string }) {
             questionId: state.currentQuestion.id,
             selectedAnswer: answer,
             responseTimeMs: Date.now() - questionStartTime.current,
+            sessionQuestionType: state.questionType,
           },
         );
 
@@ -141,6 +160,11 @@ function SessionContent({ id }: { id: string }) {
           questionCount: prev.questionCount + 1,
           correctCount: prev.correctCount + (data.feedback.isCorrect ? 1 : 0),
         }));
+
+        // If backend signals session complete, auto-end after feedback
+        if (data.sessionComplete) {
+          pendingNext.current = { node: null, question: null };
+        }
       } catch {
         toast.error("Could not submit answer. Please retry.");
       } finally {
@@ -232,7 +256,18 @@ function SessionContent({ id }: { id: string }) {
     pendingNext.current = null;
   }, []);
 
-  if (loading || !documentId) {
+  // Question type selector
+  if (!documentId) {
+    return null;
+  }
+
+  if (showTypeDialog) {
+    return (
+      <QuestionTypeDialog open={showTypeDialog} onSelect={handleTypeSelect} />
+    );
+  }
+
+  if (loading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
         <Spinner />
@@ -260,7 +295,7 @@ function SessionContent({ id }: { id: string }) {
         masteryScore={currentMastery}
         previousMasteryScore={state.previousMastery}
         currentQuestion={state.questionCount + 1}
-        totalQuestions={12}
+        totalQuestions={MAX_SESSION_QUESTIONS}
         correctCount={state.correctCount}
         isSubmitting={isSubmitting}
         onEndSession={handleEndSession}
@@ -296,10 +331,10 @@ function SessionContent({ id }: { id: string }) {
         /* No more questions */
         <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-8 text-center">
           <p className="text-lg font-medium text-white">
-            All questions completed
+            Session complete
           </p>
           <p className="mt-2 text-sm text-text-secondary">
-            Great work! End the session to see your summary.
+            Great work! View your session summary to see how you did.
           </p>
           <button
             type="button"

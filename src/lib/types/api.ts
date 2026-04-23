@@ -93,6 +93,8 @@ export interface Question {
   questionType: QuestionType;
   content: string;
   options?: QuestionOption[] | null;
+  /** Sent by backend for QCM questions; null for short_answer */
+  correctAnswer?: string | null;
   bloomLevel: number;
   difficulty: number;
 }
@@ -115,6 +117,7 @@ export interface SessionStats {
 export interface StartSessionResponse {
   sessionId: string;
   documentId: string;
+  questionType: QuestionType;
   targetNode: TargetNode;
   sessionStats: SessionStats;
   question: Question | null;
@@ -132,6 +135,7 @@ export interface FeedbackResult {
 
 export interface RespondResponse {
   feedback: FeedbackResult;
+  sessionComplete: boolean;
   nextNode: TargetNode | null;
   question: Question | null;
 }
