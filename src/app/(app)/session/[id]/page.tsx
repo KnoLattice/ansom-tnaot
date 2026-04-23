@@ -238,8 +238,8 @@ function SessionContent({ id }: { id: string }) {
         isTransitioning: false,
       }));
       questionStartTime.current = Date.now();
+      pendingNext.current = null;
     }
-    pendingNext.current = null;
   }, [state.currentNode, handleEndSession]);
 
   // Transition complete — show the next question
