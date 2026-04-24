@@ -45,7 +45,6 @@ export function QuestionTypeDialog({ open, onSelect, onClose }: QuestionTypeDial
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
-        className="sm:max-w-md"
         onPointerDownOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
