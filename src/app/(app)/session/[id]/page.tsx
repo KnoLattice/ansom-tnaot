@@ -73,6 +73,11 @@ function SessionContent({ id }: { id: string }) {
     question: Question | null;
   } | null>(null);
 
+  const handleCloseTypeDialog = useCallback(() => {
+    router.back();
+    setShowTypeDialog(false);
+  }, [router]);
+
   // Start session — sends questionType to backend
   const startSession = useCallback(async () => {
     if (!documentId) return;
@@ -263,7 +268,7 @@ function SessionContent({ id }: { id: string }) {
 
   if (showTypeDialog) {
     return (
-      <QuestionTypeDialog open={showTypeDialog} onSelect={handleTypeSelect} />
+      <QuestionTypeDialog open={showTypeDialog} onSelect={handleTypeSelect} onClose={handleCloseTypeDialog} />
     );
   }
 
