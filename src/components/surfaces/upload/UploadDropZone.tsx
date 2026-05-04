@@ -5,13 +5,13 @@ import { UploadCloud } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface UploadDropZoneProps {
-  onFileSelect: (file: File) => void;
+  onFilesSelect: (files: File[]) => void;
   isUploading?: boolean;
   error?: string | null;
 }
 
 export function UploadDropZone({
-  onFileSelect,
+  onFilesSelect,
   isUploading,
   error,
 }: UploadDropZoneProps) {
@@ -20,11 +20,9 @@ export function UploadDropZone({
   const handleFiles = useCallback(
     (files?: FileList | null) => {
       if (!files || files.length === 0) return;
-      const file = files[0];
-      if (!file) return;
-      onFileSelect(file);
+      onFilesSelect(Array.from(files));
     },
-    [onFileSelect],
+    [onFilesSelect],
   );
 
   return (
@@ -51,6 +49,7 @@ export function UploadDropZone({
         id="upload-zone-input"
         type="file"
         accept=".pdf,.txt"
+        multiple
         className="sr-only"
         onChange={(e) => {
           handleFiles(e.target.files);
@@ -77,11 +76,11 @@ export function UploadDropZone({
           ? "Release to upload"
           : isUploading
             ? "Uploading..."
-            : "Drop your PDF or text file here, or click to browse"}
+            : "Drop your files here, or click to browse"}
       </p>
       <p className="mt-2 max-w-md text-sm text-text-muted">
         PDF, plain text. Lecture notes, textbook chapters, or any educational
-        material. Max 10 MB.
+        material. Max 10 MB per file · 50 MB total storage.
       </p>
 
       {error && (
