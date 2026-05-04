@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { Check, X as XIcon } from "lucide-react";
+import { Check, X as XIcon, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,6 +19,9 @@ interface QuestionCardProps {
   onContinue: () => void;
 }
 
+const TIMER_SECONDS_QCM = 30;
+const TIMER_SECONDS_SHORT = 60;
+
 export function QuestionCard({
   question,
   feedback,
@@ -30,13 +33,61 @@ export function QuestionCard({
   const [shortAnswer, setShortAnswer] = useState("");
   const isQCM = question.questionType === "qcm";
 
-  // For QCM: we know the correct answer client-side
+  const timerDuration = isQCM ? TIMER_SECONDS_QCM : TIMER_SECONDS_SHORT;
+  const [timeLeft, setTimeLeft] = useState(timerDuration);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "c") {
+        if ((e.target as HTMLElement).tagName === "TEXTAREA") return;
+        e.preventDefault();
+      }
+    },
+    [],
+  );
+
   const [localCorrect, setLocalCorrect] = useState<boolean | null>(null);
 
   const hasAnswered = isQCM ? localCorrect !== null : feedback !== null;
   const hasFeedback = feedback !== null;
 
-  // QCM: instant feedback on click, then submit to backend in background
+  // Refs to access latest values inside the interval callback
+  const shortAnswerRef = useRef(shortAnswer);
+  shortAnswerRef.current = shortAnswer;
+  const onSubmitRef = useRef(onSubmit);
+  onSubmitRef.current = onSubmit;
+
+  useEffect(() => {
+    if (hasAnswered) {
+      if (timerRef.current) clearInterval(timerRef.current);
+      return;
+    }
+
+    timerRef.current = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          if (timerRef.current) clearInterval(timerRef.current);
+          // Auto-submit on timeout via microtask to avoid setState-in-setState
+          queueMicrotask(() => {
+            if (isQCM) {
+              setLocalCorrect(false);
+              onSubmitRef.current("");
+            } else {
+              onSubmitRef.current(shortAnswerRef.current.trim() || "");
+            }
+          });
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [hasAnswered, isQCM]);
+
   const handleOptionClick = useCallback(
     (optionText: string) => {
       if (localCorrect !== null) return; // already answered
@@ -65,9 +116,14 @@ export function QuestionCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.15 }}
       className="space-y-6 rounded-2xl border border-white/8 bg-white/[0.03] p-6"
+      onKeyDown={handleKeyDown}
+      onContextMenu={(e) => {
+        if ((e.target as HTMLElement).tagName === "TEXTAREA") return;
+        e.preventDefault();
+      }}
+      onDragStart={(e) => e.preventDefault()}
     >
-      {/* Question meta */}
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex select-none flex-wrap items-center gap-2">
         <Badge variant="outline" className="border-white/10 text-text-muted">
           {bloomLevelLabel(question.bloomLevel)}
         </Badge>
@@ -77,14 +133,30 @@ export function QuestionCard({
         >
           {isQCM ? "Multiple choice" : "Short answer"}
         </Badge>
+
+        {!hasAnswered && (
+          <div
+            className={cn(
+              "ml-auto flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium tabular-nums",
+              timeLeft <= 10
+                ? "border-red-500/30 bg-red-500/10 text-red-400"
+                : "border-white/10 bg-white/5 text-text-secondary",
+            )}
+          >
+            <Clock className="h-3 w-3" />
+            <span>
+              {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, "0")}
+            </span>
+          </div>
+        )}
       </div>
 
-      {/* Question stem */}
-      <p className="text-base leading-relaxed text-white">{question.content}</p>
+      <p className="select-none text-base leading-relaxed text-white">
+        {question.content}
+      </p>
 
-      {/* Answer area */}
       {isQCM ? (
-        <div className="space-y-2" role="radiogroup" aria-label="Answer options">
+        <div className="select-none space-y-2" role="radiogroup" aria-label="Answer options">
           {question.options?.map((option) => {
             const isSelected = selectedOption === option.text;
             const isCorrectOption =
@@ -103,26 +175,20 @@ export function QuestionCard({
                 disabled={hasAnswered}
                 className={cn(
                   "group flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm transition",
-                  // Default state
                   !hasAnswered &&
                     !isSelected &&
                     "border-white/10 bg-white/[0.02] hover:bg-white/5",
-                  // Selected but not yet answered (brief flash before instant eval)
                   !hasAnswered &&
                     isSelected &&
                     "border-accent-primary bg-accent-primary/10",
-                  // Correct answer highlight
                   isCorrectOption && "border-green-500/40 bg-green-500/10",
-                  // Wrong selected
                   isWrongSelected && "border-red-500/40 bg-red-500/10",
-                  // Dim unrelated options after answering
                   hasAnswered &&
                     !isCorrectOption &&
                     !isWrongSelected &&
                     "opacity-40",
                 )}
               >
-                {/* Status icon for answered state */}
                 {hasAnswered && isCorrectOption && (
                   <Check className="h-4 w-4 shrink-0 text-green-400" />
                 )}
@@ -150,14 +216,13 @@ export function QuestionCard({
         />
       )}
 
-      {/* QCM instant result banner */}
       {isQCM && hasAnswered && (
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
           className={cn(
-            "rounded-xl border p-4",
+            "select-none rounded-xl border p-4",
             localCorrect
               ? "border-green-500/20 bg-green-500/5"
               : "border-red-500/20 bg-red-500/5",
@@ -179,12 +244,11 @@ export function QuestionCard({
               </span>
             </p>
           )}
-          {/* Show evaluator feedback once backend responds */}
-          {hasFeedback && feedback.evaluatorFeedback && (
+          {/*{hasFeedback && feedback.evaluatorFeedback && (
             <p className="mt-2 text-sm leading-relaxed text-text-secondary">
               {feedback.evaluatorFeedback}
             </p>
-          )}
+          )}*/}
         </motion.div>
       )}
 
@@ -195,7 +259,7 @@ export function QuestionCard({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
           className={cn(
-            "rounded-xl border p-4",
+            "select-none rounded-xl border p-4",
             feedback.isCorrect
               ? "border-green-500/20 bg-green-500/5"
               : "border-red-500/20 bg-red-500/5",
