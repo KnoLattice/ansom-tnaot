@@ -5,23 +5,21 @@ import { UploadCloud } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface UploadZoneProps {
-  onFileSelect: (file: File) => void;
+  onFilesSelect: (files: File[]) => void;
   isUploading?: boolean;
   error?: string | null;
   compact?: boolean;
 }
 
-export function UploadZone({ onFileSelect, isUploading, error, compact }: UploadZoneProps) {
+export function UploadZone({ onFilesSelect, isUploading, error, compact }: UploadZoneProps) {
   const [isDragActive, setIsDragActive] = useState(false);
 
   const handleFiles = useCallback(
     (files?: FileList | null) => {
       if (!files || files.length === 0) return;
-      const [file] = files;
-      if (!file) return;
-      onFileSelect(file);
+      onFilesSelect(Array.from(files));
     },
-    [onFileSelect],
+    [onFilesSelect],
   );
 
   return (
@@ -47,6 +45,7 @@ export function UploadZone({ onFileSelect, isUploading, error, compact }: Upload
         id="library-upload"
         type="file"
         accept=".pdf,.txt"
+        multiple
         className="sr-only"
         onChange={(event) => {
           handleFiles(event.target.files);
