@@ -12,6 +12,7 @@ import { QuestionTypeDialog } from "@/components/surfaces/session/QuestionTypeDi
 import { ThresholdCallout } from "@/components/shared/ThresholdCallout";
 import { apiClient } from "@/lib/api/client";
 import { API_ROUTES } from "@/lib/api/routes";
+import Cookies from 'js-cookie';
 import type {
   EndSessionResponse,
   FeedbackResult,
@@ -72,6 +73,11 @@ function SessionContent({ id }: { id: string }) {
     node: TargetNode | null;
     question: Question | null;
   } | null>(null);
+
+  const handleCloseTypeDialog = useCallback(() => {
+    router.back();
+    setShowTypeDialog(false);
+  }, [router]);
 
   // Start session — sends questionType to backend
   const startSession = useCallback(async () => {
@@ -185,18 +191,9 @@ function SessionContent({ id }: { id: string }) {
       );
       // Cache summary for the summary page
       if (typeof window !== "undefined") {
-        sessionStorage.setItem(
-          `session_summary_${state.sessionId}`,
-          JSON.stringify(data),
-        );
-        sessionStorage.setItem(
-          `session_titles_${state.sessionId}`,
-          JSON.stringify(nodeTitles.current),
-        );
-        sessionStorage.setItem(
-          `session_docId_${state.sessionId}`,
-          state.documentId ?? "",
-        );
+        Cookies.set(`session_summary_${state.sessionId}`, JSON.stringify(data));
+        Cookies.set(`session_titles_${state.sessionId}`, JSON.stringify(nodeTitles.current));
+        Cookies.set(`session_docId_${state.sessionId}`, state.documentId ?? "");
       }
       router.replace(`/session/${state.sessionId}/summary`);
     } catch {
@@ -263,7 +260,7 @@ function SessionContent({ id }: { id: string }) {
 
   if (showTypeDialog) {
     return (
-      <QuestionTypeDialog open={showTypeDialog} onSelect={handleTypeSelect} />
+      <QuestionTypeDialog open={showTypeDialog} onSelect={handleTypeSelect} onClose={handleCloseTypeDialog} />
     );
   }
 

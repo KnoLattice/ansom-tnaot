@@ -14,6 +14,7 @@ import { PrimaryAction } from "@/components/surfaces/home/PrimaryAction";
 import { LastSessionSummary } from "@/components/surfaces/home/LastSessionSummary";
 import { LibraryStrip } from "@/components/surfaces/home/LibraryStrip";
 import type { NodeStudied } from "@/lib/types/api";
+import Cookies from 'js-cookie';
 
 export default function HomePage() {
   const router = useRouter();
@@ -38,8 +39,8 @@ export default function HomePage() {
       return { nodesStudied: [] as NodeStudied[], nodeTitles: {} as Record<string, string> };
     }
     try {
-      const summaryRaw = sessionStorage.getItem(`session_summary_${lastSession.sessionId}`);
-      const titlesRaw = sessionStorage.getItem(`session_titles_${lastSession.sessionId}`);
+      const summaryRaw = Cookies.get(`session_summary_${lastSession.sessionId}`);
+      const titlesRaw = Cookies.get(`session_titles_${lastSession.sessionId}`);
       const nodesStudied: NodeStudied[] = summaryRaw
         ? (JSON.parse(summaryRaw) as { nodesStudied?: NodeStudied[] }).nodesStudied ?? []
         : [];

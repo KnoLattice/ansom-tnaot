@@ -50,29 +50,7 @@ export function AppShell({ children }: PropsWithChildren) {
     <div className="relative min-h-screen bg-canvas text-text-primary">
       {/* ─── Top bar ─────────────────────────────────── */}
       <header className="pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-4">
-        <nav className="pointer-events-auto flex w-full max-w-6xl items-center justify-between rounded-2xl border border-border-default bg-[var(--panel-bg)] px-5 py-3 shadow-panel backdrop-blur-2xl">
-          {/* Logo */}
-          <Link
-            href="/"
-            className="font-display text-lg tracking-[0.4em] text-white"
-          >
-            KL
-          </Link>
-
-          {/* Center — page label or active document */}
-          <div className="hidden flex-1 items-center justify-center px-6 sm:flex">
-            {hydrated && activeDocument && (isMasteryRoute || isSessionRoute) ? (
-              <p className="max-w-[240px] truncate text-xs uppercase tracking-[0.3em] text-text-muted">
-                {activeDocument.originalName.replace(/\.[^.]+$/, "")}
-              </p>
-            ) : (
-              <p className="text-xs uppercase tracking-[0.4em] text-text-muted">
-                {NAV_ITEMS.find((n) => n.href === pathname)?.label ?? "KnowLattice"}
-              </p>
-            )}
-          </div>
-
-          {/* Right — nav actions + avatar */}
+        <nav className="pointer-events-auto flex w-full max-w-6xl items-center rounded-2xl border border-border-default bg-[var(--panel-bg)] px-5 py-3 shadow-panel backdrop-blur-2xl justify-between">
           <div className="flex items-center gap-2 text-sm text-white/80">
             {NAV_ITEMS.map(({ href, label, icon: Icon }) => (
               <Button
@@ -128,6 +106,7 @@ export function AppShell({ children }: PropsWithChildren) {
             )}
 
             {/* User dropdown */}
+          </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
@@ -166,7 +145,6 @@ export function AppShell({ children }: PropsWithChildren) {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          </div>
         </nav>
       </header>
 

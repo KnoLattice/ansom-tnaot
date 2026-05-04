@@ -9,6 +9,7 @@ import { Spinner } from "@/components/ui/Spinner";
 import { HeadlineMoment } from "@/components/surfaces/session/HeadlineMoment";
 import { MovementMap } from "@/components/surfaces/session/MovementMap";
 import type { EndSessionResponse } from "@/lib/types/api";
+import Cookies from 'js-cookie';
 import { MASTERY_CALLOUT_THRESHOLD, MASTERY_ANIMATION } from "@/lib/constants/mastery";
 
 export default function SessionSummaryPage({
@@ -21,7 +22,7 @@ export default function SessionSummaryPage({
 
   const [summary] = useState<EndSessionResponse | null>(() => {
     if (typeof window === "undefined") return null;
-    const cached = sessionStorage.getItem(`session_summary_${id}`);
+    const cached = Cookies.get(`session_summary_${id}`);
     if (!cached) return null;
     try {
       return JSON.parse(cached) as EndSessionResponse;
@@ -32,7 +33,7 @@ export default function SessionSummaryPage({
 
   const [nodeTitles] = useState<Record<string, string>>(() => {
     if (typeof window === "undefined") return {};
-    const titles = sessionStorage.getItem(`session_titles_${id}`);
+    const titles = Cookies.get(`session_titles_${id}`);
     if (!titles) return {};
     try {
       return JSON.parse(titles) as Record<string, string>;
@@ -144,7 +145,7 @@ export default function SessionSummaryPage({
         <Button
           className="flex-1"
           onClick={() => {
-            const docId = sessionStorage.getItem(`session_docId_${id}`);
+            const docId = Cookies.get(`session_docId_${id}`);
             if (docId) {
               router.push(`/session/new?documentId=${docId}`);
             } else {

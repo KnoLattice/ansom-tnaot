@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils";
 interface QuestionTypeDialogProps {
   open: boolean;
   onSelect: (type: QuestionType) => void;
+  onClose: () => void;
 }
 
 const options: {
@@ -38,13 +39,12 @@ const options: {
   },
 ];
 
-export function QuestionTypeDialog({ open, onSelect }: QuestionTypeDialogProps) {
+export function QuestionTypeDialog({ open, onSelect, onClose }: QuestionTypeDialogProps) {
   const [selected, setSelected] = useState<QuestionType>("qcm");
 
   return (
-    <Dialog open={open}>
+    <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
-        className="sm:max-w-md"
         onPointerDownOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
