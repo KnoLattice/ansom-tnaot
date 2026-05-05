@@ -1,31 +1,31 @@
 :root[data-theme="ink"] {
-  /* Canvas & surfaces — warm charcoal, no blue tint */
-  --color-canvas: #121218;
-  --color-surface: #1a1a24;
-  --color-surface-elevated: #22222e;
-  --color-halo: #0e0e14;
+  /* Canvas & surfaces — pure dark, no tint */
+  --color-canvas: #090909;
+  --color-surface: #111111;
+  --color-surface-elevated: #1a1a1a;
+  --color-halo: #050505;
 
-  /* Text — bumped secondary contrast for readability */
-  --color-text-primary: #f0f0f6;
-  --color-text-secondary: #a8a8c0;
-  --color-text-muted: #5c5c78;
+  /* Text — high contrast */
+  --color-text-primary: #e8e8e8;
+  --color-text-secondary: #999999;
+  --color-text-muted: #555555;
 
-  /* Accent — violet-blue, warmer than pure indigo */
-  --color-accent-primary: #7c5cfc;
-  --color-accent-secondary: #14b8a6;
+  /* Accent — acid chartreuse primary, signal orange secondary */
+  --color-accent-primary: #c6f135;
+  --color-accent-secondary: #06b6d4;
 
-  /* Borders — slightly more visible for card definition */
-  --color-border-subtle: rgba(255, 255, 255, 0.07);
-  --color-border-default: rgba(255, 255, 255, 0.14);
+  /* Borders — solid, visible, structural */
+  --color-border-subtle: #222222;
+  --color-border-default: #333333;
 
-  /* Panel overrides */
-  --panel-bg: rgba(26, 26, 36, 0.85);
-  --panel-border: rgba(255, 255, 255, 0.09);
+  /* Panel — opaque, no effects */
+  --panel-bg: #0e0e0e;
+  --panel-border: #2a2a2a;
 
-  /* Kill the space effects — clean flat background */
+  /* All space effects disabled */
   --space-starfield-opacity: 0;
   --space-nebula-opacity: 0;
 
   /* Glow uses the new accent */
-  --glow-accent: rgba(124, 92, 252, 0.18);
+  --glow-accent: rgba(198, 241, 53, 0.12);
 }
