@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { BookOpen } from "lucide-react";
+import { BookOpen, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 interface LibraryStripProps {
@@ -13,20 +13,21 @@ export function LibraryStrip({ activeDocumentName }: LibraryStripProps) {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.2, delay: 0.3 }}
-      className="flex items-center justify-between rounded-xl border border-white/5 bg-white/[0.02] px-4 py-3"
+      transition={{ duration: 0.15 }}
+      className="flex items-center justify-between border border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-4 py-2.5"
     >
-      <div className="flex items-center gap-2 text-sm text-text-muted">
+      <div className="flex items-center gap-3 text-sm text-[var(--color-text-muted)]">
         <BookOpen className="h-3.5 w-3.5" />
-        <span className="truncate">
-          {activeDocumentName ?? "No document selected"}
+        <span className="kl-data-label">Active Doc:</span>
+        <span className="truncate font-mono text-xs text-[var(--color-text-secondary)]">
+          {activeDocumentName ?? "NONE"}
         </span>
       </div>
       <Link
         href="/library"
-        className="shrink-0 text-xs font-medium text-accent-primary underline underline-offset-4"
+        className="flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-accent-primary)] transition-colors hover:text-[var(--color-text-primary)]"
       >
-        Library
+        LIBRARY <ArrowRight className="h-3 w-3" />
       </Link>
     </motion.div>
   );
