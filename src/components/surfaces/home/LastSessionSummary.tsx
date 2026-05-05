@@ -6,7 +6,6 @@ import type { NodeStudied, SessionHistoryEntry } from "@/lib/types/api";
 
 interface LastSessionSummaryProps {
   lastSession: SessionHistoryEntry;
-  /** If we have cached node-level data from sessionStorage */
   nodesStudied: NodeStudied[];
   nodeTitles: Record<string, string>;
 }
@@ -22,20 +21,19 @@ export function LastSessionSummary({
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.3, delay: 0.25 }}
+      transition={{ duration: 0.15 }}
       className="space-y-2"
     >
-      <p className="text-xs uppercase tracking-widest text-text-muted">
-        Last session recap
-      </p>
-      <div className="rounded-2xl border border-white/8 bg-white/[0.02] p-4">
-        <div className="mb-2 flex items-baseline justify-between text-xs text-text-muted">
-          <span>
-            {lastSession.totalInteractions} question
-            {lastSession.totalInteractions !== 1 ? "s" : ""}
+      <p className="kl-data-label">Last Session Recap</p>
+      <div className="border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4">
+        <div className="mb-3 flex items-baseline justify-between">
+          <span className="font-mono text-xs font-bold tabular-nums text-[var(--color-text-muted)]">
+            {lastSession.totalInteractions} INTERACTION{lastSession.totalInteractions !== 1 ? "S" : ""}
           </span>
           {lastSession.accuracyPercent != null && (
-            <span>{lastSession.accuracyPercent}% accuracy</span>
+            <span className="font-mono text-xs font-bold tabular-nums text-[var(--color-text-secondary)]">
+              {lastSession.accuracyPercent}% ACC
+            </span>
           )}
         </div>
         <MovementMap nodes={nodesStudied} nodeTitles={nodeTitles} />

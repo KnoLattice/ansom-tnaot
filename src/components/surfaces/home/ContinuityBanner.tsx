@@ -16,28 +16,35 @@ export function ContinuityBanner({
   learnerName,
 }: ContinuityBannerProps) {
   let message: string;
+  let statusTag: string;
 
   if (isFirstVisit) {
+    statusTag = "NEW";
     message = learnerName
-      ? `Welcome, ${learnerName}! Upload a document and start your first session.`
-      : "Welcome! Upload a document and start your first session.";
+      ? `Welcome, ${learnerName}. Upload a document to initialize your first study session.`
+      : "Welcome. Upload a document to initialize your first study session.";
   } else if (lastSession) {
     const timeAgo = fromNow(lastSession.endedAt ?? lastSession.startedAt);
     const accuracy = lastSession.accuracyPercent;
     const questions = lastSession.totalInteractions;
-    message = `Welcome back. Last session ${timeAgo}: ${questions} question${questions !== 1 ? "s" : ""}${accuracy != null ? `, ${accuracy}% accuracy` : ""}.`;
+    statusTag = "RETURNING";
+    message = `Last session ${timeAgo}: ${questions} interaction${questions !== 1 ? "s" : ""}${accuracy != null ? ` / ${accuracy}% accuracy` : ""}.`;
   } else {
-    message = "Welcome back. Start a session to continue learning.";
+    statusTag = "IDLE";
+    message = "No recent sessions. Start one to continue learning.";
   }
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: -4 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2 }}
-      className="rounded-xl border border-white/8 bg-white/[0.03] px-4 py-2.5"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.15 }}
+      className="flex items-start gap-3 border-l-2 border-[var(--color-accent-primary)] bg-[var(--color-surface)] px-4 py-3"
     >
-      <p className="text-sm text-text-secondary">{message}</p>
+      <span className="inline-block shrink-0 border border-[var(--color-accent-primary)] px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-widest text-[var(--color-accent-primary)]">
+        {statusTag}
+      </span>
+      <p className="text-sm text-[var(--color-text-secondary)]">{message}</p>
     </motion.div>
   );
 }

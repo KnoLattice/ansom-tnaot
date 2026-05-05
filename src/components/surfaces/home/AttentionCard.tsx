@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { AlertTriangle } from "lucide-react";
 import { ConceptTile } from "@/components/shared/ConceptTile";
 import type { WeakNode } from "@/lib/types/api";
 
@@ -13,30 +12,39 @@ interface AttentionCardProps {
 function urgencyLabel(urgency: WeakNode["urgency"]): string {
   switch (urgency) {
     case "critical":
-      return "Needs urgent review";
+      return "CRITICAL";
     case "high":
-      return "Falling behind";
+      return "HIGH";
     case "medium":
-      return "Could use practice";
+      return "MEDIUM";
+  }
+}
+
+function urgencyColor(urgency: WeakNode["urgency"]): string {
+  switch (urgency) {
+    case "critical":
+      return "text-red-400";
+    case "high":
+      return "text-orange-400";
+    case "medium":
+      return "text-[var(--color-text-muted)]";
   }
 }
 
 export function AttentionCard({ weakNodes, onStudy }: AttentionCardProps) {
-  const flagged = weakNodes.slice(0, 2);
+  const flagged = weakNodes.slice(0, 3);
 
   if (flagged.length === 0) {
     return (
       <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.25, delay: 0.1 }}
-        className="flex flex-col items-center justify-center rounded-2xl border border-white/8 bg-white/[0.03] p-6 text-center"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.15 }}
+        className="flex flex-col border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4"
       >
-        <p className="text-xs uppercase tracking-widest text-text-muted">
-          Needs Attention
-        </p>
-        <p className="mt-4 text-sm text-text-secondary">
-          No flagged concepts — keep it up!
+        <p className="kl-data-label">Flagged</p>
+        <p className="mt-4 text-center font-mono text-xs text-[var(--color-text-muted)]">
+          NO FLAGS — ALL CLEAR
         </p>
       </motion.div>
     );
@@ -44,37 +52,50 @@ export function AttentionCard({ weakNodes, onStudy }: AttentionCardProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25, delay: 0.1 }}
-      className="flex flex-col rounded-2xl border border-white/8 bg-white/[0.03] p-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.15 }}
+      className="flex flex-col border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4"
     >
-      <div className="flex items-center gap-2">
-        <AlertTriangle className="h-3.5 w-3.5 text-orange-400" />
-        <p className="text-xs uppercase tracking-widest text-text-muted">
-          Needs Attention
-        </p>
+      <div className="flex items-center justify-between">
+        <p className="kl-data-label">Flagged</p>
+        <span className="font-mono text-[10px] font-bold text-orange-400">
+          {flagged.length}
+        </span>
       </div>
 
-      <div className="mt-4 space-y-2">
-        {flagged.map((node) => (
-          <ConceptTile
-            key={node.id}
-            title={node.title}
-            masteryScore={node.masteryScore}
-            subtitle={urgencyLabel(node.urgency)}
-            onClick={() => onStudy([node.id])}
-          />
+      <div className="mt-3 space-y-0">
+        {flagged.map((node, i) => (
+          <div key={node.id}>
+            {i > 0 && <div className="kl-divider" />}
+            <button
+              type="button"
+              className="flex w-full items-center justify-between py-2 text-left transition-colors hover:bg-[var(--color-surface-elevated)]"
+              onClick={() => onStudy([node.id])}
+            >
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium text-[var(--color-text-primary)]">
+                  {node.title}
+                </p>
+                <p className={`font-mono text-[10px] font-bold uppercase tracking-wider ${urgencyColor(node.urgency)}`}>
+                  {urgencyLabel(node.urgency)}
+                </p>
+              </div>
+              <span className="ml-3 shrink-0 font-mono text-xs font-bold tabular-nums text-[var(--color-text-muted)]">
+                {Math.round(node.masteryScore * 100)}%
+              </span>
+            </button>
+          </div>
         ))}
       </div>
 
       {flagged.length > 1 && (
         <button
           type="button"
-          className="mt-3 self-end text-xs font-medium text-accent-primary underline underline-offset-4"
+          className="mt-2 self-end font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-accent-primary)] transition-colors hover:text-[var(--color-text-primary)]"
           onClick={() => onStudy(flagged.map((n) => n.id))}
         >
-          Study both
+          STUDY ALL [{flagged.length}]
         </button>
       )}
     </motion.div>
