@@ -1,43 +1,56 @@
 :root {
-  --raw-space-980: #05050b;
-  --raw-space-950: #0a0a12;
-  --raw-space-925: #10101a;
-  --raw-space-900: #12121e;
-  --raw-space-850: #1a1a2e;
-  --raw-surface-dim: #1f1f35;
-  --raw-surface-highlight: #24243c;
-  --raw-border-subtle: rgba(255, 255, 255, 0.06);
-  --raw-border-default: rgba(255, 255, 255, 0.12);
-  --raw-text-primary: #f0f0f8;
-  --raw-text-secondary: #9090a8;
-  --raw-text-muted: #50506a;
-  --raw-indigo-400: #818cf8;
-  --raw-indigo-500: #6366f1;
-  --raw-indigo-600: #4f46e5;
-  --raw-teal-400: #2dd4bf;
-  --raw-teal-500: #14b8a6;
-  --raw-teal-600: #0d9488;
-  --raw-aurora-green: #5ef4bc;
-  --raw-aurora-purple: #c084fc;
-  --raw-solar-amber: #f59e0b;
-  --raw-solar-orange: #fb923c;
-  --raw-obsidian-gray: #0f1115;
+  /* ── Canvas & surface ── */
+  --raw-space-980: #050505;
+  --raw-space-950: #090909;
+  --raw-space-925: #0e0e0e;
+  --raw-space-900: #141414;
+  --raw-space-850: #1a1a1a;
+  --raw-surface-dim: #111111;
+  --raw-surface-highlight: #1e1e1e;
+
+  /* ── Borders — solid, structural ── */
+  --raw-border-subtle: #222222;
+  --raw-border-default: #333333;
+
+  /* ── Text ── */
+  --raw-text-primary: #e8e8e8;
+  --raw-text-secondary: #999999;
+  --raw-text-muted: #555555;
+
+  /* ── Accent — acid chartreuse + signal orange ── */
+  --raw-chartreuse-400: #d4f74e;
+  --raw-chartreuse-500: #c6f135;
+  --raw-chartreuse-600: #a8d41a;
+  --raw-orange-400: #ff7043;
+  --raw-orange-500: #ff5722;
+  --raw-orange-600: #e64a19;
+  --raw-cyan-400: #22d3ee;
+  --raw-cyan-500: #06b6d4;
+  --raw-cyan-600: #0891b2;
+
+  /* ── Status ── */
   --raw-danger: #ef4444;
-  --raw-warning: #fbbf24;
+  --raw-warning: #f59e0b;
   --raw-success: #22c55e;
-  --raw-mastery-mastered: #22c55e;
-  --raw-mastery-proficient: #84cc16;
+
+  /* ── Mastery tiers ── */
+  --raw-mastery-mastered: #c6f135;
+  --raw-mastery-proficient: #22d3ee;
   --raw-mastery-developing: #f59e0b;
   --raw-mastery-low: #ef4444;
-  --raw-mastery-locked: #374151;
-  --raw-accent-glow: rgba(99, 102, 241, 0.18);
-  --raw-panel-glass: rgba(18, 18, 30, 0.7);
-  --raw-panel-border: rgba(255, 255, 255, 0.08);
-  --raw-panel-blur-md: 16px;
-  --raw-panel-blur-lg: 24px;
-  --raw-starfield-color: rgba(255, 255, 255, 0.55);
-  --raw-nebula-indigo: rgba(99, 102, 241, 0.15);
-  --raw-nebula-teal: rgba(20, 184, 166, 0.12);
-  --raw-nebula-aurora: rgba(163, 230, 53, 0.18);
-  --raw-nebula-solar: rgba(251, 146, 60, 0.15);
+  --raw-mastery-locked: #333333;
+
+  /* ── Panel — opaque, no glass ── */
+  --raw-accent-glow: rgba(198, 241, 53, 0.12);
+  --raw-panel-glass: #111111;
+  --raw-panel-border: #2a2a2a;
+  --raw-panel-blur-md: 0px;
+  --raw-panel-blur-lg: 0px;
+
+  /* ── Space effects — disabled for brutalist ��─ */
+  --raw-starfield-color: transparent;
+  --raw-nebula-indigo: transparent;
+  --raw-nebula-teal: transparent;
+  --raw-nebula-aurora: transparent;
+  --raw-nebula-solar: transparent;
 }

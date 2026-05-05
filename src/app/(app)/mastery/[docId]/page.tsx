@@ -21,7 +21,6 @@ function MasteryMapContent({ docId }: { docId: string }) {
   const { activeDocument } = useDocuments();
   const { data: graphData, isLoading, error } = useGraph(docId);
 
-  // View mode from URL
   const view = (searchParams.get("view") as "graph" | "list") || "graph";
   const setView = useCallback(
     (v: "graph" | "list") => {
@@ -32,7 +31,6 @@ function MasteryMapContent({ docId }: { docId: string }) {
     [docId, router, searchParams],
   );
 
-  // Selected node from URL
   const selectedNodeId = searchParams.get("node");
   const setSelectedNodeId = useCallback(
     (nodeId: string | null) => {
@@ -47,7 +45,6 @@ function MasteryMapContent({ docId }: { docId: string }) {
     [docId, router, searchParams],
   );
 
-  // List filter from URL
   const filter = (searchParams.get("filter") as FilterKey) || "all";
   const setFilter = useCallback(
     (f: FilterKey) => {
@@ -67,7 +64,6 @@ function MasteryMapContent({ docId }: { docId: string }) {
     [graphData, selectedNodeId],
   );
 
-  // Filtered count for batch action bar
   const filteredCount = useMemo(() => {
     if (!graphData || filter === "all") return 0;
     switch (filter) {
@@ -84,9 +80,9 @@ function MasteryMapContent({ docId }: { docId: string }) {
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <Skeleton className="h-20 rounded-2xl bg-white/5" />
-        <Skeleton className="h-[60vh] rounded-2xl bg-white/5" />
+      <div className="space-y-4">
+        <Skeleton className="h-16" />
+        <Skeleton className="h-[60vh]" />
       </div>
     );
   }
@@ -94,18 +90,18 @@ function MasteryMapContent({ docId }: { docId: string }) {
   if (error || !graphData) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
-        <p className="text-lg font-medium text-white">
-          Unable to load knowledge graph
+        <p className="font-mono text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+          UNABLE TO LOAD GRAPH
         </p>
-        <p className="mt-2 text-sm text-text-secondary">
+        <p className="mt-2 text-sm text-[var(--color-text-secondary)]">
           {error instanceof Error ? error.message : "This document may not be processed yet."}
         </p>
         <Button
-          variant="secondary"
+          variant="outline"
           className="mt-4"
           onClick={() => router.push("/library")}
         >
-          Back to Library
+          BACK TO LIBRARY
         </Button>
       </div>
     );
@@ -114,45 +110,45 @@ function MasteryMapContent({ docId }: { docId: string }) {
   const docName = activeDocument?.originalName ?? "Document";
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+      <div className="flex flex-col gap-4 border-b border-[var(--color-border-default)] pb-4 md:flex-row md:items-start md:justify-between">
         <div>
-          <h1 className="font-display text-2xl font-bold text-white">
+          <h1 className="font-mono text-lg font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
             Mastery Map
           </h1>
-          <p className="mt-1 text-sm text-text-secondary">
-            {docName.replace(/\.[^.]+$/, "")} — {graphData.nodes.length} concepts
+          <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
+            {docName.replace(/\.[^.]+$/, "")} / {graphData.nodes.length} concepts
           </p>
         </div>
 
-        {/* View switcher */}
-        <div className="flex rounded-xl border border-white/10 bg-white/5 p-1">
+        {/* View switcher — brutalist toggle */}
+        <div className="flex border border-[var(--color-border-default)]">
           <button
             type="button"
             onClick={() => setView("graph")}
             className={cn(
-              "flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-medium transition",
+              "flex items-center gap-2 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition",
               view === "graph"
-                ? "bg-white text-black"
-                : "text-text-muted hover:text-white",
+                ? "bg-[var(--color-accent-primary)] text-black"
+                : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
             )}
           >
-            <Network className="h-4 w-4" />
-            Graph
+            <Network className="h-3.5 w-3.5" />
+            GRAPH
           </button>
           <button
             type="button"
             onClick={() => setView("list")}
             className={cn(
-              "flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-medium transition",
+              "flex items-center gap-2 border-l border-[var(--color-border-default)] px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition",
               view === "list"
-                ? "bg-white text-black"
-                : "text-text-muted hover:text-white",
+                ? "bg-[var(--color-accent-primary)] text-black"
+                : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
             )}
           >
-            <LayoutList className="h-4 w-4" />
-            List
+            <LayoutList className="h-3.5 w-3.5" />
+            LIST
           </button>
         </div>
       </div>
@@ -161,11 +157,10 @@ function MasteryMapContent({ docId }: { docId: string }) {
       <DistributionStrip nodes={graphData.nodes} />
 
       {/* Main content: view + detail panel */}
-      <div className="flex gap-6" style={{ minHeight: "60vh" }}>
-        {/* Active view area */}
+      <div className="flex gap-4" style={{ minHeight: "60vh" }}>
         <div className="min-w-0 flex-1">
           {view === "graph" ? (
-            <div className="h-[60vh] overflow-hidden rounded-2xl border border-white/8 bg-white/[0.02]">
+            <div className="h-[60vh] overflow-hidden border border-[var(--color-border-default)] bg-[var(--color-canvas)]">
               <GraphView
                 data={graphData}
                 selectedNodeId={selectedNodeId}
@@ -183,10 +178,9 @@ function MasteryMapContent({ docId }: { docId: string }) {
           )}
         </div>
 
-        {/* Detail panel — right side, persistent */}
         {selectedNode && (
           <div className="hidden w-[360px] shrink-0 lg:block">
-            <div className="sticky top-28" style={{ maxHeight: "calc(100vh - 8rem)" }}>
+            <div className="sticky top-16" style={{ maxHeight: "calc(100vh - 5rem)" }}>
               <ConceptDetailPanel
                 node={selectedNode}
                 allNodes={graphData.nodes}
@@ -200,7 +194,6 @@ function MasteryMapContent({ docId }: { docId: string }) {
         )}
       </div>
 
-      {/* Batch action bar — list view with active filter */}
       {view === "list" && (
         <BatchActionBar
           conceptCount={filteredCount}

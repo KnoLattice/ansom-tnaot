@@ -15,9 +15,8 @@ function pickHeadline(
   nodeTitles: Record<string, string>,
 ): string {
   const { nodesStudied } = summary;
-  if (nodesStudied.length === 0) return "Session complete.";
+  if (nodesStudied.length === 0) return "SESSION COMPLETE";
 
-  // Check for mastered threshold crossings
   const mastered = nodesStudied.filter(
     (n) =>
       n.masteryBefore < MASTERY_CALLOUT_THRESHOLD &&
@@ -26,11 +25,10 @@ function pickHeadline(
   if (mastered.length > 0) {
     const name = nodeTitles[mastered[0].nodeId] ?? "a concept";
     return mastered.length === 1
-      ? `You mastered ${name}.`
-      : `You mastered ${mastered.length} concepts.`;
+      ? `MASTERED: ${name}`
+      : `MASTERED ${mastered.length} CONCEPTS`;
   }
 
-  // Biggest gain
   const sorted = [...nodesStudied].sort(
     (a, b) => Math.abs(b.delta) - Math.abs(a.delta),
   );
@@ -38,15 +36,14 @@ function pickHeadline(
   if (biggest && biggest.delta > 0) {
     const name = nodeTitles[biggest.nodeId] ?? "a concept";
     const delta = `+${Math.round(biggest.delta * 100)}%`;
-    return `Biggest gain: ${name} (${delta}).`;
+    return `BIGGEST GAIN: ${name} (${delta})`;
   }
 
-  // All improved
   if (nodesStudied.every((n) => n.delta >= 0)) {
-    return "You improved every concept you touched.";
+    return "ALL CONCEPTS IMPROVED";
   }
 
-  return "Good study session.";
+  return "SESSION COMPLETE";
 }
 
 export function HeadlineMoment({ summary, nodeTitles }: HeadlineMomentProps) {
@@ -54,17 +51,17 @@ export function HeadlineMoment({ summary, nodeTitles }: HeadlineMomentProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="text-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2 }}
+      className="border-b border-[var(--color-border-default)] pb-6 text-center"
     >
-      <h1 className="font-display text-3xl font-bold text-white">
+      <h1 className="font-mono text-xl font-bold uppercase tracking-wider text-[var(--color-accent-primary)]">
         {headline}
       </h1>
-      <p className="mt-3 text-sm text-text-secondary">
-        {summary.totalInteractions} question{summary.totalInteractions !== 1 ? "s" : ""} ·{" "}
-        {summary.accuracy}% accuracy ·{" "}
+      <p className="mt-3 font-mono text-xs text-[var(--color-text-secondary)]">
+        {summary.totalInteractions} Q{summary.totalInteractions !== 1 ? "S" : ""} /{" "}
+        {summary.accuracy}% ACC /{" "}
         {formatDuration(summary.durationMs)}
       </p>
     </motion.div>

@@ -41,55 +41,57 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
       <Button
         type="button"
         variant="outline"
-        className="w-full border-border-default bg-white/5 text-text-primary hover:bg-white/10"
+        className="w-full"
         onClick={googleLogin}
       >
-        Continue with Google
+        CONTINUE WITH GOOGLE
       </Button>
-      <div className="text-center text-xs uppercase tracking-[0.3em] text-text-muted">
-        or
+      <div className="flex items-center gap-3">
+        <div className="h-px flex-1 bg-[var(--color-border-default)]" />
+        <span className="kl-data-label">OR</span>
+        <div className="h-px flex-1 bg-[var(--color-border-default)]" />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="email" className="text-text-secondary">
+        <Label htmlFor="email" className="kl-data-label">
           Email
         </Label>
         <Input
           id="email"
           type="email"
           placeholder="you@example.com"
-          className="border-border-default bg-white/5 text-text-primary placeholder:text-text-muted"
+          className="border-[var(--color-border-default)] bg-[var(--color-canvas)] font-mono text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]"
           {...form.register("email")}
         />
         <FieldError message={form.formState.errors.email?.message} />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="password" className="text-text-secondary">
+        <Label htmlFor="password" className="kl-data-label">
           Password
         </Label>
         <Input
           id="password"
           type="password"
           placeholder="••••••••"
-          className="border-border-default bg-white/5 text-text-primary placeholder:text-text-muted"
+          className="border-[var(--color-border-default)] bg-[var(--color-canvas)] font-mono text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]"
           {...form.register("password")}
         />
-        <div className="flex items-center justify-between text-xs text-text-muted">
+        <div className="flex items-center justify-between text-xs text-[var(--color-text-muted)]">
           <FieldError message={form.formState.errors.password?.message} />
           <button
             type="button"
-            className="transition hover:text-white"
+            className="font-mono text-[10px] uppercase tracking-wider transition hover:text-[var(--color-text-primary)]"
             onClick={onForgotPassword}
           >
-            Forgot password?
+            FORGOT?
           </button>
         </div>
       </div>
       <Button
         type="submit"
         disabled={disabled}
-        className="w-full bg-accent-primary text-white shadow-glow hover:opacity-90"
+        className="w-full"
       >
-        Sign in
+        SIGN IN
       </Button>
     </form>
   );
@@ -97,5 +99,5 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null;
-  return <p className="text-xs text-rose-300">{message}</p>;
+  return <p className="font-mono text-[10px] text-red-400">{message}</p>;
 }

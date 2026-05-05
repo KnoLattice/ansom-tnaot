@@ -11,10 +11,10 @@ import { formatMastery, getMasteryBand } from "@/lib/utils/mastery";
 export type FilterKey = "all" | "below-mastered" | "mastered" | "locked";
 
 const FILTERS: { key: FilterKey; label: string }[] = [
-  { key: "all", label: "All" },
-  { key: "below-mastered", label: "Below mastered" },
-  { key: "mastered", label: "Mastered" },
-  { key: "locked", label: "Locked" },
+  { key: "all", label: "ALL" },
+  { key: "below-mastered", label: "BELOW MASTERED" },
+  { key: "mastered", label: "MASTERED" },
+  { key: "locked", label: "LOCKED" },
 ];
 
 type SortKey = "mastery" | "name" | "depth";
@@ -83,24 +83,24 @@ export function ConceptListView({
   };
 
   return (
-    <div className="space-y-4">
-      {/* Filter chips */}
-      <div className="flex flex-wrap items-center gap-2">
+    <div className="space-y-3">
+      {/* Filter chips — brutalist */}
+      <div className="flex flex-wrap items-center gap-1">
         {FILTERS.map((f) => (
           <button
             key={f.key}
             type="button"
             onClick={() => onFilterChange(f.key)}
             className={cn(
-              "rounded-full border px-3 py-1.5 text-xs font-medium transition",
+              "border px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider transition",
               filter === f.key
-                ? "border-accent-primary bg-accent-primary/10 text-white"
-                : "border-white/10 bg-white/5 text-text-muted hover:text-white",
+                ? "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/10 text-[var(--color-accent-primary)]"
+                : "border-[var(--color-border-default)] text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
             )}
           >
             {f.label}
             {f.key !== "all" && (
-              <span className="ml-1.5 tabular-nums text-text-muted">
+              <span className="ml-1.5 tabular-nums">
                 {f.key === "below-mastered"
                   ? nodes.filter((n) => !n.isLocked && n.masteryScore < 0.7).length
                   : f.key === "mastered"
@@ -113,7 +113,7 @@ export function ConceptListView({
       </div>
 
       {/* Table header */}
-      <div className="grid grid-cols-[1fr_120px_100px_80px] items-center gap-3 px-4 text-xs uppercase tracking-wider text-text-muted">
+      <div className="grid grid-cols-[1fr_120px_100px_80px] items-center gap-3 border-b border-[var(--color-border-default)] px-4 pb-2 font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
         <SortButton label="Concept" sortKey="name" current={sortKey} asc={sortAsc} onClick={handleSort} />
         <SortButton label="Mastery" sortKey="mastery" current={sortKey} asc={sortAsc} onClick={handleSort} />
         <span>Band</span>
@@ -121,10 +121,10 @@ export function ConceptListView({
       </div>
 
       {/* Rows */}
-      <div className="space-y-1">
+      <div className="space-y-0">
         {sortedNodes.length === 0 ? (
-          <p className="py-8 text-center text-sm text-text-muted">
-            No concepts match this filter.
+          <p className="py-8 text-center font-mono text-xs text-[var(--color-text-muted)]">
+            NO CONCEPTS MATCH THIS FILTER
           </p>
         ) : (
           sortedNodes.map((node) => (
@@ -133,27 +133,27 @@ export function ConceptListView({
               type="button"
               onClick={() => onSelectNode(node.id)}
               className={cn(
-                "grid w-full grid-cols-[1fr_120px_100px_80px] items-center gap-3 rounded-xl px-4 py-3 text-left transition",
+                "grid w-full grid-cols-[1fr_120px_100px_80px] items-center gap-3 border-b border-[var(--color-border-subtle)] px-4 py-2.5 text-left transition",
                 node.id === selectedNodeId
-                  ? "border border-accent-primary/30 bg-accent-primary/5"
-                  : "border border-transparent hover:bg-white/5",
-                node.isLocked && "opacity-60",
+                  ? "border-l-2 border-l-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5"
+                  : "hover:bg-[var(--color-surface-elevated)]",
+                node.isLocked && "opacity-40",
               )}
             >
               <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-white">
+                <p className="truncate text-sm font-medium text-[var(--color-text-primary)]">
                   {node.title}
                 </p>
               </div>
               <div className="flex items-center gap-2">
                 <MasteryBar score={node.masteryScore} size="xs" animated={false} className="flex-1" />
-                <span className="shrink-0 text-xs tabular-nums text-text-secondary">
+                <span className="shrink-0 font-mono text-[10px] font-bold tabular-nums text-[var(--color-text-secondary)]">
                   {formatMastery(node.masteryScore)}
                 </span>
               </div>
               <MasteryBadge band={node.masteryBand ?? getMasteryBand(node.masteryScore)} />
-              <span className="text-xs tabular-nums text-text-muted">
-                {node.isLocked ? "Locked" : `L${node.graphDepth}`}
+              <span className="font-mono text-[10px] font-bold tabular-nums text-[var(--color-text-muted)]">
+                {node.isLocked ? "LOCKED" : `L${node.graphDepth}`}
               </span>
             </button>
           ))
@@ -183,7 +183,7 @@ function SortButton({
       onClick={() => onClick(sortKey)}
       className={cn(
         "inline-flex items-center gap-1 text-left",
-        isActive && "text-white",
+        isActive && "text-[var(--color-accent-primary)]",
       )}
     >
       {label}

@@ -52,7 +52,6 @@ export function QuestionCard({
   const hasAnswered = isQCM ? localCorrect !== null : feedback !== null;
   const hasFeedback = feedback !== null;
 
-  // Refs to access latest values inside the interval callback
   const shortAnswerRef = useRef(shortAnswer);
   shortAnswerRef.current = shortAnswer;
   const onSubmitRef = useRef(onSubmit);
@@ -68,7 +67,6 @@ export function QuestionCard({
       setTimeLeft((prev) => {
         if (prev <= 1) {
           if (timerRef.current) clearInterval(timerRef.current);
-          // Auto-submit on timeout via microtask to avoid setState-in-setState
           queueMicrotask(() => {
             if (isQCM) {
               setLocalCorrect(false);
@@ -90,7 +88,7 @@ export function QuestionCard({
 
   const handleOptionClick = useCallback(
     (optionText: string) => {
-      if (localCorrect !== null) return; // already answered
+      if (localCorrect !== null) return;
       setSelectedOption(optionText);
 
       const isCorrect =
@@ -98,13 +96,11 @@ export function QuestionCard({
         (question.correctAnswer ?? "").trim().toLowerCase();
       setLocalCorrect(isCorrect);
 
-      // Submit to backend for mastery update (runs in background)
       onSubmit(optionText);
     },
     [localCorrect, question.correctAnswer, onSubmit],
   );
 
-  // Short answer: needs explicit submit
   const handleShortAnswerSubmit = () => {
     if (!shortAnswer.trim()) return;
     onSubmit(shortAnswer.trim());
@@ -112,10 +108,10 @@ export function QuestionCard({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.15 }}
-      className="space-y-6 rounded-2xl border border-white/8 bg-white/[0.03] p-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.1 }}
+      className="space-y-5 border border-[var(--color-border-default)] bg-[var(--color-surface)] p-5"
       onKeyDown={handleKeyDown}
       onContextMenu={(e) => {
         if ((e.target as HTMLElement).tagName === "TEXTAREA") return;
@@ -124,23 +120,20 @@ export function QuestionCard({
       onDragStart={(e) => e.preventDefault()}
     >
       <div className="flex select-none flex-wrap items-center gap-2">
-        <Badge variant="outline" className="border-white/10 text-text-muted">
+        <Badge variant="outline">
           {bloomLevelLabel(question.bloomLevel)}
         </Badge>
-        <Badge
-          variant="outline"
-          className="border-white/10 capitalize text-text-muted"
-        >
-          {isQCM ? "Multiple choice" : "Short answer"}
+        <Badge variant="outline">
+          {isQCM ? "MCQ" : "SHORT"}
         </Badge>
 
         {!hasAnswered && (
           <div
             className={cn(
-              "ml-auto flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium tabular-nums",
+              "ml-auto flex items-center gap-1.5 border px-2 py-1 font-mono text-[10px] font-bold tabular-nums",
               timeLeft <= 10
-                ? "border-red-500/30 bg-red-500/10 text-red-400"
-                : "border-white/10 bg-white/5 text-text-secondary",
+                ? "border-red-500 bg-red-500/10 text-red-400"
+                : "border-[var(--color-border-default)] text-[var(--color-text-secondary)]",
             )}
           >
             <Clock className="h-3 w-3" />
@@ -151,12 +144,12 @@ export function QuestionCard({
         )}
       </div>
 
-      <p className="select-none text-base leading-relaxed text-white">
+      <p className="select-none text-base leading-relaxed text-[var(--color-text-primary)]">
         {question.content}
       </p>
 
       {isQCM ? (
-        <div className="select-none space-y-2" role="radiogroup" aria-label="Answer options">
+        <div className="select-none space-y-1" role="radiogroup" aria-label="Answer options">
           {question.options?.map((option) => {
             const isSelected = selectedOption === option.text;
             const isCorrectOption =
@@ -174,19 +167,19 @@ export function QuestionCard({
                 onClick={() => handleOptionClick(option.text)}
                 disabled={hasAnswered}
                 className={cn(
-                  "group flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm transition",
+                  "group flex w-full items-center gap-3 border px-4 py-3 text-left text-sm transition",
                   !hasAnswered &&
                     !isSelected &&
-                    "border-white/10 bg-white/[0.02] hover:bg-white/5",
+                    "border-[var(--color-border-subtle)] bg-[var(--color-canvas)] hover:border-[var(--color-border-default)] hover:bg-[var(--color-surface-elevated)]",
                   !hasAnswered &&
                     isSelected &&
-                    "border-accent-primary bg-accent-primary/10",
-                  isCorrectOption && "border-green-500/40 bg-green-500/10",
-                  isWrongSelected && "border-red-500/40 bg-red-500/10",
+                    "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5",
+                  isCorrectOption && "border-green-500 bg-green-500/10",
+                  isWrongSelected && "border-red-500 bg-red-500/10",
                   hasAnswered &&
                     !isCorrectOption &&
                     !isWrongSelected &&
-                    "opacity-40",
+                    "opacity-30",
                 )}
               >
                 {hasAnswered && isCorrectOption && (
@@ -197,10 +190,10 @@ export function QuestionCard({
                 )}
 
                 <span>
-                  <span className="font-medium text-text-secondary">
+                  <span className="font-mono text-xs font-bold text-[var(--color-text-muted)]">
                     {option.label}.
                   </span>{" "}
-                  <span className="text-white">{option.text}</span>
+                  <span className="text-[var(--color-text-primary)]">{option.text}</span>
                 </span>
               </button>
             );
@@ -212,74 +205,68 @@ export function QuestionCard({
           value={shortAnswer}
           onChange={(e) => setShortAnswer(e.target.value)}
           disabled={hasFeedback}
-          className="min-h-[100px] border-white/10 bg-white/5 text-white placeholder:text-text-muted"
+          className="min-h-[100px] border-[var(--color-border-default)] bg-[var(--color-canvas)] font-mono text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]"
         />
       )}
 
       {isQCM && hasAnswered && (
         <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.1 }}
           className={cn(
-            "select-none rounded-xl border p-4",
+            "select-none border-l-2 p-4",
             localCorrect
-              ? "border-green-500/20 bg-green-500/5"
-              : "border-red-500/20 bg-red-500/5",
+              ? "border-l-green-500 bg-green-500/5"
+              : "border-l-red-500 bg-red-500/5",
           )}
         >
           <p
             className={cn(
-              "text-sm font-medium",
+              "font-mono text-xs font-bold uppercase tracking-wider",
               localCorrect ? "text-green-400" : "text-red-400",
             )}
           >
-            {localCorrect ? "Correct!" : "Not quite."}
+            {localCorrect ? "CORRECT" : "INCORRECT"}
           </p>
           {!localCorrect && (
-            <p className="mt-2 text-sm text-text-muted">
-              The correct answer was:{" "}
-              <span className="font-medium text-white">
+            <p className="mt-2 text-sm text-[var(--color-text-muted)]">
+              Correct answer:{" "}
+              <span className="font-medium text-[var(--color-text-primary)]">
                 {question.correctAnswer}
               </span>
             </p>
           )}
-          {/*{hasFeedback && feedback.evaluatorFeedback && (
-            <p className="mt-2 text-sm leading-relaxed text-text-secondary">
-              {feedback.evaluatorFeedback}
-            </p>
-          )}*/}
         </motion.div>
       )}
 
-      {/* Short answer feedback (from backend) */}
       {!isQCM && hasFeedback && feedback && (
         <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.1 }}
           className={cn(
-            "select-none rounded-xl border p-4",
+            "select-none border-l-2 p-4",
             feedback.isCorrect
-              ? "border-green-500/20 bg-green-500/5"
-              : "border-red-500/20 bg-red-500/5",
+              ? "border-l-green-500 bg-green-500/5"
+              : "border-l-red-500 bg-red-500/5",
           )}
         >
           <p
             className={cn(
-              "text-sm font-medium",
+              "font-mono text-xs font-bold uppercase tracking-wider",
               feedback.isCorrect ? "text-green-400" : "text-red-400",
             )}
           >
-            {feedback.isCorrect ? "Correct!" : "Not quite."}
+            {feedback.isCorrect ? "CORRECT" : "INCORRECT"}
           </p>
-          <p className="mt-2 text-sm leading-relaxed text-text-secondary">
+          <p className="mt-2 text-sm leading-relaxed text-[var(--color-text-secondary)]">
             {feedback.evaluatorFeedback}
           </p>
           {!feedback.isCorrect && (
-            <p className="mt-2 text-sm text-text-muted">
+            <p className="mt-2 text-sm text-[var(--color-text-muted)]">
               Correct answer:{" "}
-              <span className="font-medium text-white">
+              <span className="font-medium text-[var(--color-text-primary)]">
                 {feedback.correctAnswer}
               </span>
             </p>
@@ -287,19 +274,18 @@ export function QuestionCard({
         </motion.div>
       )}
 
-      {/* Submit (short answer only) / Continue */}
+      {/* Submit / Continue */}
       <div className="flex justify-end">
         {isQCM ? (
-          // QCM: show Continue once answered (wait for backend before enabling)
           hasAnswered && (
             <Button onClick={onContinue} disabled={isSubmitting}>
               {isSubmitting ? (
                 <>
                   <Spinner size="sm" />
-                  <span className="ml-2">Updating mastery...</span>
+                  <span className="ml-2">UPDATING...</span>
                 </>
               ) : (
-                "Continue"
+                "CONTINUE"
               )}
             </Button>
           )
@@ -308,10 +294,10 @@ export function QuestionCard({
             disabled={!shortAnswer.trim() || isSubmitting}
             onClick={handleShortAnswerSubmit}
           >
-            {isSubmitting ? <Spinner size="sm" /> : "Submit answer"}
+            {isSubmitting ? <Spinner size="sm" /> : "SUBMIT"}
           </Button>
         ) : (
-          <Button onClick={onContinue}>Continue</Button>
+          <Button onClick={onContinue}>CONTINUE</Button>
         )}
       </div>
     </motion.div>

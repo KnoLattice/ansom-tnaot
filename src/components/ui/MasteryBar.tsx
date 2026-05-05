@@ -12,14 +12,16 @@ interface MasteryBarProps {
   band?: MasteryBand;
   size?: MasterySize;
   showLabel?: boolean;
+  showDelta?: boolean;
+  previousScore?: number;
   animated?: boolean;
   className?: string;
 }
 
 const sizeClasses: Record<MasterySize, string> = {
-  xs: "h-2",
-  sm: "h-3",
-  md: "h-4",
+  xs: "h-1",
+  sm: "h-1.5",
+  md: "h-2",
 };
 
 export function MasteryBar({
@@ -35,17 +37,17 @@ export function MasteryBar({
 
   return (
     <div className={cn("w-full space-y-1", className)}>
-      <div className={cn("w-full rounded-full bg-muted", sizeClasses[size])}>
+      <div className={cn("w-full bg-[var(--color-border-subtle)]", sizeClasses[size])}>
         <motion.div
           initial={{ width: animated ? 0 : `${percent}%` }}
           animate={{ width: `${percent}%` }}
-          transition={{ duration: 0.4 }}
-          className={cn("h-full rounded-full")}
+          transition={{ duration: 0.3 }}
+          className="h-full"
           style={{ backgroundColor: color }}
         />
       </div>
       {showLabel && (
-        <p className="text-xs font-medium text-muted-foreground">
+        <p className="font-mono text-[10px] font-bold tabular-nums text-[var(--color-text-muted)]">
           {formatMastery(score)}
         </p>
       )}

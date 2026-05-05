@@ -24,46 +24,60 @@ export function PulseCard({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25, delay: 0.05 }}
-      className="flex flex-col justify-between rounded-2xl border border-white/8 bg-white/[0.03] p-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.15 }}
+      className="flex flex-col justify-between border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4"
     >
-      <div>
-        <p className="text-xs uppercase tracking-widest text-text-muted">
-          Overall Mastery
-        </p>
-        <div className="mt-2 flex items-baseline gap-3">
+      {/* Header label */}
+      <p className="kl-data-label">Overall Mastery</p>
+
+      {/* Big number readout */}
+      <div className="mt-3 flex items-baseline gap-3">
+        <span
+          className="kl-data-value text-5xl"
+          style={{ color }}
+        >
+          {Math.round(overallMasteryPercent)}
+        </span>
+        <span className="kl-data-label" style={{ color }}>%</span>
+        {weeklyDelta != null && (
           <span
-            className="font-display text-5xl font-bold tabular-nums"
-            style={{ color }}
+            className={`font-mono text-xs font-bold tabular-nums ${
+              weeklyDelta > 0
+                ? "text-[var(--color-accent-primary)]"
+                : weeklyDelta < 0
+                  ? "text-red-400"
+                  : "text-[var(--color-text-muted)]"
+            }`}
           >
-            {Math.round(overallMasteryPercent)}%
+            {weeklyDelta > 0 ? "+" : ""}
+            {weeklyDelta}% /wk
           </span>
-          {weeklyDelta != null && (
-            <span
-              className={`text-sm font-medium tabular-nums ${
-                weeklyDelta > 0
-                  ? "text-green-400"
-                  : weeklyDelta < 0
-                    ? "text-red-400"
-                    : "text-text-muted"
-              }`}
-            >
-              {weeklyDelta > 0 ? "+" : ""}
-              {weeklyDelta}% this week
-            </span>
-          )}
-        </div>
+        )}
       </div>
 
+      {/* Progress bar — raw, no radius */}
+      <div className="mt-4 h-1.5 w-full bg-[var(--color-border-subtle)]">
+        <div
+          className="h-full transition-all duration-300"
+          style={{
+            width: `${overallMasteryPercent}%`,
+            backgroundColor: color,
+          }}
+        />
+      </div>
+
+      {/* Sparkline */}
       {sparklineData.length > 1 && (
-        <div className="mt-4">
-          <MasterySparkline data={sparklineData} height={48} />
+        <div className="mt-3">
+          <MasterySparkline data={sparklineData} height={40} />
         </div>
       )}
 
-      <p className="mt-3 text-xs text-text-muted">{trajectory}</p>
+      <p className="mt-2 font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
+        {trajectory}
+      </p>
     </motion.div>
   );
 }

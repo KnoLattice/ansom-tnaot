@@ -1,7 +1,6 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   BookOpen,
@@ -9,7 +8,6 @@ import {
   LogOut,
   Map,
   PlayCircle,
-  Upload,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -17,15 +15,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/auth.store";
 import { useDocuments, useHydrated } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
-  { href: "/", label: "Home", icon: LayoutGrid },
-  { href: "/library", label: "Library", icon: BookOpen },
+  { href: "/", label: "HOME", icon: LayoutGrid },
+  { href: "/library", label: "LIB", icon: BookOpen },
 ] as const;
 
 export function AppShell({ children }: PropsWithChildren) {
@@ -34,7 +30,7 @@ export function AppShell({ children }: PropsWithChildren) {
   const hydrated = useHydrated();
   const learner = useAuthStore((s) => s.learner);
   const logout = useAuthStore((s) => s.logout);
-  const { activeDocument, activeDocumentId } = useDocuments();
+  const { activeDocumentId } = useDocuments();
 
   const initials = learner?.fullName
     ?.split(" ")
@@ -48,108 +44,114 @@ export function AppShell({ children }: PropsWithChildren) {
 
   return (
     <div className="relative min-h-screen bg-canvas text-text-primary">
-      {/* ─── Top bar ─────────────────────────────────── */}
-      <header className="pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-4">
-        <nav className="pointer-events-auto flex w-full max-w-6xl items-center rounded-2xl border border-border-default bg-[var(--panel-bg)] px-5 py-3 shadow-panel backdrop-blur-2xl justify-between">
-          <div className="flex items-center gap-2 text-sm text-white/80">
+      {/* ─── Top bar — brutalist strip ─── */}
+      <header className="fixed inset-x-0 top-0 z-50 border-b border-[var(--color-border-default)] bg-[var(--color-canvas)]">
+        <nav className="mx-auto flex h-12 max-w-7xl items-center justify-between px-4">
+          {/* Brand */}
+          <button
+            type="button"
+            onClick={() => router.push("/")}
+            className="font-mono text-[10px] font-bold uppercase tracking-[0.35em] text-[var(--color-accent-primary)]"
+          >
+            KNOWLATTICE
+          </button>
+
+          {/* Center nav */}
+          <div className="flex items-center gap-0">
             {NAV_ITEMS.map(({ href, label, icon: Icon }) => (
-              <Button
+              <button
                 key={href}
-                variant="ghost"
-                size="icon"
-                aria-label={label}
-                aria-current={pathname === href ? "page" : undefined}
-                className={cn(
-                  "h-10 w-10 rounded-full border border-white/10 bg-white/5",
-                  pathname === href && "bg-white text-black",
-                )}
+                type="button"
                 onClick={() => router.push(href)}
+                className={cn(
+                  "flex h-12 items-center gap-2 border-b-2 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.2em] transition-colors",
+                  pathname === href
+                    ? "border-[var(--color-accent-primary)] text-[var(--color-accent-primary)]"
+                    : "border-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
+                )}
               >
-                <Icon className="h-4 w-4" />
-              </Button>
+                <Icon className="h-3.5 w-3.5" />
+                {label}
+              </button>
             ))}
 
-            {/* Mastery Map shortcut (only if active doc exists) */}
             {hydrated && activeDocumentId && (
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label="Mastery Map"
+              <button
+                type="button"
+                onClick={() => router.push(`/mastery/${activeDocumentId}`)}
                 className={cn(
-                  "h-10 w-10 rounded-full border border-white/10 bg-white/5",
-                  isMasteryRoute && "bg-white text-black",
+                  "flex h-12 items-center gap-2 border-b-2 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.2em] transition-colors",
+                  isMasteryRoute
+                    ? "border-[var(--color-accent-primary)] text-[var(--color-accent-primary)]"
+                    : "border-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
                 )}
-                onClick={() =>
-                  router.push(`/mastery/${activeDocumentId}`)
-                }
               >
-                <Map className="h-4 w-4" />
-              </Button>
+                <Map className="h-3.5 w-3.5" />
+                MAP
+              </button>
             )}
 
-            {/* Session shortcut */}
             {hydrated && activeDocumentId && (
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label="Start session"
-                className={cn(
-                  "h-10 w-10 rounded-full border border-white/10 bg-white/5",
-                  isSessionRoute && "bg-white text-black",
-                )}
+              <button
+                type="button"
                 onClick={() =>
                   router.push(`/session/new?documentId=${activeDocumentId}`)
                 }
+                className={cn(
+                  "flex h-12 items-center gap-2 border-b-2 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.2em] transition-colors",
+                  isSessionRoute
+                    ? "border-[var(--color-accent-primary)] text-[var(--color-accent-primary)]"
+                    : "border-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
+                )}
               >
-                <PlayCircle className="h-5 w-5" />
-              </Button>
+                <PlayCircle className="h-3.5 w-3.5" />
+                SESSION
+              </button>
             )}
-
-            {/* User dropdown */}
           </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  type="button"
-                  className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-2 py-1 text-left"
-                >
-                  <Avatar className="h-9 w-9 border border-white/10 text-black">
-                    <AvatarFallback className="bg-white font-semibold">
-                      {hydrated ? (initials || "KL") : "KL"}
-                    </AvatarFallback>
-                  </Avatar>
-                  {hydrated && (
-                    <div className="hidden text-left text-xs text-text-secondary sm:block">
-                      <p className="font-medium text-text-primary">
-                        {learner?.fullName ?? "Learner"}
-                      </p>
-                      <p className="text-text-muted">
-                        {learner?.email ?? ""}
-                      </p>
-                    </div>
-                  )}
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-48 border border-white/10 bg-surface text-white">
-                <DropdownMenuItem onClick={() => router.push("/library")}>
-                  My documents
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="text-rose-300"
-                  onClick={() => {
-                    logout();
-                    router.replace("/auth");
-                  }}
-                >
-                  <LogOut className="mr-2 h-4 w-4" /> Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+
+          {/* User */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                type="button"
+                className="flex items-center gap-3 border-l border-[var(--color-border-default)] pl-4 text-left"
+              >
+                <div className="flex h-7 w-7 items-center justify-center border border-[var(--color-border-default)] bg-[var(--color-surface)] font-mono text-[10px] font-bold text-[var(--color-text-primary)]">
+                  {hydrated ? initials || "KL" : "KL"}
+                </div>
+                {hydrated && (
+                  <div className="hidden sm:block">
+                    <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+                      {learner?.fullName ?? "Learner"}
+                    </p>
+                  </div>
+                )}
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-48 border border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]">
+              <DropdownMenuItem
+                className="font-mono text-xs uppercase tracking-wider"
+                onClick={() => router.push("/library")}
+              >
+                My documents
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="font-mono text-xs uppercase tracking-wider text-red-400"
+                onClick={() => {
+                  logout();
+                  router.replace("/auth");
+                }}
+              >
+                <LogOut className="mr-2 h-3.5 w-3.5" /> Logout
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </nav>
       </header>
 
-      {/* ─── Main content ────────────────────────────── */}
-      <main className="mx-auto w-full max-w-6xl px-6 pb-12 pt-28">
+      {/* ─── Main content ─── */}
+      <main className="mx-auto w-full max-w-7xl px-4 pb-12 pt-16">
         {children}
       </main>
     </div>
