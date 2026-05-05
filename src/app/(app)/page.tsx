@@ -27,13 +27,11 @@ export default function HomePage() {
   const hasDocuments = documents.length > 0;
   const hasReadyDoc = activeDocument?.processingStatus === "completed";
 
-  // Get last session from dashboard history
   const lastSession = useMemo(() => {
     if (!dashboard?.sessionHistory?.length) return null;
     return dashboard.sessionHistory[0];
   }, [dashboard]);
 
-  // Try to load last session's node data from sessionStorage
   const lastSessionCache = useMemo(() => {
     if (!lastSession || typeof window === "undefined") {
       return { nodesStudied: [] as NodeStudied[], nodeTitles: {} as Record<string, string> };
@@ -51,11 +49,8 @@ export default function HomePage() {
     }
   }, [lastSession]);
 
-  // Build sparkline data from session history (approximate: use accuracy as proxy)
-  // TODO: Backend needs a GET /me/overview endpoint with 14-day sparkline data
   const sparklineData = useMemo(() => {
     if (!dashboard) return [];
-    // Use overall mastery as a single-point; no historical sparkline from this endpoint
     return [dashboard.overallMasteryPercent / 100];
   }, [dashboard]);
 
@@ -74,7 +69,6 @@ export default function HomePage() {
   };
 
   const handleStudyNodes = () => {
-    // Start a session — the backend picks concepts, but we navigate to session
     if (activeDocumentId) {
       router.push(`/session/new?documentId=${activeDocumentId}`);
     }
@@ -83,29 +77,29 @@ export default function HomePage() {
   // ── Empty state: no documents ──
   if (!docsLoading && !hasDocuments) {
     return (
-      <div className="mx-auto max-w-2xl space-y-8">
+      <div className="mx-auto max-w-3xl space-y-6">
         <ContinuityBanner
           lastSession={null}
           isFirstVisit
           learnerName={learner?.fullName?.split(" ")[0]}
         />
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.15 }}
           className="flex min-h-[40vh] flex-col items-center justify-center text-center"
         >
-          <div className="rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-12">
-            <Upload className="mx-auto h-10 w-10 text-text-muted" />
-            <h2 className="mt-4 font-display text-xl font-bold text-white">
-              Upload your first document
+          <div className="border-2 border-dashed border-[var(--color-border-default)] bg-[var(--color-surface)] p-12">
+            <Upload className="mx-auto h-8 w-8 text-[var(--color-text-muted)]" />
+            <h2 className="mt-4 font-mono text-lg font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+              No documents loaded
             </h2>
-            <p className="mt-2 max-w-sm text-sm text-text-secondary">
-              Upload a PDF, and we&apos;ll build a knowledge graph you can study
-              from. It takes about a minute.
+            <p className="mt-2 max-w-sm text-sm text-[var(--color-text-secondary)]">
+              Upload a PDF to extract concepts and build your knowledge graph.
+              Processing takes approximately 60 seconds.
             </p>
             <Button className="mt-6" onClick={() => router.push("/upload")}>
-              Upload a document
+              UPLOAD DOCUMENT
             </Button>
           </div>
         </motion.div>
@@ -116,23 +110,20 @@ export default function HomePage() {
   // ── Loading skeleton ──
   if (docsLoading || (hasReadyDoc && dashLoading)) {
     return (
-      <div className="mx-auto max-w-2xl space-y-6">
-        {/* Banner skeleton */}
-        <div className="h-10 animate-pulse rounded-xl bg-white/5" />
-        {/* Cards skeleton */}
-        <div className="grid gap-6 md:grid-cols-2">
-          <div className="h-48 animate-pulse rounded-2xl bg-white/5" />
-          <div className="h-48 animate-pulse rounded-2xl bg-white/5" />
+      <div className="mx-auto max-w-3xl space-y-4">
+        <div className="h-10 animate-pulse bg-[var(--color-surface)]" />
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="h-48 animate-pulse bg-[var(--color-surface)]" />
+          <div className="h-48 animate-pulse bg-[var(--color-surface)]" />
         </div>
-        {/* Action skeleton */}
-        <div className="h-14 animate-pulse rounded-md bg-white/5" />
+        <div className="h-14 animate-pulse bg-[var(--color-surface)]" />
       </div>
     );
   }
 
   // ── Main home ──
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
+    <div className="mx-auto max-w-3xl space-y-4">
       {/* 1. Continuity banner */}
       <ContinuityBanner
         lastSession={lastSession}
@@ -140,9 +131,9 @@ export default function HomePage() {
         learnerName={learner?.fullName?.split(" ")[0]}
       />
 
-      {/* 2 & 3. Pulse + Attention cards */}
+      {/* 2 & 3. Pulse + Attention — data grid */}
       {hasReadyDoc && dashboard && (
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2">
           <PulseCard
             overallMasteryPercent={dashboard.overallMasteryPercent}
             sparklineData={sparklineData}
@@ -163,29 +154,31 @@ export default function HomePage() {
       {/* Not-ready state: document is processing */}
       {activeDocument && activeDocument.processingStatus !== "completed" && (
         <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.25 }}
-          className="rounded-2xl border border-white/8 bg-white/[0.03] p-8 text-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.15 }}
+          className="border border-[var(--color-border-default)] bg-[var(--color-surface)] p-6"
         >
-          <p className="text-sm font-medium text-white">
-            Your document is still processing
-          </p>
-          <p className="mt-1 text-xs text-text-muted">
-            This usually takes about a minute. You can check progress in the{" "}
+          <div className="flex items-center gap-3">
+            <span className="inline-block h-2 w-2 animate-pulse bg-[var(--color-accent-primary)]" />
+            <p className="font-mono text-sm font-medium text-[var(--color-text-primary)]">
+              PROCESSING
+            </p>
+          </div>
+          <p className="mt-2 text-xs text-[var(--color-text-muted)]">
+            Document is being analyzed. This usually takes about a minute.{" "}
             <button
               type="button"
-              className="text-accent-primary underline underline-offset-4"
+              className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-accent-primary)]"
               onClick={() => router.push("/library")}
             >
-              Library
+              VIEW IN LIBRARY
             </button>
-            .
           </p>
         </motion.div>
       )}
 
-      {/* 5. Last session summary (below the fold) */}
+      {/* 5. Last session summary */}
       {lastSession && lastSessionCache.nodesStudied.length > 0 && (
         <LastSessionSummary
           lastSession={lastSession}
@@ -194,7 +187,7 @@ export default function HomePage() {
         />
       )}
 
-      {/* 6. Library access strip */}
+      {/* 6. Library strip */}
       <LibraryStrip activeDocumentName={activeDocument?.originalName ?? null} />
     </div>
   );

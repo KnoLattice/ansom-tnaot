@@ -64,11 +64,9 @@ function SessionContent({ id }: { id: string }) {
   const startedRef = useRef(false);
   const nodeTitles = useRef<Record<string, string>>({});
 
-  // Question type selection
   const [showTypeDialog, setShowTypeDialog] = useState(true);
   const questionTypeRef = useRef<QuestionType>("qcm");
 
-  // Pending next node/question to show after transition
   const pendingNext = useRef<{
     node: TargetNode | null;
     question: Question | null;
@@ -79,7 +77,6 @@ function SessionContent({ id }: { id: string }) {
     setShowTypeDialog(false);
   }, [router]);
 
-  // Start session — sends questionType to backend
   const startSession = useCallback(async () => {
     if (!documentId) return;
     setLoading(true);
@@ -129,7 +126,6 @@ function SessionContent({ id }: { id: string }) {
     [startSession],
   );
 
-  // Submit answer
   const handleSubmit = useCallback(
     async (answer: string) => {
       if (!state.sessionId || !state.currentNode || !state.currentQuestion)
@@ -148,12 +144,10 @@ function SessionContent({ id }: { id: string }) {
           },
         );
 
-        // Track node titles for summary
         if (data.nextNode) {
           nodeTitles.current[data.nextNode.id] = data.nextNode.title;
         }
 
-        // Store the pending next for after continue
         pendingNext.current = {
           node: data.nextNode,
           question: data.question,
@@ -167,7 +161,6 @@ function SessionContent({ id }: { id: string }) {
           correctCount: prev.correctCount + (data.feedback.isCorrect ? 1 : 0),
         }));
 
-        // If backend signals session complete, auto-end after feedback
         if (data.sessionComplete) {
           pendingNext.current = { node: null, question: null };
         }
@@ -180,7 +173,6 @@ function SessionContent({ id }: { id: string }) {
     [state.sessionId, state.currentNode, state.currentQuestion],
   );
 
-  // End session
   const handleEndSession = useCallback(async () => {
     if (!state.sessionId) return;
     setIsSubmitting(true);
@@ -189,7 +181,6 @@ function SessionContent({ id }: { id: string }) {
         API_ROUTES.SESSIONS.END,
         { sessionId: state.sessionId },
       );
-      // Cache summary for the summary page
       if (typeof window !== "undefined") {
         Cookies.set(`session_summary_${state.sessionId}`, JSON.stringify(data));
         Cookies.set(`session_titles_${state.sessionId}`, JSON.stringify(nodeTitles.current));
@@ -203,18 +194,15 @@ function SessionContent({ id }: { id: string }) {
     }
   }, [state.sessionId, state.documentId, router]);
 
-  // Continue to next question
   const handleContinue = useCallback(() => {
     const next = pendingNext.current;
     if (!next) return;
 
-    // If no more questions, end session
     if (!next.question) {
       handleEndSession();
       return;
     }
 
-    // If switching concepts, show transition card
     const switchingConcepts =
       next.node && state.currentNode && next.node.id !== state.currentNode.id;
 
@@ -239,7 +227,6 @@ function SessionContent({ id }: { id: string }) {
     }
   }, [state.currentNode, handleEndSession]);
 
-  // Transition complete — show the next question
   const handleTransitionComplete = useCallback(() => {
     const next = pendingNext.current;
     setState((prev) => ({
@@ -253,7 +240,6 @@ function SessionContent({ id }: { id: string }) {
     pendingNext.current = null;
   }, []);
 
-  // Question type selector
   if (!documentId) {
     return null;
   }
@@ -275,7 +261,7 @@ function SessionContent({ id }: { id: string }) {
   if (!state.currentNode) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <p className="text-sm text-text-muted">No session data available.</p>
+        <p className="font-mono text-xs text-[var(--color-text-muted)]">NO SESSION DATA</p>
       </div>
     );
   }
@@ -285,8 +271,7 @@ function SessionContent({ id }: { id: string }) {
     : state.currentNode.masteryScore;
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
-      {/* Persistent header */}
+    <div className="mx-auto max-w-3xl space-y-4">
       <SessionHeader
         conceptName={state.currentNode.title}
         masteryScore={currentMastery}
@@ -298,7 +283,6 @@ function SessionContent({ id }: { id: string }) {
         onEndSession={handleEndSession}
       />
 
-      {/* Threshold callout */}
       {state.feedback && (
         <ThresholdCallout
           previousScore={state.feedback.masteryBefore}
@@ -307,7 +291,6 @@ function SessionContent({ id }: { id: string }) {
         />
       )}
 
-      {/* Concept transition */}
       {state.isTransitioning ? (
         <ConceptTransition
           conceptName={state.currentNode.title}
@@ -315,7 +298,6 @@ function SessionContent({ id }: { id: string }) {
           onComplete={handleTransitionComplete}
         />
       ) : state.currentQuestion ? (
-        /* Question card */
         <QuestionCard
           key={state.currentQuestion.id}
           question={state.currentQuestion}
@@ -325,21 +307,20 @@ function SessionContent({ id }: { id: string }) {
           onContinue={handleContinue}
         />
       ) : (
-        /* No more questions */
-        <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-8 text-center">
-          <p className="text-lg font-medium text-white">
-            Session complete
+        <div className="border border-[var(--color-border-default)] bg-[var(--color-surface)] p-8 text-center">
+          <p className="font-mono text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+            SESSION COMPLETE
           </p>
-          <p className="mt-2 text-sm text-text-secondary">
-            Great work! View your session summary to see how you did.
+          <p className="mt-2 text-sm text-[var(--color-text-secondary)]">
+            Great work. View your session summary to see how you did.
           </p>
           <button
             type="button"
-            className="mt-4 text-sm font-medium text-accent-primary underline underline-offset-4"
+            className="mt-4 font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-accent-primary)]"
             onClick={handleEndSession}
             disabled={isSubmitting}
           >
-            View session summary
+            VIEW SUMMARY
           </button>
         </div>
       )}

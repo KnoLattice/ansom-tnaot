@@ -46,14 +46,13 @@ export default function SessionSummaryPage({
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
         <Spinner />
-        <p className="mt-4 text-sm text-text-muted">Loading session summary...</p>
-        {/* TODO: Backend needs GET /sessions/:id/summary for revisiting past summaries */}
+        <p className="mt-4 font-mono text-[10px] text-[var(--color-text-muted)]">LOADING SUMMARY...</p>
         <button
           type="button"
-          className="mt-4 text-sm text-accent-primary underline underline-offset-4"
+          className="mt-4 font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-accent-primary)]"
           onClick={() => router.push("/")}
         >
-          Back to Home
+          BACK TO HOME
         </button>
       </div>
     );
@@ -61,18 +60,16 @@ export default function SessionSummaryPage({
 
   const { nodesStudied } = summary;
 
-  // Threshold crossings
   const thresholdCrossings = nodesStudied.filter(
     (n) =>
       n.masteryBefore < MASTERY_CALLOUT_THRESHOLD &&
       n.masteryAfter >= MASTERY_CALLOUT_THRESHOLD,
   );
 
-  // Still weak — below 0.4 after session
   const stillWeak = nodesStudied.filter((n) => n.masteryAfter < 0.4);
 
   return (
-    <div className="mx-auto max-w-2xl space-y-8 pb-12">
+    <div className="mx-auto max-w-3xl space-y-6 pb-12">
       {/* Headline moment */}
       <HeadlineMoment summary={summary} nodeTitles={nodeTitles} />
 
@@ -89,16 +86,14 @@ export default function SessionSummaryPage({
           transition={{ delay: nodesStudied.length * MASTERY_ANIMATION.listStagger + 0.2 }}
           className="space-y-2"
         >
-          <p className="text-xs uppercase tracking-widest text-text-muted">
-            Threshold crossings
-          </p>
-          <div className="space-y-2">
+          <p className="kl-data-label">Threshold Crossings</p>
+          <div className="space-y-1">
             {thresholdCrossings.map((node) => (
               <div
                 key={node.nodeId}
-                className="rounded-xl border border-green-500/20 bg-green-500/5 px-4 py-3 text-sm text-green-400"
+                className="border-l-2 border-l-green-500 bg-green-500/5 px-4 py-3 text-sm text-green-400"
               >
-                Just mastered:{" "}
+                MASTERED:{" "}
                 <span className="font-semibold">
                   {nodeTitles[node.nodeId] ?? node.nodeId.slice(0, 8)}
                 </span>
@@ -116,17 +111,15 @@ export default function SessionSummaryPage({
           transition={{ delay: nodesStudied.length * MASTERY_ANIMATION.listStagger + 0.4 }}
           className="space-y-2"
         >
-          <p className="text-xs uppercase tracking-widest text-text-muted">
-            Keep working on these
-          </p>
+          <p className="kl-data-label">Keep Working On</p>
           <div className="space-y-1">
             {stillWeak.map((node) => (
               <div
                 key={node.nodeId}
-                className="rounded-xl border border-white/8 bg-white/[0.02] px-4 py-3 text-sm text-text-secondary"
+                className="border border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-4 py-3 text-sm text-[var(--color-text-secondary)]"
               >
                 {nodeTitles[node.nodeId] ?? node.nodeId.slice(0, 8)} —{" "}
-                <span className="tabular-nums">
+                <span className="font-mono font-bold tabular-nums">
                   {Math.round(node.masteryAfter * 100)}%
                 </span>
               </div>
@@ -137,8 +130,8 @@ export default function SessionSummaryPage({
 
       {/* Next actions */}
       <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ delay: nodesStudied.length * MASTERY_ANIMATION.listStagger + 0.6 }}
         className="flex flex-col gap-3 pt-4 sm:flex-row"
       >
@@ -154,15 +147,15 @@ export default function SessionSummaryPage({
           }}
         >
           <PlayCircle className="mr-2 h-4 w-4" />
-          Study again
+          STUDY AGAIN
         </Button>
         <Button
-          variant="secondary"
-          className="flex-1 border border-white/10 bg-white/10 text-white"
+          variant="outline"
+          className="flex-1"
           onClick={() => router.push("/")}
         >
           <Home className="mr-2 h-4 w-4" />
-          Done for now
+          DONE
         </Button>
       </motion.div>
     </div>
