@@ -33,10 +33,10 @@ interface DocumentRowProps {
 }
 
 const statusColors: Record<string, string> = {
-  completed: "text-green-400 bg-green-500/10 border-green-500/20",
-  processing: "text-yellow-400 bg-yellow-500/10 border-yellow-500/20",
-  pending: "text-blue-400 bg-blue-500/10 border-blue-500/20",
-  failed: "text-red-400 bg-red-500/10 border-red-500/20",
+  completed: "text-green-400 border-green-500",
+  processing: "text-yellow-400 border-yellow-500",
+  pending: "text-cyan-400 border-cyan-500",
+  failed: "text-red-400 border-red-500",
 };
 
 export function DocumentRow({
@@ -52,25 +52,25 @@ export function DocumentRow({
   return (
     <div
       className={cn(
-        "group flex items-center gap-4 rounded-xl border border-white/8 bg-white/[0.03] px-4 py-3 transition",
-        isActive && "border-accent-primary/30 bg-accent-primary/5",
-        isReady && "hover:bg-white/[0.06]",
+        "group flex items-center gap-4 border border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-4 py-3 transition",
+        isActive && "border-l-2 border-l-[var(--color-accent-primary)]",
+        isReady && "hover:bg-[var(--color-surface-elevated)]",
       )}
     >
       {/* Active indicator */}
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center">
+      <div className="flex h-6 w-6 shrink-0 items-center justify-center">
         {isActive && (
-          <Star className="h-4 w-4 fill-accent-primary text-accent-primary" />
+          <Star className="h-3.5 w-3.5 fill-[var(--color-accent-primary)] text-[var(--color-accent-primary)]" />
         )}
       </div>
 
       {/* Document info */}
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium text-white">
+        <p className="truncate text-sm font-medium text-[var(--color-text-primary)]">
           {document.originalName}
         </p>
-        <p className="text-xs text-text-muted">
-          {dayjs(document.uploadedAt).format("MMM D, YYYY")} · {fileSizeMB.toFixed(1)} MB
+        <p className="font-mono text-[10px] text-[var(--color-text-muted)]">
+          {dayjs(document.uploadedAt).format("YYYY-MM-DD")} / {fileSizeMB.toFixed(1)}MB
         </p>
       </div>
 
@@ -78,11 +78,11 @@ export function DocumentRow({
       <Badge
         variant="outline"
         className={cn(
-          "shrink-0 text-xs capitalize",
+          "shrink-0",
           statusColors[document.processingStatus] ?? "",
         )}
       >
-        {document.processingStatus}
+        {document.processingStatus.toUpperCase()}
       </Badge>
 
       {/* Actions */}
@@ -91,31 +91,36 @@ export function DocumentRow({
           <DropdownMenuTrigger asChild>
             <button
               type="button"
-              className="rounded-lg border border-white/10 bg-white/5 p-2 text-text-muted opacity-0 transition hover:text-white group-hover:opacity-100"
+              className="border border-[var(--color-border-default)] bg-[var(--color-canvas)] p-1.5 text-[var(--color-text-muted)] opacity-0 transition hover:text-[var(--color-text-primary)] group-hover:opacity-100"
             >
               <MoreVertical className="h-4 w-4" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
-            className="w-44 border-white/10 bg-surface text-white"
+            className="w-44 border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]"
           >
             {!isActive && (
-              <DropdownMenuItem onClick={() => onSetActive(document.id)}>
+              <DropdownMenuItem
+                className="font-mono text-xs uppercase tracking-wider"
+                onClick={() => onSetActive(document.id)}
+              >
                 <Check className="mr-2 h-4 w-4" />
-                Set as active
+                Set active
               </DropdownMenuItem>
             )}
             {isReady && (
-              <DropdownMenuItem onClick={() => onViewMastery(document.id)}>
+              <DropdownMenuItem
+                className="font-mono text-xs uppercase tracking-wider"
+                onClick={() => onViewMastery(document.id)}
+              >
                 <Map className="mr-2 h-4 w-4" />
-                View mastery map
+                Mastery map
               </DropdownMenuItem>
             )}
-            {/* TODO: Rename — backend needs PATCH /documents/:id endpoint */}
-            <DropdownMenuSeparator className="bg-white/10" />
+            <DropdownMenuSeparator className="bg-[var(--color-border-default)]" />
             <AlertDialogTrigger asChild>
-              <DropdownMenuItem className="text-red-400 focus:text-red-400">
+              <DropdownMenuItem className="font-mono text-xs uppercase tracking-wider text-red-400 focus:text-red-400">
                 <Trash2 className="mr-2 h-4 w-4" />
                 Delete
               </DropdownMenuItem>
@@ -123,24 +128,23 @@ export function DocumentRow({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <AlertDialogContent className="border-white/10 bg-surface text-white">
+        <AlertDialogContent className="border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]">
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete document?</AlertDialogTitle>
-            <AlertDialogDescription className="text-text-secondary">
+            <AlertDialogTitle>DELETE DOCUMENT?</AlertDialogTitle>
+            <AlertDialogDescription className="text-[var(--color-text-secondary)]">
               This will permanently delete &ldquo;{document.originalName}&rdquo;
               and all associated concepts, mastery data, and session history.
-              This cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="border-white/10 bg-white/5 text-white hover:bg-white/10">
-              Cancel
+            <AlertDialogCancel className="border-[var(--color-border-default)] bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)] hover:bg-[var(--color-border-default)]">
+              CANCEL
             </AlertDialogCancel>
             <AlertDialogAction
               className="bg-red-600 text-white hover:bg-red-700"
               onClick={() => onDelete(document.id)}
             >
-              Delete document
+              DELETE
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

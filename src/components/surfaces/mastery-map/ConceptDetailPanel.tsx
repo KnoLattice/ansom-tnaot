@@ -32,7 +32,6 @@ export function ConceptDetailPanel({
   const router = useRouter();
   const panelRef = useRef<HTMLDivElement>(null);
 
-  // Close on Escape
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -41,7 +40,6 @@ export function ConceptDetailPanel({
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [onClose]);
 
-  // Compute prerequisites and unlocks
   const prerequisites = node
     ? edges
         .filter((e) => e.targetNodeId === node.id && e.relationshipType === "prerequisite")
@@ -71,27 +69,25 @@ export function ConceptDetailPanel({
       {node && (
         <motion.div
           key={node.id}
-          initial={{ x: 20, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: 20, opacity: 0 }}
-          transition={{ duration: 0.2 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.15 }}
           ref={panelRef}
           role="complementary"
           aria-label={`Details for ${node.title}`}
-          className="flex h-full w-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-surface"
+          className="flex h-full w-full flex-col overflow-hidden border border-[var(--color-border-default)] bg-[var(--color-surface)]"
         >
           {/* Header */}
-          <div className="flex items-start justify-between border-b border-white/8 p-5">
+          <div className="flex items-start justify-between border-b border-[var(--color-border-default)] p-4">
             <div className="min-w-0 flex-1">
-              <p className="text-xs uppercase tracking-widest text-text-muted">
-                Concept detail
-              </p>
-              <h3 className="mt-1 text-lg font-semibold leading-snug text-white">
+              <p className="kl-data-label">Concept Detail</p>
+              <h3 className="mt-1 text-sm font-semibold leading-snug text-[var(--color-text-primary)]">
                 {node.title}
               </h3>
               <div className="mt-2 flex items-center gap-2">
                 <MasteryBadge band={node.masteryBand ?? getMasteryBand(node.masteryScore)} />
-                <span className="text-xs tabular-nums text-text-secondary">
+                <span className="font-mono text-[10px] font-bold tabular-nums text-[var(--color-text-secondary)]">
                   {formatMastery(node.masteryScore)}
                 </span>
               </div>
@@ -100,7 +96,7 @@ export function ConceptDetailPanel({
               type="button"
               onClick={onClose}
               aria-label="Close detail panel"
-              className="rounded-lg p-1.5 text-text-muted transition hover:bg-white/10 hover:text-white"
+              className="border border-[var(--color-border-default)] p-1 text-[var(--color-text-muted)] transition hover:text-[var(--color-text-primary)]"
             >
               <X className="h-4 w-4" />
             </button>
@@ -108,44 +104,36 @@ export function ConceptDetailPanel({
 
           {/* Scrollable body */}
           <ScrollArea className="flex-1">
-            <div className="space-y-5 p-5">
-              {/* Mastery bar */}
+            <div className="space-y-4 p-4">
               <MasteryBar score={node.masteryScore} size="md" showLabel />
 
               {/* Description */}
               <div>
-                <p className="text-xs uppercase tracking-widest text-text-muted">
-                  Description
-                </p>
-                <p className="mt-2 text-sm leading-relaxed text-text-secondary">
+                <p className="kl-data-label">Description</p>
+                <p className="mt-2 text-sm leading-relaxed text-[var(--color-text-secondary)]">
                   {node.description || "No description available for this concept."}
                 </p>
               </div>
 
-              {/* Sparkline placeholder */}
-              <div className="rounded-xl border border-white/8 bg-white/[0.02] p-4">
-                <p className="text-xs uppercase tracking-widest text-text-muted">
-                  Mastery over time
-                </p>
-                {/* TODO: Backend needs GET /concepts/:id/history for sparkline data */}
-                <p className="mt-2 text-xs text-text-muted">
-                  Per-concept history coming soon
+              {/* History placeholder */}
+              <div className="border border-[var(--color-border-subtle)] bg-[var(--color-canvas)] p-3">
+                <p className="kl-data-label">Mastery Over Time</p>
+                <p className="mt-2 font-mono text-[10px] text-[var(--color-text-muted)]">
+                  PER-CONCEPT HISTORY COMING SOON
                 </p>
               </div>
 
               {/* Prerequisites */}
               {prerequisites.length > 0 && (
                 <div>
-                  <p className="text-xs uppercase tracking-widest text-text-muted">
-                    Prerequisites
-                  </p>
-                  <div className="mt-2 flex flex-wrap gap-2">
+                  <p className="kl-data-label">Prerequisites</p>
+                  <div className="mt-2 flex flex-wrap gap-1">
                     {prerequisites.map((prereq) => (
                       <button
                         key={prereq.id}
                         type="button"
                         onClick={() => onSelectNode(prereq.id)}
-                        className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-text-secondary transition hover:bg-white/10 hover:text-white"
+                        className="inline-flex items-center gap-1 border border-[var(--color-border-default)] px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-secondary)] transition hover:text-[var(--color-text-primary)]"
                       >
                         {prereq.title}
                         <ArrowUpRight className="h-3 w-3" />
@@ -158,20 +146,18 @@ export function ConceptDetailPanel({
               {/* Unlocks */}
               {unlocks.length > 0 && (
                 <div>
-                  <p className="text-xs uppercase tracking-widest text-text-muted">
-                    Unlocks
-                  </p>
-                  <div className="mt-2 flex flex-wrap gap-2">
+                  <p className="kl-data-label">Unlocks</p>
+                  <div className="mt-2 flex flex-wrap gap-1">
                     {unlocks.map((unlock) => (
                       <button
                         key={unlock.id}
                         type="button"
                         onClick={() => onSelectNode(unlock.id)}
                         className={cn(
-                          "inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-medium transition",
+                          "inline-flex items-center gap-1 border px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-wider transition",
                           unlock.isLocked
-                            ? "border-white/5 text-text-muted"
-                            : "border-accent-primary/20 bg-accent-primary/5 text-accent-primary hover:bg-accent-primary/10",
+                            ? "border-[var(--color-border-subtle)] text-[var(--color-text-muted)]"
+                            : "border-[var(--color-accent-primary)]/30 text-[var(--color-accent-primary)] hover:bg-[var(--color-accent-primary)]/5",
                         )}
                       >
                         {unlock.isLocked && <Lock className="h-3 w-3" />}
@@ -182,35 +168,34 @@ export function ConceptDetailPanel({
                 </div>
               )}
 
-              {/* Graph depth */}
-              <p className="text-xs text-text-muted">
-                Graph depth: level {node.graphDepth}
+              <p className="font-mono text-[10px] text-[var(--color-text-muted)]">
+                DEPTH: L{node.graphDepth}
               </p>
             </div>
           </ScrollArea>
 
           {/* Action footer */}
-          <div className="border-t border-white/8 p-5">
+          <div className="border-t border-[var(--color-border-default)] p-4">
             {node.isLocked ? (
               <div className="space-y-3">
-                <p className="text-xs text-text-muted">
+                <p className="font-mono text-[10px] text-[var(--color-text-muted)]">
                   <Lock className="mr-1 inline h-3 w-3" />
-                  Complete the prerequisites above to unlock this concept.
+                  COMPLETE PREREQUISITES TO UNLOCK
                 </p>
                 {prerequisites[0] && (
                   <Button
-                    variant="secondary"
-                    className="w-full border border-white/10 bg-white/10 text-white"
+                    variant="outline"
+                    className="w-full"
                     onClick={handleStudyPrerequisite}
                   >
-                    Study &ldquo;{prerequisites[0].title}&rdquo;
+                    STUDY &ldquo;{prerequisites[0].title}&rdquo;
                   </Button>
                 )}
               </div>
             ) : (
               <Button className="w-full" onClick={handleStudy}>
                 <PlayCircle className="mr-2 h-4 w-4" />
-                Study this concept
+                STUDY CONCEPT
               </Button>
             )}
           </div>
