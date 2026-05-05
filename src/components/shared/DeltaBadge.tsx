@@ -18,17 +18,17 @@ export function DeltaBadge({ delta, className }: DeltaBadgeProps) {
 
   return (
     <motion.span
-      initial={{ opacity: 0, y: 4, scale: 0.9 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       transition={{
         delay: MASTERY_ANIMATION.deltaBadgeDelay,
-        duration: MASTERY_ANIMATION.deltaBadgeDuration,
+        duration: 0.15,
       }}
       className={cn(
-        "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold tabular-nums",
+        "inline-flex items-center border px-2 py-0.5 font-mono text-[10px] font-bold tabular-nums",
         isPositive
-          ? "bg-green-500/15 text-green-400"
-          : "bg-red-500/15 text-red-400",
+          ? "border-green-500 text-green-400"
+          : "border-red-500 text-red-400",
         className,
       )}
     >
