@@ -15,6 +15,8 @@ import { LastSessionSummary } from "@/components/surfaces/home/LastSessionSummar
 import { LibraryStrip } from "@/components/surfaces/home/LibraryStrip";
 import type { NodeStudied } from "@/lib/types/api";
 import Cookies from 'js-cookie';
+import { RecentDocuments } from "@/components/surfaces/home/RecentDocuments";
+import { QuickUploadZone } from "@/components/surfaces/home/QuickUploadZone";
 
 export default function HomePage() {
   const router = useRouter();
@@ -178,7 +180,7 @@ export default function HomePage() {
         </motion.div>
       )}
 
-      {/* 5. Last session summary */}
+
       {lastSession && lastSessionCache.nodesStudied.length > 0 && (
         <LastSessionSummary
           lastSession={lastSession}
@@ -187,8 +189,11 @@ export default function HomePage() {
         />
       )}
 
-      {/* 6. Library strip */}
-      <LibraryStrip activeDocumentName={activeDocument?.originalName ?? null} />
+      <div className="flex flex-col gap-4 border border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-4 py-2.5">
+        <LibraryStrip activeDocumentName={activeDocument?.originalName ?? null} />
+        <QuickUploadZone showFullUploadCTA={false} />
+        <RecentDocuments documents={documents}/>
+      </ div>
     </div>
   );
 }

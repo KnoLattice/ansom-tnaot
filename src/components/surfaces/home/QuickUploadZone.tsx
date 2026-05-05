@@ -16,9 +16,10 @@ const ACCEPTED_TYPES = [
 
 interface QuickUploadZoneProps {
   onUploadComplete?: () => void;
+  showFullUploadCTA?: boolean;
 }
 
-export function QuickUploadZone({ onUploadComplete }: QuickUploadZoneProps) {
+export function QuickUploadZone({ onUploadComplete, showFullUploadCTA = true }: QuickUploadZoneProps) {
   const router = useRouter();
   const uploadDocument = useUploadDocument();
   const [isDragActive, setIsDragActive] = useState(false);
@@ -108,14 +109,16 @@ export function QuickUploadZone({ onUploadComplete }: QuickUploadZoneProps) {
 
       <div className="flex items-center justify-between border-t border-[var(--color-border-subtle)] px-4 py-2">
         <p className="kl-data-label">Quick Upload</p>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => router.push("/upload")}
-          className="text-[10px]"
-        >
-          FULL UPLOAD PAGE
-        </Button>
+        {showFullUploadCTA && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => router.push("/upload")}
+            className="text-[10px]"
+          >
+            FULL UPLOAD PAGE
+          </Button>
+        )}
       </div>
     </div>
   );
