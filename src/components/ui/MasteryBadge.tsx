@@ -4,10 +4,10 @@ import { getMasteryColor } from "@/lib/utils/mastery";
 import type { MasteryBand } from "@/lib/types/api";
 
 const labels: Record<MasteryBand, string> = {
-  mastered: "Mastered",
-  proficient: "Proficient",
-  developing: "Developing",
-  low: "Low",
+  mastered: "MASTERED",
+  proficient: "PROFICIENT",
+  developing: "DEVELOPING",
+  low: "LOW",
 };
 
 interface MasteryBadgeProps {
@@ -16,10 +16,11 @@ interface MasteryBadgeProps {
 }
 
 export function MasteryBadge({ band, className }: MasteryBadgeProps) {
+  const color = getMasteryColor(band);
   return (
     <Badge
-      className={cn("border-0 text-white", className)}
-      style={{ backgroundColor: getMasteryColor(band) }}
+      className={cn("border text-white", className)}
+      style={{ backgroundColor: `${color}20`, borderColor: color, color }}
     >
       {labels[band]}
     </Badge>
