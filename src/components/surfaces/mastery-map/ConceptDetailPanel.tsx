@@ -185,7 +185,7 @@ export function ConceptDetailPanel({
                 {prerequisites[0] && (
                   <Button
                     variant="outline"
-                    className="w-full"
+                    className="w-full text-[10px]"
                     onClick={handleStudyPrerequisite}
                   >
                     STUDY &ldquo;{prerequisites[0].title}&rdquo;
