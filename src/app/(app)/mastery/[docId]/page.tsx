@@ -130,7 +130,7 @@ function MasteryMapContent({ docId }: { docId: string }) {
             className={cn(
               "flex items-center gap-2 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition",
               view === "graph"
-                ? "bg-[var(--color-accent-primary)] text-black"
+                ? "bg-[var(--color-accent-primary)] text-white"
                 : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
             )}
           >
@@ -143,7 +143,7 @@ function MasteryMapContent({ docId }: { docId: string }) {
             className={cn(
               "flex items-center gap-2 border-l border-[var(--color-border-default)] px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition",
               view === "list"
-                ? "bg-[var(--color-accent-primary)] text-black"
+                ? "bg-[var(--color-accent-primary)] text-white"
                 : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
             )}
           >

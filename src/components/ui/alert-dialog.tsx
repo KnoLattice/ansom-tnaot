@@ -78,8 +78,8 @@ const AlertDialogAction = React.forwardRef<
     ref={ref}
     className={cn(
       "inline-flex h-10 items-center justify-center whitespace-nowrap px-5 py-2 font-mono text-sm font-medium uppercase tracking-wider transition-colors",
-      "bg-red-600 text-white border border-red-600 hover:bg-red-700",
-      "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-red-500",
+      "bg-[#F40139] text-white border border-[#F40139] hover:brightness-90",
+      "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#F40139]",
       "disabled:pointer-events-none disabled:opacity-40",
       className,
     )}
