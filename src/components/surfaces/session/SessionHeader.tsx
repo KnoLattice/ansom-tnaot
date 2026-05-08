@@ -87,7 +87,7 @@ export function SessionHeader({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="border-[var(--color-border-default)] bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)] hover:bg-[var(--color-border-default)]">
+            <AlertDialogCancel>
               KEEP STUDYING
             </AlertDialogCancel>
             <AlertDialogAction
