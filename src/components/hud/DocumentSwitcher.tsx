@@ -24,7 +24,7 @@ export function DocumentSwitcher({
         <span>Document</span>
         <button
           type="button"
-          className="text-[var(--color-accent-secondary)] hover:text-white"
+          className="text-[var(--color-accent-secondary)] rounded-md border border-[var(--color-border-default)] hover:text-white"
           onClick={onUpload}
         >
           + Upload

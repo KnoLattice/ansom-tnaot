@@ -40,7 +40,7 @@ export function AttentionCard({ weakNodes, onStudy }: AttentionCardProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.15 }}
-        className="flex flex-col border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4"
+        className="flex flex-col border rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)] p-4"
       >
         <p className="kl-data-label">Flagged</p>
         <p className="mt-4 text-center font-mono text-xs text-[var(--color-text-muted)]">

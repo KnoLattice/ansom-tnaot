@@ -39,9 +39,9 @@ export function UploadDropZone({
       }}
       onDragLeave={() => setIsDragActive(false)}
       className={cn(
-        "relative flex min-h-[320px] w-full cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-white/20 bg-white/[0.02] p-12 text-center transition",
+        "relative flex min-h-[320px] w-full cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[var(--color-border-default)] bg-[var(--color-surface)] p-12 text-center transition",
         isDragActive &&
-          "border-accent-primary bg-accent-primary/5 border-solid",
+          "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5 border-solid",
         isUploading && "pointer-events-none opacity-60",
       )}
     >
@@ -59,8 +59,8 @@ export function UploadDropZone({
 
       <div
         className={cn(
-          "flex h-16 w-16 items-center justify-center rounded-full border border-white/15 bg-white/5 transition",
-          isDragActive && "border-accent-primary bg-accent-primary/10",
+          "flex h-16 w-16 items-center justify-center rounded-full border border-[var(--color-border-default)] bg-[var(--color-surface-elevated)] transition",
+          isDragActive && "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/10",
         )}
       >
         <UploadCloud
@@ -71,14 +71,14 @@ export function UploadDropZone({
         />
       </div>
 
-      <p className="mt-5 text-base font-medium text-white">
+      <p className="mt-5 text-base font-medium text-[var(--color-text-primary)]">
         {isDragActive
           ? "Release to upload"
           : isUploading
             ? "Uploading..."
             : "Drop your files here, or click to browse"}
       </p>
-      <p className="mt-2 max-w-md text-sm text-text-muted">
+      <p className="mt-2 max-w-md text-sm text-[var(--color-text-muted)]">
         PDF, plain text. Lecture notes, textbook chapters, or any educational
         material. Max 10 MB per file · 50 MB total storage.
       </p>

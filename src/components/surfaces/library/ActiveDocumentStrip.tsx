@@ -15,7 +15,7 @@ export function ActiveDocumentStrip({ document }: ActiveDocumentStripProps) {
   const isReady = document.processingStatus === "completed";
 
   return (
-    <div className="flex flex-col gap-4 border-l-2 border-l-[var(--color-accent-primary)] border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4 md:flex-row md:items-center md:justify-between">
+    <div className="flex flex-col gap-4 border-l-2 border rounded-md border-l-[var(--color-accent-primary)] border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4 md:flex-row md:items-center md:justify-between">
       <div className="min-w-0">
         <p className="kl-data-label">Active Document</p>
         <h2 className="mt-1 truncate font-mono text-sm font-bold text-[var(--color-text-primary)]">

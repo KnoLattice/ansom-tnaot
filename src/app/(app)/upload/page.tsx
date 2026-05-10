@@ -192,7 +192,7 @@ export default function UploadPage() {
     <div className="mx-auto max-w-2xl space-y-8">
       {/* Title and context */}
       <div>
-        <h1 className="font-display text-2xl font-bold text-white">
+        <h1 className="font-display text-2xl font-bold text-[var(--color-text-primary)]">
           Upload study documents
         </h1>
         <p className="mt-2 text-sm text-text-secondary">

@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { GoogleIcon } from "@/components/ui/icons/GoogleIcon";
 import { useAuth } from "@/lib/hooks";
 
 const schema = z.object({
@@ -41,9 +42,10 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
       <Button
         type="button"
         variant="outline"
-        className="w-full"
+        className="w-full bg-white hover:bg-gray-100 border-gray-300 text-black hover:text-black font-medium"
         onClick={googleLogin}
       >
+        <GoogleIcon className="w-5 h-5 mr-2" />
         CONTINUE WITH GOOGLE
       </Button>
       <div className="flex items-center gap-3">
@@ -52,46 +54,48 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
         <div className="h-px flex-1 bg-[var(--color-border-default)]" />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="email" className="kl-data-label">
+        <Label htmlFor="email" className="text-text-secondary">
           Email
         </Label>
         <Input
           id="email"
           type="email"
-          placeholder="you@example.com"
-          className="border-[var(--color-border-default)] bg-[var(--color-canvas)] font-mono text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]"
+          placeholder="Enter email"
+          className=" border rounded-md border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 "
           {...form.register("email")}
         />
         <FieldError message={form.formState.errors.email?.message} />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="password" className="kl-data-label">
+        <Label htmlFor="password" className="text-text-secondary">
           Password
         </Label>
         <Input
           id="password"
           type="password"
-          placeholder="••••••••"
-          className="border-[var(--color-border-default)] bg-[var(--color-canvas)] font-mono text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]"
+          placeholder="Enter password"
+          className="border rounded-md border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 "
           {...form.register("password")}
         />
-        <div className="flex items-center justify-between text-xs text-[var(--color-text-muted)]">
+        <div className="flex items-center justify-between text-xs text-[var(--color-accent-primary)]">
           <FieldError message={form.formState.errors.password?.message} />
-          <button
-            type="button"
-            className="font-mono text-[10px] uppercase tracking-wider transition hover:text-[var(--color-text-primary)]"
-            onClick={onForgotPassword}
-          >
-            FORGOT?
-          </button>
+          <div className="ml-auto">
+            <button
+              type="button"
+              className="font-mono text-[10px] uppercase tracking-wider transition hover:text-[var(--color-text-muted)]"
+              onClick={onForgotPassword}
+            >
+              FORGOT PASSWORD?
+            </button>
+          </div>
         </div>
       </div>
       <Button
         type="submit"
         disabled={disabled}
-        className="w-full"
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white border rounded-md font-medium shadow-sm"
       >
-        SIGN IN
+        LOG IN
       </Button>
     </form>
   );
