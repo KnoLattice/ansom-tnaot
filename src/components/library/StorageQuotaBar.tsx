@@ -20,7 +20,7 @@ export function StorageQuotaBar({ quota }: StorageQuotaBarProps) {
           REMAINING
         </p>
       </div>
-      <div className="mt-3 h-1.5 overflow-hidden border rounded-md bg-[var(--color-border-subtle)]">
+      <div className="mt-3 h-1.5 overflow-hidden bg-[var(--color-border-subtle)]">
         <div
           className={cn(
             "h-full bg-[var(--color-accent-primary)] transition-all",
