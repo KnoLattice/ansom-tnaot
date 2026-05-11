@@ -123,12 +123,12 @@ function MasteryMapContent({ docId }: { docId: string }) {
         </div>
 
         {/* View switcher — brutalist toggle */}
-        <div className="flex border border-[var(--color-border-default)]">
+        <div className="flex border rounded-lg border-[var(--color-border-default)]">
           <button
             type="button"
             onClick={() => setView("graph")}
             className={cn(
-              "flex items-center gap-2 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition",
+              "flex items-center gap-2 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition border-r rounded-l-lg border-[var(--color-border-default)]",
               view === "graph"
                 ? "bg-[var(--color-accent-primary)] text-white"
                 : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
@@ -141,7 +141,7 @@ function MasteryMapContent({ docId }: { docId: string }) {
             type="button"
             onClick={() => setView("list")}
             className={cn(
-              "flex items-center gap-2 border-l border-[var(--color-border-default)] px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition",
+              "flex items-center gap-2 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition rounded-r-lg border-[var(--color-border-default)]",
               view === "list"
                 ? "bg-[var(--color-accent-primary)] text-white"
                 : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",

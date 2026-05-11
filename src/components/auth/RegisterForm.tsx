@@ -64,7 +64,7 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
         <Input
           id="fullName"
           placeholder="Enter full name"
-          className="border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md"
+          className=" border rounded-md border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 "
           {...form.register("fullName")}
         />
         <FieldError message={form.formState.errors.fullName?.message} />
@@ -77,7 +77,7 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
           id="email"
           type="email"
           placeholder="Enter email"
-          className="border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md"
+          className=" border rounded-md border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 "
           {...form.register("email")}
         />
         <FieldError message={form.formState.errors.email?.message} />
