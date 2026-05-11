@@ -38,12 +38,13 @@ export function ActiveDocumentStrip({ document }: ActiveDocumentStripProps) {
         </Button>
         <Button
           size="sm"
+          className="rounded-md"
           disabled={!isReady}
           onClick={() =>
             router.push(`/session?documentId=${document.id}`)
           }
         >
-          <PlayCircle className="mr-2 h-3.5 w-3.5" />
+          <PlayCircle className="mr-2 h-3.5 w-3.5 " />
           SESSION
         </Button>
       </div>
