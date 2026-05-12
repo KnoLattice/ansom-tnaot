@@ -76,7 +76,7 @@ export function ConceptDetailPanel({
           ref={panelRef}
           role="complementary"
           aria-label={`Details for ${node.title}`}
-          className="flex h-full w-full flex-col overflow-hidden border border-[var(--color-border-default)] bg-[var(--color-surface)]"
+          className="flex h-full w-full flex-col overflow-hidden border rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)]"
         >
           {/* Header */}
           <div className="flex items-start justify-between border-b border-[var(--color-border-default)] p-4">
@@ -116,7 +116,7 @@ export function ConceptDetailPanel({
               </div>
 
               {/* History placeholder */}
-              <div className="border border-[var(--color-border-subtle)] bg-[var(--color-canvas)] p-3">
+              <div className="border rounded-md border-[var(--color-border-subtle)] bg-[var(--color-canvas)] p-3">
                 <p className="kl-data-label">Mastery Over Time</p>
                 <p className="mt-2 font-mono text-[10px] text-[var(--color-text-muted)]">
                   PER-CONCEPT HISTORY COMING SOON
@@ -133,7 +133,7 @@ export function ConceptDetailPanel({
                         key={prereq.id}
                         type="button"
                         onClick={() => onSelectNode(prereq.id)}
-                        className="inline-flex items-center gap-1 border border-[var(--color-border-default)] px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-secondary)] transition hover:text-[var(--color-text-primary)]"
+                        className="inline-flex items-center gap-1 border rounded-md border-[var(--color-border-default)] px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-secondary)] transition hover:text-[var(--color-text-primary)]"
                       >
                         {prereq.title}
                         <ArrowUpRight className="h-3 w-3" />
@@ -193,7 +193,7 @@ export function ConceptDetailPanel({
                 )}
               </div>
             ) : (
-              <Button className="w-full" onClick={handleStudy}>
+              <Button className="w-full border rounded-lg" onClick={handleStudy}>
                 <PlayCircle className="mr-2 h-4 w-4" />
                 STUDY CONCEPT
               </Button>
