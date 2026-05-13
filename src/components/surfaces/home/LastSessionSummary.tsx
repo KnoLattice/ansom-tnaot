@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { History } from "lucide-react";
 import { MovementMap } from "@/components/surfaces/session/MovementMap";
 import type { NodeStudied, SessionHistoryEntry } from "@/lib/types/api";
 
@@ -22,10 +23,13 @@ export function LastSessionSummary({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.15 }}
-      className="space-y-2"
+      className="space-y-2 border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4"
     >
-      <p className="kl-data-label">Last Session Recap</p>
-      <div className="border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4">
+      <p className="kl-data-label flex items-center gap-1.5 font-bold">
+        <History className="h-3.5 w-3.5" />
+        Last Session Recap
+      </p>
+      <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4">
         <div className="mb-3 flex items-baseline justify-between">
           <span className="font-mono text-xs font-bold tabular-nums text-[var(--color-text-muted)]">
             {lastSession.totalInteractions} INTERACTION{lastSession.totalInteractions !== 1 ? "S" : ""}
