@@ -42,16 +42,16 @@ export function ConceptDetailPanel({
 
   const prerequisites = node
     ? edges
-        .filter((e) => e.targetNodeId === node.id && e.relationshipType === "prerequisite")
-        .map((e) => allNodes.find((n) => n.id === e.sourceNodeId))
-        .filter(Boolean) as GraphNode[]
+      .filter((e) => e.targetNodeId === node.id && e.relationshipType === "prerequisite")
+      .map((e) => allNodes.find((n) => n.id === e.sourceNodeId))
+      .filter(Boolean) as GraphNode[]
     : [];
 
   const unlocks = node
     ? edges
-        .filter((e) => e.sourceNodeId === node.id && e.relationshipType === "prerequisite")
-        .map((e) => allNodes.find((n) => n.id === e.targetNodeId))
-        .filter(Boolean) as GraphNode[]
+      .filter((e) => e.sourceNodeId === node.id && e.relationshipType === "prerequisite")
+      .map((e) => allNodes.find((n) => n.id === e.targetNodeId))
+      .filter(Boolean) as GraphNode[]
     : [];
 
   const handleStudy = () => {
@@ -154,7 +154,7 @@ export function ConceptDetailPanel({
                         type="button"
                         onClick={() => onSelectNode(unlock.id)}
                         className={cn(
-                          "inline-flex items-center gap-1 border px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-wider transition",
+                          "inline-flex items-center gap-1 border rounded-md px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-wider transition",
                           unlock.isLocked
                             ? "border-[var(--color-border-subtle)] text-[var(--color-text-muted)]"
                             : "border-[var(--color-accent-primary)]/30 text-[var(--color-accent-primary)] hover:bg-[var(--color-accent-primary)]/5",

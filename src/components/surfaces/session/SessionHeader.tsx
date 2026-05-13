@@ -73,12 +73,12 @@ export function SessionHeader({
             variant="ghost"
             size="icon"
             aria-label="End session"
-            className="h-8 w-8 shrink-0 border border-[var(--color-border-default)] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
+            className="h-8 w-8 shrink-0 border  border-[var(--color-border-default)] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
           >
             <X className="h-4 w-4" />
           </Button>
         </AlertDialogTrigger>
-        <AlertDialogContent className="border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]">
+        <AlertDialogContent className=" rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]">
           <AlertDialogHeader>
             <AlertDialogTitle>END SESSION?</AlertDialogTitle>
             <AlertDialogDescription className="text-[var(--color-text-secondary)]">
@@ -87,12 +87,14 @@ export function SessionHeader({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>
-              KEEP STUDYING
+            <AlertDialogCancel
+               className="border rounded-md">
+                KEEP STUDYING
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={onEndSession}
               disabled={isSubmitting}
+              className="border rounded-md"
             >
               END SESSION
             </AlertDialogAction>

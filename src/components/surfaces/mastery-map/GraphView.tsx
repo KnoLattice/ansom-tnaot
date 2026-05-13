@@ -50,9 +50,9 @@ function InnerGraphView({
       style: {
         stroke:
           edge.relationshipType === "prerequisite"
-            ? "rgba(255,255,255,0.15)"
-            : "rgba(255,255,255,0.06)",
-        strokeWidth: 1,
+            ? "var(--color-border-default)"
+            : "var(--color-border-subtle)",
+        strokeWidth: edge.relationshipType === "prerequisite" ? 1.5 : 1,
         strokeDasharray:
           edge.relationshipType === "prerequisite" ? undefined : "4 4",
       },
@@ -76,7 +76,7 @@ function InnerGraphView({
     >
       <Background
         variant={BackgroundVariant.Dots}
-        color="rgba(255,255,255,0.04)"
+        color="var(--color-border-subtle)"
         gap={20}
         size={1}
       />
