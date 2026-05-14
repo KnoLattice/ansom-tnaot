@@ -241,8 +241,8 @@ export default function UploadPage() {
                   item.status === "completed" && "border-green-500/20 bg-green-500/5",
                   item.status === "failed" && "border-red-500/20 bg-red-500/5",
                   item.status === "processing" && "border-accent-primary/30 bg-accent-primary/5",
-                  item.status === "uploading" && "border-white/15 bg-white/[0.04]",
-                  item.status === "pending" && "border-white/8 bg-white/[0.02]",
+                  item.status === "uploading" && "border-[var(--color-border-default)] bg-[var(--color-surface)]",
+                  item.status === "pending" && "border-[var(--color-border-subtle)] bg-[var(--color-surface)]",
                 )}
               >
                 {/* Status icon */}
@@ -256,7 +256,7 @@ export default function UploadPage() {
                   <Loader2 className="h-4 w-4 shrink-0 animate-spin text-accent-primary" />
                 )}
                 {item.status === "uploading" && (
-                  <Loader2 className="h-4 w-4 shrink-0 animate-spin text-white/60" />
+                  <Loader2 className="h-4 w-4 shrink-0 animate-spin text-[var(--color-text-muted)]" />
                 )}
                 {item.status === "pending" && (
                   <FileText className="h-4 w-4 shrink-0 text-text-muted" />
@@ -264,7 +264,7 @@ export default function UploadPage() {
 
                 {/* File name + error */}
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm text-white">{item.file.name}</p>
+                  <p className="truncate text-sm text-[var(--color-text-primary)]">{item.file.name}</p>
                   {item.error && (
                     <p className="mt-0.5 truncate text-xs text-red-400">{item.error}</p>
                   )}
@@ -277,7 +277,7 @@ export default function UploadPage() {
                     item.status === "completed" && "text-green-400",
                     item.status === "failed" && "text-red-400",
                     item.status === "processing" && "text-accent-primary",
-                    item.status === "uploading" && "text-white/60",
+                    item.status === "uploading" && "text-[var(--color-text-muted)]",
                     item.status === "pending" && "text-text-muted",
                   )}
                 >
@@ -307,7 +307,7 @@ export default function UploadPage() {
 
       {/* Existing documents strip */}
       {documents.length > 0 && (
-        <div className="border-t border-white/8 pt-6">
+        <div className="border-t border-[var(--color-border-subtle)] pt-6">
           <p className="text-sm text-text-muted">
             You have {documents.length} document{documents.length !== 1 ? "s" : ""} in your
             library.{" "}

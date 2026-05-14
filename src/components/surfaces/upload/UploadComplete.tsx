@@ -32,7 +32,7 @@ export function UploadComplete({
       </div>
 
       <div>
-        <h3 className="text-xl font-semibold text-white">
+        <h3 className="text-xl font-semibold text-[var(--color-text-primary)]">
           {count === 1
             ? "Your knowledge map is ready"
             : `${count} knowledge maps are ready`}
@@ -47,7 +47,7 @@ export function UploadComplete({
       </div>
 
       {isFirstUpload && (
-        <div className="rounded-xl border border-white/8 bg-white/[0.03] p-4">
+        <div className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-4">
           <p className="text-xs uppercase tracking-widest text-text-muted">
             {count === 1 ? "Your first document" : "Your first documents"}
           </p>
@@ -68,7 +68,7 @@ export function UploadComplete({
             </Button>
             <Button
               variant="secondary"
-              className="border border-white/10 bg-white/10 text-white"
+              className="border border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]"
               onClick={() => router.push(`/session?documentId=${lastDoc.documentId}`)}
             >
               <PlayCircle className="mr-2 h-4 w-4" />
@@ -83,7 +83,7 @@ export function UploadComplete({
             </Button>
             <Button
               variant="secondary"
-              className="border border-white/10 bg-white/10 text-white"
+              className="border border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]"
               onClick={() =>
                 router.push(
                   lastDoc
