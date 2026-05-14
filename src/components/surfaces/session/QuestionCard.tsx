@@ -155,7 +155,7 @@ export function QuestionCard({
             const isCorrectOption =
               hasAnswered &&
               option.text.trim().toLowerCase() ===
-                (question.correctAnswer ?? "").trim().toLowerCase();
+              (question.correctAnswer ?? "").trim().toLowerCase();
             const isWrongSelected = hasAnswered && isSelected && !localCorrect;
 
             return (
@@ -169,17 +169,17 @@ export function QuestionCard({
                 className={cn(
                   "group flex w-full items-center gap-3 border rounded-md px-4 py-3 text-left text-sm transition",
                   !hasAnswered &&
-                    !isSelected &&
-                    "border-[var(--color-border-subtle)] bg-[var(--color-canvas)] hover:border-[var(--color-border-default)] hover:bg-[var(--color-surface-elevated)]",
+                  !isSelected &&
+                  "border-[var(--color-border-subtle)] bg-[var(--color-canvas)] hover:border-[var(--color-border-default)] hover:bg-[var(--color-surface-elevated)]",
                   !hasAnswered &&
-                    isSelected &&
-                    "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5",
+                  isSelected &&
+                  "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5",
                   isCorrectOption && "border-green-500 bg-green-500/10",
                   isWrongSelected && "border-red-500 bg-red-500/10",
                   hasAnswered &&
-                    !isCorrectOption &&
-                    !isWrongSelected &&
-                    "opacity-30",
+                  !isCorrectOption &&
+                  !isWrongSelected &&
+                  "opacity-30",
                 )}
               >
                 {hasAnswered && isCorrectOption && (
@@ -278,7 +278,7 @@ export function QuestionCard({
       <div className="flex justify-end">
         {isQCM ? (
           hasAnswered && (
-            <Button onClick={onContinue} disabled={isSubmitting}>
+            <Button onClick={onContinue} disabled={isSubmitting} className="rounded-md" >
               {isSubmitting ? (
                 <>
                   <Spinner size="sm" />
@@ -297,7 +297,7 @@ export function QuestionCard({
             {isSubmitting ? <Spinner size="sm" /> : "SUBMIT"}
           </Button>
         ) : (
-          <Button onClick={onContinue} > CONTINUE</Button>
+          <Button onClick={onContinue} > Continue </Button>
         )}
       </div>
     </motion.div>
