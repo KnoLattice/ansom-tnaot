@@ -25,7 +25,7 @@ export function DistributionStrip({ nodes, className }: DistributionStripProps) 
   ].filter((s) => s.count > 0);
 
   return (
-    <div className={cn("space-y-2 border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4", className)}>
+    <div className={cn("space-y-2 rounded-md border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4", className)}>
       {/* Bar — sharp, no radius */}
       <div className="flex h-2 overflow-hidden bg-[var(--color-border-subtle)]">
         {segments.map((seg) => (

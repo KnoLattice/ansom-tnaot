@@ -14,6 +14,7 @@ import { apiClient } from "@/lib/api/client";
 import { API_ROUTES } from "@/lib/api/routes";
 
 type SortKey = "recency" | "name";
+type ViewMode = "list" | "grid";
 
 export default function LibraryPage() {
   const router = useRouter();
@@ -27,6 +28,7 @@ export default function LibraryPage() {
     invalidateDocuments,
   } = useDocuments();
   const [sortBy, setSortBy] = useState<SortKey>("recency");
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
 
   const sortedDocuments = useMemo(() => {
     const sorted = [...documents];
@@ -100,7 +102,7 @@ export default function LibraryPage() {
               : "Empty"}
           </p>
         </div>
-        <Button onClick={() => router.push("/upload")}>
+        <Button onClick={() => router.push("/upload")} className="border rounded-md">
           <Plus className="mr-2 h-4 w-4" />
           UPLOAD
         </Button>
@@ -113,7 +115,7 @@ export default function LibraryPage() {
 
       {/* Documents list */}
       {documents.length === 0 ? (
-        <div className="flex min-h-[40vh] flex-col items-center justify-center border-2 border-dashed border-[var(--color-border-default)] bg-[var(--color-surface)] p-12 text-center">
+        <div className="flex min-h-[40vh] flex-col items-center justify-center border-2 border rounded-lg border-dashed border-[var(--color-border-default)] bg-[var(--color-surface)] p-12 text-center">
           <p className="font-mono text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
             No documents loaded
           </p>
@@ -121,7 +123,7 @@ export default function LibraryPage() {
             Upload your first study document to get started. We&apos;ll
             extract concepts and build your personal knowledge map.
           </p>
-          <Button className="mt-6" onClick={() => router.push("/upload")}>
+          <Button className="mt-6 border rounded-md" onClick={() => router.push("/upload")}>
             <Plus className="mr-2 h-4 w-4" />
             UPLOAD FIRST DOCUMENT
           </Button>

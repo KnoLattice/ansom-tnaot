@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { GoogleIcon } from "@/components/ui/icons/GoogleIcon";
 import { useAuth } from "@/lib/hooks";
 
 const schema = z.object({
@@ -45,13 +46,16 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
       <Button
         type="button"
         variant="outline"
-        className="w-full border-border-default bg-white/5 text-text-primary hover:bg-white/10"
+        className="w-full bg-white hover:bg-gray-100 border-gray-300 text-black hover:text-black font-medium"
         onClick={googleLogin}
       >
-        Continue with Google
+        <GoogleIcon className="w-5 h-5 mr-2" />
+        CONTINUE WITH GOOGLE
       </Button>
-      <div className="text-center text-xs uppercase tracking-[0.3em] text-text-muted">
-        or
+      <div className=" flex items-center gap-3">
+        <div className="h-px flex-1 bg-[var(--color-border-default)]" />
+        <span className="kl-data-label">OR</span>
+        <div className="h-px flex-1 bg-[var(--color-border-default)]" />
       </div>
       <div className="space-y-2">
         <Label htmlFor="fullName" className="text-text-secondary">
@@ -59,8 +63,8 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
         </Label>
         <Input
           id="fullName"
-          placeholder="Aurora Chen"
-          className="border-border-default bg-white/5 text-text-primary placeholder:text-text-muted"
+          placeholder="Enter full name"
+          className=" border rounded-md border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 "
           {...form.register("fullName")}
         />
         <FieldError message={form.formState.errors.fullName?.message} />
@@ -72,8 +76,8 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
         <Input
           id="email"
           type="email"
-          placeholder="you@example.com"
-          className="border-border-default bg-white/5 text-text-primary placeholder:text-text-muted"
+          placeholder="Enter email"
+          className=" border rounded-md border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 "
           {...form.register("email")}
         />
         <FieldError message={form.formState.errors.email?.message} />
@@ -85,8 +89,8 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
         <Input
           id="password"
           type="password"
-          placeholder="Create a password"
-          className="border-border-default bg-white/5 text-text-primary placeholder:text-text-muted"
+          placeholder="Creat a password"
+          className="border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md"
           {...form.register("password")}
         />
         <FieldError message={form.formState.errors.password?.message} />
@@ -94,7 +98,7 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
       <Button
         type="submit"
         disabled={disabled}
-        className="w-full bg-accent-primary text-white shadow-glow hover:opacity-90"
+        className="ml-auto mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white border rounded-md font-medium shadow-sm px-8 py-3"
       >
         Create account
       </Button>

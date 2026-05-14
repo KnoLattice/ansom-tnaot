@@ -12,7 +12,7 @@ export function StorageQuotaBar({ quota }: StorageQuotaBarProps) {
   const percent = total > 0 ? Math.min(100, (used / total) * 100) : 0;
 
   return (
-    <div className="border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4">
+    <div className="rounded-md border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4">
       <div className="flex flex-wrap items-center justify-between gap-3 text-sm">
         <p className="kl-data-label">Storage</p>
         <p className="font-mono text-[10px] text-[var(--color-text-secondary)]">

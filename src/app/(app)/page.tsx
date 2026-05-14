@@ -91,7 +91,7 @@ export default function HomePage() {
           transition={{ duration: 0.15 }}
           className="flex min-h-[40vh] flex-col items-center justify-center text-center"
         >
-          <div className="border-2 border-dashed border-[var(--color-border-default)] bg-[var(--color-surface)] p-12">
+          <div className="border-2 border rounded-md border-dashed border-[var(--color-border-default)] bg-[var(--color-surface)] p-12">
             <Upload className="mx-auto h-8 w-8 text-[var(--color-text-muted)]" />
             <h2 className="mt-4 font-mono text-lg font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
               No documents loaded
@@ -100,7 +100,7 @@ export default function HomePage() {
               Upload a PDF to extract concepts and build your knowledge graph.
               Processing takes approximately 60 seconds.
             </p>
-            <Button className="mt-6" onClick={() => router.push("/upload")}>
+            <Button className="mt-6 border rounded-md" onClick={() => router.push("/upload")}>
               UPLOAD DOCUMENT
             </Button>
           </div>

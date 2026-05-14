@@ -14,7 +14,7 @@ export function LibraryStrip({ activeDocumentName }: LibraryStripProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.15 }}
-      className="flex items-center justify-between border border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-4 py-2.5"
+      className="flex items-center justify-between border rounded-md border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-4 py-2.5"
     >
       <div className="flex items-center gap-3 text-sm text-[var(--color-text-muted)]">
         <BookOpen className="h-3.5 w-3.5" />

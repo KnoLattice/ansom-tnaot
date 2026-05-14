@@ -36,9 +36,9 @@ export function UploadZone({ onFilesSelect, isUploading, error, compact }: Uploa
       }}
       onDragLeave={() => setIsDragActive(false)}
       className={cn(
-        "relative block w-full cursor-pointer rounded-3xl border border-dashed border-white/20 bg-white/5 p-8 text-white transition",
+        "relative block w-full cursor-pointer rounded-3xl border border-dashed border-[var(--color-border-default)] bg-[var(--color-surface)] p-8 text-[var(--color-text-primary)] transition",
         compact ? "min-h-[180px]" : "min-h-[280px]",
-        isDragActive && "border-[var(--color-accent-primary)] bg-[rgba(99,102,241,0.08)]",
+        isDragActive && "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5",
       )}
     >
       <input
@@ -53,16 +53,16 @@ export function UploadZone({ onFilesSelect, isUploading, error, compact }: Uploa
         }}
       />
       <div className="flex h-full flex-col items-center justify-center text-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/10 bg-white/10">
-          <UploadCloud className="h-7 w-7" />
+        <div className="flex h-16 w-16 items-center justify-center rounded-full border border-[var(--color-border-default)] bg-[var(--color-surface-elevated)]">
+          <UploadCloud className="h-7 w-7 text-[var(--color-text-muted)]" />
         </div>
-        <p className="mt-4 font-medium text-white">
-          {isUploading ? "Uploading…" : "Drag & drop PDFs or click to browse"}
+        <p className="mt-4 font-medium text-[var(--color-text-primary)]">
+          {isUploading ? "Uploading…" : "Drop your files here, or click to browse"}
         </p>
-        <p className="mt-1 max-w-md text-sm text-white/60">
+        <p className="mt-1 max-w-md text-sm text-[var(--color-text-muted)]">
           We parse lecture decks, course notes, and research PDFs up to 10 MB.
         </p>
-        {error && <p className="mt-3 text-sm text-rose-300">{error}</p>}
+        {error && <p className="mt-3 text-sm text-[var(--color-destructive)]">{error}</p>}
       </div>
     </label>
   );

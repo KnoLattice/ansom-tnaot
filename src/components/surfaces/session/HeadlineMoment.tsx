@@ -54,7 +54,7 @@ export function HeadlineMoment({ summary, nodeTitles }: HeadlineMomentProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.2 }}
-      className="border-b border-[var(--color-border-default)] pb-6 text-center"
+      className="border-b rounded-md border-[var(--color-border-default)] pb-6 text-center"
     >
       <h1 className="font-mono text-xl font-bold uppercase tracking-wider text-[var(--color-accent-primary)]">
         {headline}

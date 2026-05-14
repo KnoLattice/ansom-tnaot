@@ -111,7 +111,7 @@ export function QuestionCard({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.1 }}
-      className="space-y-5 border border-[var(--color-border-default)] bg-[var(--color-surface)] p-5"
+      className="space-y-5 border  border-[var(--color-border-default)] bg-[var(--color-surface)] p-5"
       onKeyDown={handleKeyDown}
       onContextMenu={(e) => {
         if ((e.target as HTMLElement).tagName === "TEXTAREA") return;
@@ -123,7 +123,7 @@ export function QuestionCard({
         <Badge variant="outline">
           {bloomLevelLabel(question.bloomLevel)}
         </Badge>
-        <Badge variant="outline">
+        <Badge variant="outline" >
           {isQCM ? "MCQ" : "SHORT"}
         </Badge>
 
@@ -167,7 +167,7 @@ export function QuestionCard({
                 onClick={() => handleOptionClick(option.text)}
                 disabled={hasAnswered}
                 className={cn(
-                  "group flex w-full items-center gap-3 border px-4 py-3 text-left text-sm transition",
+                  "group flex w-full items-center gap-3 border rounded-md px-4 py-3 text-left text-sm transition",
                   !hasAnswered &&
                     !isSelected &&
                     "border-[var(--color-border-subtle)] bg-[var(--color-canvas)] hover:border-[var(--color-border-default)] hover:bg-[var(--color-surface-elevated)]",
@@ -249,7 +249,7 @@ export function QuestionCard({
             "select-none border-l-2 p-4",
             feedback.isCorrect
               ? "border-l-green-500 bg-green-500/5"
-              : "border-l-red-500 bg-red-500/5",
+              : "border-l-red-500 rounded-r-md bg-red-500/5",
           )}
         >
           <p
@@ -297,7 +297,7 @@ export function QuestionCard({
             {isSubmitting ? <Spinner size="sm" /> : "SUBMIT"}
           </Button>
         ) : (
-          <Button onClick={onContinue}>CONTINUE</Button>
+          <Button onClick={onContinue} > CONTINUE</Button>
         )}
       </div>
     </motion.div>
