@@ -12,6 +12,7 @@ import { QuestionTypeDialog } from "@/components/surfaces/session/QuestionTypeDi
 import { ThresholdCallout } from "@/components/shared/ThresholdCallout";
 import { apiClient } from "@/lib/api/client";
 import { API_ROUTES } from "@/lib/api/routes";
+import { useSessionStore } from "@/store/session.store";
 import Cookies from 'js-cookie';
 import type {
   EndSessionResponse,
@@ -66,6 +67,8 @@ function SessionContent({ id }: { id: string }) {
 
   const [showTypeDialog, setShowTypeDialog] = useState(true);
   const questionTypeRef = useRef<QuestionType>("qcm");
+  const setSessionActive = useSessionStore((s) => s.startSession);
+  const clearSession = useSessionStore((s) => s.endSession);
 
   const pendingNext = useRef<{
     node: TargetNode | null;
@@ -100,13 +103,21 @@ function SessionContent({ id }: { id: string }) {
         isTransitioning: false,
       });
       questionStartTime.current = Date.now();
+      setSessionActive(data.sessionId, documentId);
     } catch {
       toast.error("Unable to start session. Check if your document is ready.");
       router.replace(documentId ? `/mastery/${documentId}` : "/");
     } finally {
       setLoading(false);
     }
-  }, [documentId, router]);
+  }, [documentId, router, setSessionActive]);
+
+  // Cleanup: if component unmounts while a session is active, clear the store
+  useEffect(() => {
+    return () => {
+      clearSession();
+    };
+  }, [clearSession]);
 
   useEffect(() => {
     if (!documentId) {
@@ -187,6 +198,7 @@ function SessionContent({ id }: { id: string }) {
         Cookies.set(`session_docId_${state.sessionId}`, state.documentId ?? "");
       }
       router.replace(`/session/${state.sessionId}/summary`);
+      clearSession();
     } catch {
       toast.error("Unable to end session. Please try again.");
     } finally {

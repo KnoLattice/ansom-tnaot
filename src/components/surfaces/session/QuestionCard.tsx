@@ -293,11 +293,12 @@ export function QuestionCard({
           <Button
             disabled={!shortAnswer.trim() || isSubmitting}
             onClick={handleShortAnswerSubmit}
+            className="rounded-md"
           >
             {isSubmitting ? <Spinner size="sm" /> : "SUBMIT"}
           </Button>
         ) : (
-          <Button onClick={onContinue} > Continue </Button>
+          <Button onClick={onContinue}> Continue </Button>
         )}
       </div>
     </motion.div>
