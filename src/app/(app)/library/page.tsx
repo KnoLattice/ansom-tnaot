@@ -152,6 +152,7 @@ export default function LibraryPage() {
               onSetActive={setActiveDocument}
               onViewMastery={handleViewMastery}
               onDelete={handleDelete}
+              onClick={() => setActiveDocument(doc.id)}
             />
           ))}
         </div>

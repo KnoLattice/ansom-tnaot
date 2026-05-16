@@ -55,7 +55,7 @@ export function ConceptDetailPanel({
     : [];
 
   const handleStudy = () => {
-    router.push(`/session?documentId=${documentId}`);
+    router.push(`/session?documentId=${documentId}&nodeId=${node!.id}`);
   };
 
   const handleStudyPrerequisite = () => {

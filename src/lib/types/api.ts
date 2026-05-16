@@ -118,6 +118,7 @@ export interface StartSessionResponse {
   sessionId: string;
   documentId: string;
   questionType: QuestionType;
+  focusMode?: boolean;
   targetNode: TargetNode;
   sessionStats: SessionStats;
   question: Question | null;

@@ -62,7 +62,7 @@ export function RecentDocuments({ documents, activeDocumentId }: RecentDocuments
         {recent.map((doc, index) => {
           const isActive = doc.id === activeDocumentId;
           const status = statusLabel(doc.processingStatus);
-          const sizeMB = (doc.fileSizeBytes / (1024 * 1024)).toFixed(1);
+          const sizeMB = (Number(doc.fileSizeBytes) / (1024 * 1024)).toFixed(1);
 
           return (
             <motion.button

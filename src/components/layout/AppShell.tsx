@@ -18,6 +18,7 @@ import {
 import { useAuthStore } from "@/store/auth.store";
 import { useDocuments, useHydrated } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
 
 const NAV_ITEMS = [
   { href: "/", label: "HOME", icon: LayoutGrid },
@@ -107,6 +108,8 @@ export function AppShell({ children }: PropsWithChildren) {
                 <PlayCircle className="h-3.5 w-3.5" />
                 SESSION
               </button>
+
+              // <Button>SESSION</Button>
             )}
           </div>
 

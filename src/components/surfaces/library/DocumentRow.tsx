@@ -30,6 +30,7 @@ interface DocumentRowProps {
   onSetActive: (id: string) => void;
   onViewMastery: (id: string) => void;
   onDelete: (id: string) => void;
+  onClick?: (id: string) => void;
 }
 
 const statusColors: Record<string, string> = {
@@ -45,6 +46,7 @@ export function DocumentRow({
   onSetActive,
   onViewMastery,
   onDelete,
+  onClick,
 }: DocumentRowProps) {
   const isReady = document.processingStatus === "completed";
   const fileSizeMB = Number(document.fileSizeBytes ?? 0) / (1024 * 1024);
@@ -55,7 +57,9 @@ export function DocumentRow({
         "group flex items-center gap-4 border border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-4 py-3 transition",
         isActive && "border-l-2 border-l-[var(--color-accent-primary)]",
         isReady && "hover:bg-[var(--color-surface-elevated)]",
+        onClick && "cursor-pointer",
       )}
+      onClick={() => onClick?.(document.id)}
     >
       {/* Active indicator */}
       <div className="flex h-6 w-6 shrink-0 items-center justify-center">
@@ -100,7 +104,7 @@ export function DocumentRow({
             align="end"
             className="w-44 border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]"
           >
-            {!isActive && (
+            {/*{!isActive && (
               <DropdownMenuItem
                 className="font-mono text-xs uppercase tracking-wider"
                 onClick={() => onSetActive(document.id)}
@@ -108,7 +112,7 @@ export function DocumentRow({
                 <Check className="mr-2 h-4 w-4" />
                 Set active
               </DropdownMenuItem>
-            )}
+            )}*/}
             {isReady && (
               <DropdownMenuItem
                 className="font-mono text-xs uppercase tracking-wider"

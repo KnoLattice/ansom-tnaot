@@ -24,11 +24,13 @@ import type {
 } from "@/lib/types/api";
 
 const MAX_SESSION_QUESTIONS = 12;
+const FOCUSED_SESSION_QUESTIONS = 8;
 
 interface SessionState {
   sessionId: string | null;
   documentId: string | null;
   questionType: QuestionType;
+  focusMode: boolean;
   currentNode: TargetNode | null;
   currentQuestion: Question | null;
   feedback: FeedbackResult | null;
@@ -43,6 +45,7 @@ const initialState: SessionState = {
   sessionId: null,
   documentId: null,
   questionType: "qcm",
+  focusMode: false,
   currentNode: null,
   currentQuestion: null,
   feedback: null,
@@ -57,6 +60,7 @@ function SessionContent({ id }: { id: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const documentId = searchParams.get("documentId");
+  const nodeId = searchParams.get("nodeId");
   const [state, setState] = useState<SessionState>(initialState);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -83,13 +87,17 @@ function SessionContent({ id }: { id: string }) {
     try {
       const { data } = await apiClient.get<StartSessionResponse>(
         API_ROUTES.SESSIONS.START,
-        { params: { documentId, questionType: questionTypeRef.current } },
+        {
+          params: { documentId, questionType: questionTypeRef.current, ...(nodeId && { nodeId }) },
+          timeout: nodeId ? 60000 : undefined, // longer timeout for focused mode (question generation)
+        },
       );
       nodeTitles.current = { [data.targetNode.id]: data.targetNode.title };
       setState({
         sessionId: data.sessionId,
         documentId,
         questionType: data.questionType ?? questionTypeRef.current,
+        focusMode: data.focusMode ?? false,
         currentNode: data.targetNode,
         currentQuestion: data.question,
         feedback: null,
@@ -106,7 +114,7 @@ function SessionContent({ id }: { id: string }) {
     } finally {
       setLoading(false);
     }
-  }, [documentId, router]);
+  }, [documentId, nodeId, router]);
 
   useEffect(() => {
     if (!documentId) {
@@ -204,6 +212,7 @@ function SessionContent({ id }: { id: string }) {
     }
 
     const switchingConcepts =
+      !state.focusMode &&
       next.node && state.currentNode && next.node.id !== state.currentNode.id;
 
     if (switchingConcepts && next.node) {
@@ -252,8 +261,13 @@ function SessionContent({ id }: { id: string }) {
 
   if (loading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3">
         <Spinner />
+        {nodeId && (
+          <p className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
+            PREPARING QUESTIONS...
+          </p>
+        )}
       </div>
     );
   }
@@ -270,14 +284,26 @@ function SessionContent({ id }: { id: string }) {
     ? state.feedback.masteryAfter
     : state.currentNode.masteryScore;
 
+  const maxQuestions = state.focusMode
+    ? FOCUSED_SESSION_QUESTIONS
+    : MAX_SESSION_QUESTIONS;
+
   return (
     <div className="mx-auto max-w-3xl space-y-4">
+      {state.focusMode && (
+        <div className="border-l-2 border-l-[var(--color-accent-primary)] bg-[var(--color-surface)] px-3 py-1.5">
+          <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-accent-primary)]">
+            FOCUSED: {state.currentNode.title}
+          </p>
+        </div>
+      )}
+
       <SessionHeader
         conceptName={state.currentNode.title}
         masteryScore={currentMastery}
         previousMasteryScore={state.previousMastery}
         currentQuestion={state.questionCount + 1}
-        totalQuestions={MAX_SESSION_QUESTIONS}
+        totalQuestions={maxQuestions}
         correctCount={state.correctCount}
         isSubmitting={isSubmitting}
         onEndSession={handleEndSession}
