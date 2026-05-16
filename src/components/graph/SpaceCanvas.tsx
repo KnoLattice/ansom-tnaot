@@ -89,9 +89,10 @@ function InnerSpaceCanvas({
       zoomOnScroll
       selectionOnDrag
       onNodeClick={(_, node) => onSelectNode(node.id)}
-      className="space-flow"
+      className="space-flow bg-black"
     >
-      <Background color="rgba(255,255,255,0.05)" gap={24} />
+      <Background color="hsla(0, 0%, 100%, 0.05)" gap={24} />
+
     </ReactFlow>
   );
 }

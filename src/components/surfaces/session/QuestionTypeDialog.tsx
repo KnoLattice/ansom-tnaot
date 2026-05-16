@@ -65,7 +65,7 @@ export function QuestionTypeDialog({ open, onSelect, onClose }: QuestionTypeDial
                 type="button"
                 onClick={() => setSelected(opt.type)}
                 className={cn(
-                  "flex w-full items-start gap-4 border p-4 text-left transition",
+                  "flex w-full items-start gap-4 border rounded-md p-4 text-left transition",
                   isSelected
                     ? "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5"
                     : "border-[var(--color-border-default)] bg-[var(--color-canvas)] hover:bg-[var(--color-surface-elevated)]",
@@ -73,7 +73,7 @@ export function QuestionTypeDialog({ open, onSelect, onClose }: QuestionTypeDial
               >
                 <div
                   className={cn(
-                    "flex h-9 w-9 shrink-0 items-center justify-center border",
+                    "flex h-9 w-9 shrink-0 items-center justify-center border rounded-md",
                     isSelected
                       ? "border-[var(--color-accent-primary)] text-[var(--color-accent-primary)]"
                       : "border-[var(--color-border-default)] text-[var(--color-text-muted)]",
@@ -99,7 +99,7 @@ export function QuestionTypeDialog({ open, onSelect, onClose }: QuestionTypeDial
           })}
         </div>
 
-        <Button className="mt-4 w-full" onClick={() => onSelect(selected)}>
+        <Button className="mt-4 w-full rounded-md" onClick={() => onSelect(selected)}>
           START SESSION
         </Button>
       </DialogContent>

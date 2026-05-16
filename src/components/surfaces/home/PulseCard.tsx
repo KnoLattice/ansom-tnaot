@@ -27,7 +27,7 @@ export function PulseCard({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.15 }}
-      className="flex flex-col justify-between border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4"
+      className="flex flex-col justify-between border rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)] p-4"
     >
       {/* Header label */}
       <p className="kl-data-label">Overall Mastery</p>
@@ -38,14 +38,13 @@ export function PulseCard({
           className="kl-data-value text-5xl"
           style={{ color }}
         >
-          {Math.round(overallMasteryPercent)}
+          {Math.round(overallMasteryPercent)}%
         </span>
-        <span className="kl-data-label" style={{ color }}>%</span>
         {weeklyDelta != null && (
           <span
             className={`font-mono text-xs font-bold tabular-nums ${
               weeklyDelta > 0
-                ? "text-[var(--color-accent-primary)]"
+                ? "text-[var(--color-accent-secondary)]"
                 : weeklyDelta < 0
                   ? "text-red-400"
                   : "text-[var(--color-text-muted)]"

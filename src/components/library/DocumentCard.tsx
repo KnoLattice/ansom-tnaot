@@ -46,7 +46,7 @@ export function DocumentCard({
         if (event.key === "Enter") onSelect(document.id);
       }}
       className={cn(
-        "flex h-full flex-col justify-between rounded-3xl border border-white/5 bg-white/5 p-6 text-white shadow-[0_20px_60px_rgba(3,4,13,0.4)] transition",
+        "flex h-full flex-col justify-between rounded-3xl border rounded-lg border-white/5 bg-white/5 p-6 text-white shadow-[0_20px_60px_rgba(3,4,13,0.4)] transition",
         active && "border-[var(--color-accent-primary)] shadow-glow",
       )}
     >

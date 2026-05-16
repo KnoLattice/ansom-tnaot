@@ -54,7 +54,7 @@ export function DocumentRow({
   return (
     <div
       className={cn(
-        "group flex items-center gap-4 border border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-4 py-3 transition",
+        "group flex items-center gap-4 border rounded-md border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-4 py-3 transition",
         isActive && "border-l-2 border-l-[var(--color-accent-primary)]",
         isReady && "hover:bg-[var(--color-surface-elevated)]",
         onClick && "cursor-pointer",
@@ -69,7 +69,7 @@ export function DocumentRow({
       </div>
 
       {/* Document info */}
-      <div className="min-w-0 flex-1">
+      <div className="min-w-0 flex-1 border-l border-[var(--color-border-subtle)] pl-4">
         <p className="truncate text-sm font-medium text-[var(--color-text-primary)]">
           {document.originalName}
         </p>
@@ -82,7 +82,7 @@ export function DocumentRow({
       <Badge
         variant="outline"
         className={cn(
-          "shrink-0",
+          "shrink-0 rounded-sm border border-[var(--color-border-subtle)]",
           statusColors[document.processingStatus] ?? "",
         )}
       >

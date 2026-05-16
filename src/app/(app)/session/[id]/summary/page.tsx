@@ -116,7 +116,7 @@ export default function SessionSummaryPage({
             {stillWeak.map((node) => (
               <div
                 key={node.nodeId}
-                className="border border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-4 py-3 text-sm text-[var(--color-text-secondary)]"
+                className="border rounded-md border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-4 py-3 text-sm text-[var(--color-text-secondary)]"
               >
                 {nodeTitles[node.nodeId] ?? node.nodeId.slice(0, 8)} —{" "}
                 <span className="font-mono font-bold tabular-nums">
@@ -136,7 +136,7 @@ export default function SessionSummaryPage({
         className="flex flex-col gap-3 pt-4 sm:flex-row"
       >
         <Button
-          className="flex-1"
+          className="flex-1 rounded-md"
           onClick={() => {
             const docId = Cookies.get(`session_docId_${id}`);
             if (docId) {
@@ -151,7 +151,7 @@ export default function SessionSummaryPage({
         </Button>
         <Button
           variant="outline"
-          className="flex-1"
+          className="flex-1 hover:bg-[var(--color-surface-elevated)] hover:text-[var(--color-text-primary)]"
           onClick={() => router.push("/")}
         >
           <Home className="mr-2 h-4 w-4" />

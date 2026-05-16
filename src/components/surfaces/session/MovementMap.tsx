@@ -19,6 +19,7 @@ export function MovementMap({ nodes, nodeTitles }: MovementMapProps) {
 
   return (
     <div className="space-y-2">
+      <hr className="border-[var(--color-border-subtle)]" />
       <p className="kl-data-label">Concept Movement</p>
       <div className="space-y-0">
         {sorted.map((node, index) => (
@@ -30,7 +31,7 @@ export function MovementMap({ nodes, nodeTitles }: MovementMapProps) {
               delay: index * (MASTERY_ANIMATION.listStagger * 0.8),
               duration: 0.15,
             }}
-            className="flex items-center gap-3 border-b border-[var(--color-border-subtle)] px-4 py-2.5"
+            className="flex items-center gap-3 px-4 py-2.5"
           >
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium text-[var(--color-text-primary)]">

@@ -7,8 +7,8 @@
   --color-text-primary: var(--raw-text-primary);
   --color-text-secondary: var(--raw-text-secondary);
   --color-text-muted: var(--raw-text-muted);
-  --color-accent-primary: var(--raw-chartreuse-500);
-  --color-accent-secondary: var(--raw-cyan-500);
+  --color-accent-primary: #1454E1;
+  --color-accent-secondary: #73E2A4;
   --color-border-subtle: var(--raw-border-subtle);
   --color-border-default: var(--raw-border-default);
   --color-node-mastered: var(--raw-mastery-mastered);

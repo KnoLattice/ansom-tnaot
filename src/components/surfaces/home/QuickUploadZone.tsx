@@ -55,7 +55,20 @@ export function QuickUploadZone({ onUploadComplete, showFullUploadCTA = true }: 
   );
 
   return (
-    <div className="border border-[var(--color-border-default)] bg-[var(--color-surface)]">
+    <div className="border rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)]">
+      <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] px-4 py-2">
+        <p className="kl-data-label">Quick Upload</p>
+        {showFullUploadCTA && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => router.push("/upload")}
+            className="text-[10px]"
+          >
+            FULL UPLOAD PAGE
+          </Button>
+        )}
+      </div>
       <label
         htmlFor="home-upload-input"
         onDrop={(e) => {
@@ -106,20 +119,6 @@ export function QuickUploadZone({ onUploadComplete, showFullUploadCTA = true }: 
           PDF / TXT -- MAX 10MB
         </p>
       </label>
-
-      <div className="flex items-center justify-between border-t border-[var(--color-border-subtle)] px-4 py-2">
-        <p className="kl-data-label">Quick Upload</p>
-        {showFullUploadCTA && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => router.push("/upload")}
-            className="text-[10px]"
-          >
-            FULL UPLOAD PAGE
-          </Button>
-        )}
-      </div>
     </div>
   );
 }

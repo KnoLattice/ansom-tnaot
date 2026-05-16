@@ -28,12 +28,12 @@ function formatUploadDate(dateStr: string): string {
 function statusLabel(status: string): { text: string; color: string } {
   switch (status) {
     case "completed":
-      return { text: "READY", color: "text-green-400 border-green-500" };
+      return { text: "READY", color: "text-green-400 border-green-500 rounded-sm" };
     case "processing":
     case "pending":
-      return { text: "PROCESSING", color: "text-yellow-400 border-yellow-500" };
+      return { text: "PROCESSING", color: "text-yellow-400 border-yellow-500 rounded-sm" };
     case "failed":
-      return { text: "FAILED", color: "text-red-400 border-red-500" };
+      return { text: "FAILED", color: "text-red-400 border-red-500 rounded-sm" };
     default:
       return { text: status.toUpperCase(), color: "text-[var(--color-text-muted)] border-[var(--color-border-default)]" };
   }
@@ -46,7 +46,7 @@ export function RecentDocuments({ documents, activeDocumentId }: RecentDocuments
   if (recent.length === 0) return null;
 
   return (
-    <div className="border border-[var(--color-border-default)] bg-[var(--color-surface)]">
+    <div className="border rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)]">
       <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] px-4 py-2">
         <p className="kl-data-label">Recent Documents</p>
         <button
