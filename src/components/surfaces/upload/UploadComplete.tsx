@@ -39,7 +39,7 @@ export function UploadComplete({
         </h3>
         <div className="mt-2 space-y-1">
           {completedDocuments.map((doc) => (
-            <p key={doc.documentId} className="text-sm text-text-secondary">
+            <p key={doc.documentId} className="text-sm text-[var(--color-text-secondary)]">
               {doc.documentName}
             </p>
           ))}
@@ -48,10 +48,10 @@ export function UploadComplete({
 
       {isFirstUpload && (
         <div className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-4">
-          <p className="text-xs uppercase tracking-widest text-text-muted">
+          <p className="text-xs uppercase tracking-widest text-[var(--color-text-muted)]">
             {count === 1 ? "Your first document" : "Your first documents"}
           </p>
-          <p className="mt-2 text-sm text-text-secondary">
+          <p className="mt-2 text-sm text-[var(--color-text-secondary)]">
             We&apos;ve extracted concepts and mapped their relationships.
             Explore your knowledge map or start studying right away.
           </p>

@@ -195,7 +195,7 @@ export default function UploadPage() {
         <h1 className="font-display text-2xl font-bold text-[var(--color-text-primary)]">
           Upload study documents
         </h1>
-        <p className="mt-2 text-sm text-text-secondary">
+        <p className="mt-2 text-sm text-[var(--color-text-secondary)]">
           We&apos;ll extract the concepts from your documents and build your
           personal knowledge map. You can upload multiple files at once.
         </p>
@@ -215,7 +215,7 @@ export default function UploadPage() {
         <div className="space-y-4">
           {/* Summary header */}
           <div className="flex items-center justify-between">
-            <p className="text-sm font-medium text-text-secondary">
+            <p className="text-sm font-medium text-[var(--color-text-secondary)]">
               {allDone
                 ? `${completedItems.length}/${uploadQueue.length} completed`
                 : `Processing ${uploadQueue.length} file${uploadQueue.length > 1 ? "s" : ""}…`}
@@ -223,7 +223,7 @@ export default function UploadPage() {
             {allDone && (
               <button
                 type="button"
-                className="text-xs text-accent-primary underline underline-offset-4"
+                className="text-xs text-[var(--color-accent-primary)] underline underline-offset-4"
                 onClick={handleReset}
               >
                 Upload more
@@ -240,10 +240,17 @@ export default function UploadPage() {
                   "flex items-center gap-3 rounded-xl border px-4 py-3 transition-colors",
                   item.status === "completed" && "border-green-500/20 bg-green-500/5",
                   item.status === "failed" && "border-red-500/20 bg-red-500/5",
-                  item.status === "processing" && "border-accent-primary/30 bg-accent-primary/5",
                   item.status === "uploading" && "border-[var(--color-border-default)] bg-[var(--color-surface)]",
                   item.status === "pending" && "border-[var(--color-border-subtle)] bg-[var(--color-surface)]",
                 )}
+                style={
+                  item.status === "processing"
+                    ? {
+                        borderColor: "color-mix(in srgb, var(--color-accent-primary) 30%, transparent)",
+                        backgroundColor: "color-mix(in srgb, var(--color-accent-primary) 5%, transparent)",
+                      }
+                    : undefined
+                }
               >
                 {/* Status icon */}
                 {item.status === "completed" && (
@@ -253,13 +260,13 @@ export default function UploadPage() {
                   <XCircle className="h-4 w-4 shrink-0 text-red-400" />
                 )}
                 {item.status === "processing" && (
-                  <Loader2 className="h-4 w-4 shrink-0 animate-spin text-accent-primary" />
+                  <Loader2 className="h-4 w-4 shrink-0 animate-spin text-[var(--color-accent-primary)]" />
                 )}
                 {item.status === "uploading" && (
                   <Loader2 className="h-4 w-4 shrink-0 animate-spin text-[var(--color-text-muted)]" />
                 )}
                 {item.status === "pending" && (
-                  <FileText className="h-4 w-4 shrink-0 text-text-muted" />
+                  <FileText className="h-4 w-4 shrink-0 text-[var(--color-text-muted)]" />
                 )}
 
                 {/* File name + error */}
@@ -276,16 +283,16 @@ export default function UploadPage() {
                     "shrink-0 text-xs font-medium",
                     item.status === "completed" && "text-green-400",
                     item.status === "failed" && "text-red-400",
-                    item.status === "processing" && "text-accent-primary",
+                    item.status === "processing" && "text-[var(--color-accent-primary)]",
                     item.status === "uploading" && "text-[var(--color-text-muted)]",
-                    item.status === "pending" && "text-text-muted",
+                    item.status === "pending" && "text-[var(--color-text-muted)]",
                   )}
                 >
                   {statusLabel(item.status)}
                 </span>
 
                 {/* Size */}
-                <span className="shrink-0 text-xs text-text-muted">
+                <span className="shrink-0 text-xs text-[var(--color-text-muted)]">
                   {(item.file.size / 1024 / 1024).toFixed(1)} MB
                 </span>
               </div>
@@ -308,12 +315,12 @@ export default function UploadPage() {
       {/* Existing documents strip */}
       {documents.length > 0 && (
         <div className="border-t border-[var(--color-border-subtle)] pt-6">
-          <p className="text-sm text-text-muted">
+          <p className="text-sm text-[var(--color-text-muted)]">
             You have {documents.length} document{documents.length !== 1 ? "s" : ""} in your
             library.{" "}
             <Link
               href="/library"
-              className="text-accent-primary underline underline-offset-4"
+              className="text-[var(--color-accent-primary)] underline underline-offset-4"
             >
               View library
             </Link>
