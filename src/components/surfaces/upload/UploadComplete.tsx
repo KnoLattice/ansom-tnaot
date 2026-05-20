@@ -62,13 +62,13 @@ export function UploadComplete({
       <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
         {count === 1 && lastDoc ? (
           <>
-            <Button onClick={() => router.push(`/mastery/${lastDoc.documentId}`)}>
-              <Map className="mr-2 h-4 w-4" />
+            <Button className="rounded-md" onClick={() => router.push(`/mastery/${lastDoc.documentId}`)}>
+              <Map className="mr-2 h-4 w-4 " />
               View my knowledge map
             </Button>
             <Button
               variant="secondary"
-              className="border border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]"
+              className="rounded-md border border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]"
               onClick={() => router.push(`/session?documentId=${lastDoc.documentId}`)}
             >
               <PlayCircle className="mr-2 h-4 w-4" />
@@ -83,7 +83,7 @@ export function UploadComplete({
             </Button>
             <Button
               variant="secondary"
-              className="border border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]"
+              className="border rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]"
               onClick={() =>
                 router.push(
                   lastDoc
