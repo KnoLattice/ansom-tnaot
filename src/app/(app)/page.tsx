@@ -193,7 +193,7 @@ export default function HomePage() {
         <LibraryStrip activeDocumentName={activeDocument?.originalName ?? null} />
         <QuickUploadZone showFullUploadCTA={false} />
         <RecentDocuments documents={documents}/>
-      </ div>
+      </div>
     </div>
   );
 }

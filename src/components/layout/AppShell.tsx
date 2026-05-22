@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuthStore } from "@/store/auth.store";
 import { useDocuments, useHydrated } from "@/lib/hooks";
+import { useSessionNavGuard } from "@/components/shared/SessionNavGuard";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
@@ -31,6 +32,7 @@ export function AppShell({ children }: PropsWithChildren) {
   const learner = useAuthStore((s) => s.learner);
   const logout = useAuthStore((s) => s.logout);
   const { activeDocumentId } = useDocuments();
+  const { guardNavigation, dialog: sessionGuardDialog } = useSessionNavGuard();
 
   const initials = learner?.fullName
     ?.split(" ")
@@ -50,7 +52,9 @@ export function AppShell({ children }: PropsWithChildren) {
           {/* Brand */}
           <button
             type="button"
-            onClick={() => router.push("/")}
+            onClick={() => {
+              if (guardNavigation("/")) router.push("/");
+            }}
             className="font-mono text-[12px] font-bold uppercase tracking-[0.35em] text-[var(--color-accent-primary)]"
           >
             KNOWLATTICE
@@ -62,7 +66,9 @@ export function AppShell({ children }: PropsWithChildren) {
               <button
                 key={href}
                 type="button"
-                onClick={() => router.push(href)}
+                onClick={() => {
+                  if (guardNavigation(href)) router.push(href);
+                }}
                 className={cn(
                   "flex h-12 items-center gap-2 border-b-2 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.2em] transition-colors",
                   pathname === href
@@ -78,7 +84,10 @@ export function AppShell({ children }: PropsWithChildren) {
             {hydrated && activeDocumentId && (
               <button
                 type="button"
-                onClick={() => router.push(`/mastery/${activeDocumentId}`)}
+                onClick={() => {
+                  const target = `/mastery/${activeDocumentId}`;
+                  if (guardNavigation(target)) router.push(target);
+                }}
                 className={cn(
                   "flex h-12 items-center gap-2 border-b-2 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.2em] transition-colors",
                   isMasteryRoute
@@ -94,9 +103,10 @@ export function AppShell({ children }: PropsWithChildren) {
             {hydrated && activeDocumentId && (
               <button
                 type="button"
-                onClick={() =>
-                  router.push(`/session/new?documentId=${activeDocumentId}`)
-                }
+                onClick={() => {
+                  const target = `/session/new?documentId=${activeDocumentId}`;
+                  if (guardNavigation(target)) router.push(target);
+                }}
                 className={cn(
                   "flex h-12 items-center gap-2 border-b-2 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.2em] transition-colors",
                   isSessionRoute
@@ -154,6 +164,9 @@ export function AppShell({ children }: PropsWithChildren) {
       <main className="mx-auto w-full max-w-7xl px-4 pb-12 pt-16">
         {children}
       </main>
+
+      {/* Session navigation guard dialog */}
+      {sessionGuardDialog}
     </div>
   );
 }
