@@ -44,13 +44,13 @@ export function ProcessingPipeline({
   const isComplete = status === "completed";
 
   return (
-    <div className="w-full space-y-6 rounded-2xl border border-white/10 bg-white/[0.03] p-8">
+    <div className="w-full space-y-6 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-8">
       {/* Header */}
       <div>
         <p className="text-xs uppercase tracking-widest text-text-muted">
           {isFailed ? "Processing failed" : isComplete ? "Processing complete" : "Processing"}
         </p>
-        <h3 className="mt-1 text-lg font-semibold text-white">{documentName}</h3>
+        <h3 className="mt-1 text-lg font-semibold text-[var(--color-text-primary)]">{documentName}</h3>
         {!isComplete && !isFailed && (
           <p className="mt-0.5 text-sm text-text-muted tabular-nums">
             {elapsedSeconds}s elapsed
@@ -69,7 +69,7 @@ export function ProcessingPipeline({
             <div
               key={stage.label}
               className={cn(
-                "flex flex-col items-center gap-2 rounded-xl border border-white/8 px-3 py-4 text-center transition",
+                "flex flex-col items-center gap-2 rounded-xl border border-[var(--color-border-subtle)] px-3 py-4 text-center transition",
                 isDone && "border-green-500/20 bg-green-500/5",
                 isActive && "border-accent-primary/30 bg-accent-primary/5",
                 isFailed && "border-red-500/20 bg-red-500/5",
@@ -92,7 +92,7 @@ export function ProcessingPipeline({
                   isDone
                     ? "text-green-400"
                     : isActive
-                      ? "text-white"
+                      ? "text-[var(--color-text-primary)]"
                       : isFailed
                         ? "text-red-400"
                         : "text-text-muted",
@@ -107,7 +107,7 @@ export function ProcessingPipeline({
 
       {/* Overall progress bar */}
       {!isFailed && (
-        <div className="h-2 overflow-hidden rounded-full bg-white/10">
+        <div className="h-2 overflow-hidden rounded-full bg-[var(--color-border-subtle)]">
           <div
             className={cn(
               "h-full rounded-full transition-all duration-500",

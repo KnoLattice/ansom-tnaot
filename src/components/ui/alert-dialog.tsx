@@ -97,7 +97,7 @@ const AlertDialogCancel = React.forwardRef<
     className={cn(
       "inline-flex h-10 items-center justify-center whitespace-nowrap px-5 py-2 font-mono text-sm font-medium uppercase tracking-wider transition-colors",
       "border border-[var(--color-border-default)] bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)]",
-      "hover:bg-[var(--color-border-default)] hover:text-white",
+      "hover:bg-[var(--color-border-default)]",
       "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--color-accent-primary)]",
       "disabled:pointer-events-none disabled:opacity-40",
       className,
