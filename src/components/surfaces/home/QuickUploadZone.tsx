@@ -55,17 +55,17 @@ export function QuickUploadZone({ onUploadComplete, showFullUploadCTA = true }: 
   );
 
   return (
-    <div className="border rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)]">
-      <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] px-4 py-2">
+    <div className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] shadow-sm overflow-hidden">
+      <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] px-4 py-3">
         <p className="kl-data-label">Quick Upload</p>
         {showFullUploadCTA && (
           <Button
-            variant="outline"
+            variant="ghost"
             size="sm"
             onClick={() => router.push("/upload")}
-            className="text-[10px]"
+            className="text-xs"
           >
-            FULL UPLOAD PAGE
+            Full upload page →
           </Button>
         )}
       </div>
@@ -84,8 +84,8 @@ export function QuickUploadZone({ onUploadComplete, showFullUploadCTA = true }: 
         }}
         onDragLeave={() => setIsDragActive(false)}
         className={cn(
-          "flex cursor-pointer flex-col items-center justify-center border-2 border-dashed border-[var(--color-border-subtle)] p-6 text-center transition-colors",
-          isDragActive && "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5",
+          "flex cursor-pointer flex-col items-center justify-center rounded-b-xl border-2 border-dashed border-[var(--color-border-subtle)] p-8 text-center transition-all duration-300",
+          isDragActive && "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5 scale-[1.01]",
           isUploading && "pointer-events-none opacity-60",
         )}
       >
@@ -102,21 +102,26 @@ export function QuickUploadZone({ onUploadComplete, showFullUploadCTA = true }: 
           }}
         />
 
-        <Upload
-          className={cn(
-            "h-5 w-5 text-[var(--color-text-muted)]",
-            isDragActive && "text-[var(--color-accent-primary)]",
-          )}
-        />
-        <p className="mt-2 font-mono text-xs font-medium uppercase tracking-wider text-[var(--color-text-secondary)]">
+        <div className={cn(
+          "flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-surface-elevated)] transition-all duration-300",
+          isDragActive && "bg-[var(--color-accent-primary)]/10 scale-110",
+        )}>
+          <Upload
+            className={cn(
+              "h-5 w-5 text-[var(--color-text-muted)] transition-colors duration-200",
+              isDragActive && "text-[var(--color-accent-primary)]",
+            )}
+          />
+        </div>
+        <p className="mt-3 text-sm font-medium text-[var(--color-text-secondary)]">
           {isUploading
-            ? "UPLOADING..."
+            ? "Uploading..."
             : isDragActive
-              ? "DROP TO UPLOAD"
-              : "DROP FILE HERE OR CLICK TO BROWSE"}
+              ? "Drop to upload"
+              : "Drop file here or click to browse"}
         </p>
-        <p className="mt-1 font-mono text-[9px] text-[var(--color-text-muted)]">
-          PDF / TXT -- MAX 10MB
+        <p className="mt-1 text-xs text-[var(--color-text-muted)]">
+          PDF / TXT — Max 10MB
         </p>
       </label>
     </div>

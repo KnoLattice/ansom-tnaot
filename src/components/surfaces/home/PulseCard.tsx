@@ -24,10 +24,10 @@ export function PulseCard({
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.15 }}
-      className="flex flex-col justify-between border rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)] p-4"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: 0.05, ease: "easeOut" }}
+      className="flex flex-col justify-between rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-5 shadow-sm"
     >
       {/* Header label */}
       <p className="kl-data-label">Overall Mastery</p>
@@ -42,7 +42,7 @@ export function PulseCard({
         </span>
         {weeklyDelta != null && (
           <span
-            className={`font-mono text-xs font-bold tabular-nums ${
+            className={`text-xs font-semibold tabular-nums ${
               weeklyDelta > 0
                 ? "text-[var(--color-accent-secondary)]"
                 : weeklyDelta < 0
@@ -56,14 +56,14 @@ export function PulseCard({
         )}
       </div>
 
-      {/* Progress bar — raw, no radius */}
-      <div className="mt-4 h-1.5 w-full bg-[var(--color-border-subtle)]">
-        <div
-          className="h-full transition-all duration-300"
-          style={{
-            width: `${overallMasteryPercent}%`,
-            backgroundColor: color,
-          }}
+      {/* Progress bar — rounded with gradient */}
+      <div className="mt-4 h-2 w-full overflow-hidden rounded-full bg-[var(--color-border-subtle)]">
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${overallMasteryPercent}%` }}
+          transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+          className="h-full rounded-full"
+          style={{ backgroundColor: color }}
         />
       </div>
 
@@ -74,7 +74,7 @@ export function PulseCard({
         </div>
       )}
 
-      <p className="mt-2 font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
+      <p className="mt-2 text-[11px] font-medium text-[var(--color-text-muted)]">
         {trajectory}
       </p>
     </motion.div>

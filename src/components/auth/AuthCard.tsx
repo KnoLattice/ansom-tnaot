@@ -20,18 +20,19 @@ export function AuthCard({
   return (
     <div
       className={cn(
-        "relative w-full max-w-md border border-[var(--color-border-default)] bg-[var(--color-surface)] p-8 text-[var(--color-text-primary)]",
+        "relative w-full max-w-md overflow-hidden rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-8 text-[var(--color-text-primary)] shadow-xl",
         className,
       )}
+      style={{ animation: "fadeInUp 0.5s ease-out" }}
     >
-      {/* Top accent line */}
-      <div className="absolute inset-x-0 top-0 h-[2px] bg-[var(--color-accent-primary)]" />
+      {/* Top accent — gradient line */}
+      <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-[var(--color-accent-primary)] via-[var(--color-accent-secondary)] to-[var(--color-accent-primary)]" />
 
       <div className="space-y-2">
-        <p className="kl-data-label">
+        <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[var(--color-text-muted)]">
           {accent ?? "KNOWLATTICE"}
         </p>
-        <h1 className="font-mono text-2xl font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+        <h1 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
           {title}
         </h1>
         {description && (

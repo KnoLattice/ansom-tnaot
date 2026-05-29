@@ -39,9 +39,9 @@ export function UploadDropZone({
       }}
       onDragLeave={() => setIsDragActive(false)}
       className={cn(
-        "relative flex min-h-[320px] w-full cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[var(--color-border-default)] bg-[var(--color-surface)] p-12 text-center transition",
+        "relative flex min-h-[320px] w-full cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[var(--color-border-default)] bg-[var(--color-surface)] p-12 text-center transition-all duration-300",
         isDragActive &&
-          "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5 border-solid",
+          "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5 border-solid scale-[1.01] shadow-lg",
         isUploading && "pointer-events-none opacity-60",
       )}
     >
@@ -59,19 +59,19 @@ export function UploadDropZone({
 
       <div
         className={cn(
-          "flex h-16 w-16 items-center justify-center rounded-full border border-[var(--color-border-default)] bg-[var(--color-surface-elevated)] transition",
-          isDragActive && "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/10",
+          "flex h-20 w-20 items-center justify-center rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] transition-all duration-300",
+          isDragActive && "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/10 scale-110",
         )}
       >
         <UploadCloud
           className={cn(
-            "h-7 w-7 text-text-secondary",
-            isDragActive && "text-accent-primary",
+            "h-8 w-8 text-[var(--color-text-muted)] transition-all duration-200",
+            isDragActive && "text-[var(--color-accent-primary)]",
           )}
         />
       </div>
 
-      <p className="mt-5 text-base font-medium text-[var(--color-text-primary)]">
+      <p className="mt-6 text-lg font-semibold text-[var(--color-text-primary)]">
         {isDragActive
           ? "Release to upload"
           : isUploading
@@ -84,7 +84,7 @@ export function UploadDropZone({
       </p>
 
       {error && (
-        <p className="mt-4 rounded-lg bg-red-500/10 px-4 py-2 text-sm text-red-400">
+        <p className="mt-4 rounded-xl bg-red-500/10 px-4 py-2 text-sm text-red-500">
           {error}
         </p>
       )}

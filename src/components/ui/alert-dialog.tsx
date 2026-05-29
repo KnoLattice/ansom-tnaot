@@ -17,10 +17,10 @@ const AlertDialogContent = ({
   ...props
 }: AlertDialogPrimitive.AlertDialogContentProps) => (
   <AlertDialogPortal>
-    <AlertDialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+    <AlertDialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
     <AlertDialogPrimitive.Content
       className={cn(
-        "fixed left-[50%] top-[50%] z-50 grid w-[92vw] max-w-sm sm:max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+        "fixed left-[50%] top-[50%] z-50 grid w-[92vw] max-w-sm sm:max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 rounded-2xl border border-[var(--color-border-subtle)] p-6 shadow-xl duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
         className,
       )}
       {...props}
@@ -53,7 +53,7 @@ const AlertDialogTitle = ({
   ...props
 }: AlertDialogPrimitive.AlertDialogTitleProps) => (
   <AlertDialogPrimitive.Title
-    className={cn("font-mono text-base font-bold uppercase tracking-wider", className)}
+    className={cn("text-lg font-semibold tracking-tight", className)}
     {...props}
   />
 );
@@ -77,9 +77,9 @@ const AlertDialogAction = React.forwardRef<
   <AlertDialogPrimitive.Action
     ref={ref}
     className={cn(
-      "inline-flex h-10 items-center justify-center whitespace-nowrap px-5 py-2 font-mono text-sm font-medium uppercase tracking-wider transition-colors",
-      "bg-[#F40139] text-white border border-[#F40139] hover:brightness-90",
-      "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#F40139]",
+      "inline-flex h-10 items-center justify-center whitespace-nowrap rounded-xl px-5 py-2 text-sm font-semibold transition-all duration-200 active:scale-[0.98]",
+      "bg-red-600 text-white shadow-sm hover:bg-red-700 hover:shadow-md",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2",
       "disabled:pointer-events-none disabled:opacity-40",
       className,
     )}
@@ -95,10 +95,10 @@ const AlertDialogCancel = React.forwardRef<
   <AlertDialogPrimitive.Cancel
     ref={ref}
     className={cn(
-      "inline-flex h-10 items-center justify-center whitespace-nowrap px-5 py-2 font-mono text-sm font-medium uppercase tracking-wider transition-colors",
+      "inline-flex h-10 items-center justify-center whitespace-nowrap rounded-xl px-5 py-2 text-sm font-semibold transition-all duration-200 active:scale-[0.98]",
       "border border-[var(--color-border-default)] bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)]",
-      "hover:bg-[var(--color-border-default)]",
-      "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--color-accent-primary)]",
+      "hover:bg-[var(--color-border-subtle)] hover:shadow-sm",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-primary)] focus-visible:ring-offset-2",
       "disabled:pointer-events-none disabled:opacity-40",
       className,
     )}

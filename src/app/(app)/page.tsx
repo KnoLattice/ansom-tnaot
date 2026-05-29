@@ -86,22 +86,24 @@ export default function HomePage() {
           learnerName={learner?.fullName?.split(" ")[0]}
         />
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.15 }}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
           className="flex min-h-[40vh] flex-col items-center justify-center text-center"
         >
-          <div className="border-2 border rounded-md border-dashed border-[var(--color-border-default)] bg-[var(--color-surface)] p-12">
-            <Upload className="mx-auto h-8 w-8 text-[var(--color-text-muted)]" />
-            <h2 className="mt-4 font-mono text-lg font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
-              No documents loaded
+          <div className="rounded-2xl border-2 border-dashed border-[var(--color-border-default)] bg-[var(--color-surface)] p-12 shadow-sm">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-accent-primary)]/10">
+              <Upload className="h-7 w-7 text-[var(--color-accent-primary)]" />
+            </div>
+            <h2 className="mt-5 text-lg font-semibold text-[var(--color-text-primary)]">
+              No documents yet
             </h2>
             <p className="mt-2 max-w-sm text-sm text-[var(--color-text-secondary)]">
               Upload a PDF to extract concepts and build your knowledge graph.
               Processing takes approximately 60 seconds.
             </p>
-            <Button className="mt-6 border rounded-md" onClick={() => router.push("/upload")}>
-              UPLOAD DOCUMENT
+            <Button className="mt-6 rounded-xl" onClick={() => router.push("/upload")}>
+              Upload Document
             </Button>
           </div>
         </motion.div>
@@ -113,12 +115,12 @@ export default function HomePage() {
   if (docsLoading || (hasReadyDoc && dashLoading)) {
     return (
       <div className="mx-auto max-w-3xl space-y-4">
-        <div className="h-10 animate-pulse bg-[var(--color-surface)]" />
+        <div className="h-12 kl-shimmer" />
         <div className="grid gap-4 md:grid-cols-2">
-          <div className="h-48 animate-pulse bg-[var(--color-surface)]" />
-          <div className="h-48 animate-pulse bg-[var(--color-surface)]" />
+          <div className="h-48 kl-shimmer" />
+          <div className="h-48 kl-shimmer" />
         </div>
-        <div className="h-14 animate-pulse bg-[var(--color-surface)]" />
+        <div className="h-14 kl-shimmer" />
       </div>
     );
   }
@@ -156,25 +158,25 @@ export default function HomePage() {
       {/* Not-ready state: document is processing */}
       {activeDocument && activeDocument.processingStatus !== "completed" && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.15 }}
-          className="border border-[var(--color-border-default)] bg-[var(--color-surface)] p-6"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35 }}
+          className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-5 shadow-sm"
         >
           <div className="flex items-center gap-3">
-            <span className="inline-block h-2 w-2 animate-pulse bg-[var(--color-accent-primary)]" />
-            <p className="font-mono text-sm font-medium text-[var(--color-text-primary)]">
-              PROCESSING
+            <span className="inline-block h-2 w-2 rounded-full bg-[var(--color-accent-primary)]" style={{ animation: "gentlePulse 1.5s ease-in-out infinite" }} />
+            <p className="text-sm font-medium text-[var(--color-text-primary)]">
+              Processing document...
             </p>
           </div>
           <p className="mt-2 text-xs text-[var(--color-text-muted)]">
             Document is being analyzed. This usually takes about a minute.{" "}
             <button
               type="button"
-              className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-accent-primary)]"
+              className="font-semibold text-[var(--color-accent-primary)] hover:underline"
               onClick={() => router.push("/library")}
             >
-              VIEW IN LIBRARY
+              View in Library
             </button>
           </p>
         </motion.div>
@@ -189,7 +191,7 @@ export default function HomePage() {
         />
       )}
 
-      <div className="flex flex-col gap-4 border border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-4 py-2.5">
+      <div className="flex flex-col gap-4 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-4 shadow-sm">
         <LibraryStrip activeDocumentName={activeDocument?.originalName ?? null} />
         <QuickUploadZone showFullUploadCTA={false} />
         <RecentDocuments documents={documents}/>
