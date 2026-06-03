@@ -28,12 +28,12 @@ function formatUploadDate(dateStr: string): string {
 function statusLabel(status: string): { text: string; color: string } {
   switch (status) {
     case "completed":
-      return { text: "Ready", color: "bg-green-500/10 text-green-600" };
+      return { text: "Ready", color: "bg-[var(--color-status-success)]/10 text-[var(--color-status-success)]" };
     case "processing":
     case "pending":
-      return { text: "Processing", color: "bg-yellow-500/10 text-yellow-600" };
+      return { text: "Processing", color: "bg-[var(--color-status-warning)]/10 text-[var(--color-status-warning)]" };
     case "failed":
-      return { text: "Failed", color: "bg-red-500/10 text-red-600" };
+      return { text: "Failed", color: "bg-[var(--color-status-danger)]/10 text-[var(--color-status-danger)]" };
     default:
       return { text: status, color: "bg-[var(--color-surface-elevated)] text-[var(--color-text-muted)]" };
   }

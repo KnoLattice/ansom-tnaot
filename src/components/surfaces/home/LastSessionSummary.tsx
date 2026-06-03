@@ -29,7 +29,7 @@ export function LastSessionSummary({
         <History className="h-3.5 w-3.5" />
         Last Session Recap
       </p>
-      <div className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-canvas)] p-4">
+      <div className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-surface)]] p-4">
         <div className="mb-3 flex items-baseline justify-between">
           <span className="text-xs font-semibold tabular-nums text-[var(--color-text-muted)]">
             {lastSession.totalInteractions} interaction{lastSession.totalInteractions !== 1 ? "s" : ""}

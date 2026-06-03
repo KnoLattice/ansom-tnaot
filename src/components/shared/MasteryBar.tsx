@@ -1,7 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useState } from "react";
+import { motion, useInView } from "framer-motion";
+import { useState, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { getMasteryTierColor, MASTERY_ANIMATION } from "@/lib/constants/mastery";
 import { formatMastery } from "@/lib/utils/mastery";
@@ -20,10 +20,10 @@ interface MasteryBarProps {
 }
 
 const sizeClasses: Record<MasterySize, string> = {
-  xs: "h-1.5",
-  sm: "h-2.5",
-  md: "h-3.5",
-  lg: "h-5",
+  xs: "h-2.5",
+  sm: "h-3",
+  md: "h-4",
+  lg: "h-6",
 };
 
 export function MasteryBar({
@@ -41,28 +41,50 @@ export function MasteryBar({
   const startPercent = animated && previousScore !== undefined ? Math.round(previousScore * 100) : 0;
   const [animationDone, setAnimationDone] = useState(!animated);
 
+  const barRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(barRef, { once: true, margin: "-40px" });
+
   return (
     <div className={cn("w-full", className)}>
       <div className="flex items-center gap-2">
         <div
+          ref={barRef}
           role="progressbar"
           aria-valuenow={percent}
           aria-valuemin={0}
           aria-valuemax={100}
           aria-label={`Mastery ${percent}%`}
-          className={cn("relative w-full overflow-hidden rounded-full bg-white/10", sizeClasses[size])}
+          className={cn("relative w-full overflow-hidden rounded-full bg-[#E5E7EB]", sizeClasses[size])}
         >
           <motion.div
-            className="h-full rounded-full"
-            initial={{ width: animated ? `${startPercent}%` : `${percent}%` }}
-            animate={{ width: `${percent}%` }}
+            className="relative h-full overflow-hidden rounded-full"
+            initial={{ width: `${startPercent}%` }}
+            animate={isInView ? { width: `${percent}%` } : { width: `${startPercent}%` }}
             transition={{
-              duration: MASTERY_ANIMATION.barFillDuration,
+              duration: animated ? MASTERY_ANIMATION.barFillDuration : 0,
               ease: [0.16, 1, 0.3, 1],
             }}
             onAnimationComplete={() => setAnimationDone(true)}
             style={{ backgroundColor: color }}
-          />
+          >
+            {/* Shimmer highlight sweep */}
+            {animated && (
+              <motion.div
+                className="absolute inset-0"
+                initial={{ x: "-100%" }}
+                animate={isInView ? { x: "200%" } : { x: "-100%" }}
+                transition={{
+                  delay: MASTERY_ANIMATION.barFillDuration * 0.6,
+                  duration: 0.8,
+                  ease: "easeInOut",
+                }}
+                style={{
+                  background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent)",
+                  width: "50%",
+                }}
+              />
+            )}
+          </motion.div>
         </div>
         {showLabel && (
           <span className="shrink-0 text-xs font-medium tabular-nums text-text-secondary">
@@ -76,3 +98,4 @@ export function MasteryBar({
     </div>
   );
 }
+

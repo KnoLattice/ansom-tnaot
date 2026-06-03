@@ -27,7 +27,7 @@ const sizeClasses: Record<MasterySize, string> = {
 export function MasteryBar({
   score,
   band,
-  size = "sm",
+  size = "xs",
   showLabel = false,
   animated = true,
   className,

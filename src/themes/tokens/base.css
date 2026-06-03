@@ -29,15 +29,15 @@
   --raw-cyan-600: #0891b2;
 
   /* ── Status ── */
-  --raw-danger: #ef4444;
-  --raw-warning: #f59e0b;
-  --raw-success: #22c55e;
+  --raw-danger: #FF0000;
+  --raw-warning: #FFBB20;
+  --raw-success: #16A34A;
 
   /* ── Mastery tiers ── */
-  --raw-mastery-mastered: #c6f135;
+  --raw-mastery-mastered: #52F531;
   --raw-mastery-proficient: #22d3ee;
   --raw-mastery-developing: #f59e0b;
-  --raw-mastery-low: #ef4444;
+  --raw-mastery-low: #FF0000;
   --raw-mastery-locked: #333333;
 
   /* ── Panel — opaque, no glass ── */
@@ -47,7 +47,7 @@
   --raw-panel-blur-md: 0px;
   --raw-panel-blur-lg: 0px;
 
-  /* ── Space effects — disabled for brutalist ��─ */
+  /* ── Space effects — disabled for brutalist ── */
   --raw-starfield-color: transparent;
   --raw-nebula-indigo: transparent;
   --raw-nebula-teal: transparent;

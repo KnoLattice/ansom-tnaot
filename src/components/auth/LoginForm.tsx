@@ -46,11 +46,11 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
         onClick={googleLogin}
       >
         <GoogleIcon className="w-5 h-5 mr-2" />
-        CONTINUE WITH GOOGLE
+        Continue with Google
       </Button>
       <div className="flex items-center gap-3">
         <div className="h-px flex-1 bg-[var(--color-border-default)]" />
-        <span className="kl-data-label">OR</span>
+        <span className="kl-data-label capitalize" style={{ fontFamily: "inherit" }}>or</span>
         <div className="h-px flex-1 bg-[var(--color-border-default)]" />
       </div>
       <div className="space-y-2">
@@ -77,15 +77,17 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
           className="border rounded-md border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 "
           {...form.register("password")}
         />
+
+
         <div className="flex items-center justify-between text-xs text-[var(--color-accent-primary)]">
           <FieldError message={form.formState.errors.password?.message} />
           <div className="ml-auto">
             <button
               type="button"
-              className="font-mono text-[10px] uppercase tracking-wider transition hover:text-[var(--color-text-muted)]"
+              className="text-[10px] font-medium tracking-wider transition hover:text-[var(--color-text-muted)]"
               onClick={onForgotPassword}
             >
-              FORGOT PASSWORD?
+              Forgot password ?
             </button>
           </div>
         </div>
@@ -93,7 +95,7 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
       <Button
         type="submit"
         disabled={disabled}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white border rounded-md font-medium shadow-sm"
+        className="mt-[29px] w-full bg-blue-600 hover:bg-blue-700 text-white border rounded-md font-medium shadow-sm"
       >
         LOG IN
       </Button>
@@ -103,5 +105,5 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null;
-  return <p className="font-mono text-[10px] text-red-400">{message}</p>;
+  return <p className="text-[10px] font-medium text-red-400">{message}</p>;
 }

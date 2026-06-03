@@ -58,9 +58,9 @@ export function AppShell({ children }: PropsWithChildren) {
             className="flex items-center gap-2 font-display text-sm font-bold tracking-[0.2em] text-[var(--color-accent-primary)] transition-opacity hover:opacity-80"
           >
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--color-accent-primary)] text-[11px] font-bold text-white">
-              KL
+              TR
             </div>
-            <span className="hidden sm:inline">KNOWLATTICE</span>
+            {/* <span className="hidden sm:inline">TRACKORA</span> */}
           </button>
 
           {/* Center nav */}

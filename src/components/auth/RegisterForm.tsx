@@ -10,11 +10,17 @@ import { Label } from "@/components/ui/label";
 import { GoogleIcon } from "@/components/ui/icons/GoogleIcon";
 import { useAuth } from "@/lib/hooks";
 
-const schema = z.object({
-  fullName: z.string().min(2, "Enter your full name"),
-  email: z.string().email("Enter a valid email"),
-  password: z.string().min(8, "Minimum 8 characters"),
-});
+const schema = z
+  .object({
+    fullName: z.string().min(2, "Enter your full name"),
+    email: z.string().email("Enter a valid email"),
+    password: z.string().min(8, "Minimum 8 characters"),
+    confirmPassword: z.string().min(1, "Please confirm your password"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 type RegisterValues = z.infer<typeof schema>;
 
@@ -25,12 +31,12 @@ interface RegisterFormProps {
 export function RegisterForm({ onRegistered }: RegisterFormProps) {
   const form = useForm<RegisterValues>({
     resolver: zodResolver(schema),
-    defaultValues: { fullName: "", email: "", password: "" },
+    defaultValues: { fullName: "", email: "", password: "", confirmPassword: "" },
   });
   const { register: registerLearner, googleLogin, isSubmitting } = useAuth();
 
   const onSubmit = useCallback(
-    async (values: RegisterValues) => {
+    async ({ confirmPassword: _, ...values }: RegisterValues) => {
       const success = await registerLearner(values, { redirectTo: false });
       if (success) {
         onRegistered(values.fullName);
@@ -50,11 +56,11 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
         onClick={googleLogin}
       >
         <GoogleIcon className="w-5 h-5 mr-2" />
-        CONTINUE WITH GOOGLE
+        Continue with Google
       </Button>
       <div className=" flex items-center gap-3">
         <div className="h-px flex-1 bg-[var(--color-border-default)]" />
-        <span className="kl-data-label">OR</span>
+        <span className="kl-data-label capitalize" style={{ fontFamily: "inherit" }}>or</span>
         <div className="h-px flex-1 bg-[var(--color-border-default)]" />
       </div>
       <div className="space-y-2">
@@ -95,6 +101,21 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
         />
         <FieldError message={form.formState.errors.password?.message} />
       </div>
+      <div className="space-y-2">
+        <Label htmlFor="confirmPassword" className="text-text-secondary">
+          Confirm Password
+        </Label>
+        <Input
+          id="confirmPassword"
+          type="password"
+          placeholder="Confirm password"
+          className="border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md"
+          {...form.register("confirmPassword")}
+        />
+        <FieldError message={form.formState.errors.confirmPassword?.message} />
+      </div>
+
+
       <Button
         type="submit"
         disabled={disabled}

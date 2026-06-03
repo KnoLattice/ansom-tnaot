@@ -29,9 +29,9 @@ export function AuthCard({
       <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-[var(--color-accent-primary)] via-[var(--color-accent-secondary)] to-[var(--color-accent-primary)]" />
 
       <div className="space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[var(--color-text-muted)]">
+        {/* <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[var(--color-text-muted)]">
           {accent ?? "KNOWLATTICE"}
-        </p>
+        </p> */}
         <h1 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
           {title}
         </h1>
