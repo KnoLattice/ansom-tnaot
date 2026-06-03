@@ -20,10 +20,10 @@ interface MasteryBarProps {
 }
 
 const sizeClasses: Record<MasterySize, string> = {
-  xs: "h-2.5",
-  sm: "h-3",
-  md: "h-4",
-  lg: "h-6",
+  xs: "h-1.5",
+  sm: "h-2",
+  md: "h-3",
+  lg: "h-4",
 };
 
 export function MasteryBar({

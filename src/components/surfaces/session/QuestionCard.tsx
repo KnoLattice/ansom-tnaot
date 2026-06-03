@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { Check, X as XIcon, Clock } from "lucide-react";
+import { Check, X as XIcon, Clock ,MoveRight} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -17,6 +17,8 @@ interface QuestionCardProps {
   isSubmitting: boolean;
   onSubmit: (answer: string) => void;
   onContinue: () => void;
+  currentQuestion?: number;
+  totalQuestions?: number;
 }
 
 const TIMER_SECONDS_QCM = 30;
@@ -28,6 +30,8 @@ export function QuestionCard({
   isSubmitting,
   onSubmit,
   onContinue,
+  currentQuestion = 1,
+  totalQuestions = 12,
 }: QuestionCardProps) {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [shortAnswer, setShortAnswer] = useState("");
@@ -106,6 +110,8 @@ export function QuestionCard({
     onSubmit(shortAnswer.trim());
   };
 
+  const progressPct = Math.min((currentQuestion / totalQuestions) * 100, 100);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
@@ -119,6 +125,24 @@ export function QuestionCard({
       }}
       onDragStart={(e) => e.preventDefault()}
     >
+      {/* Progress bar */}
+      <div className="flex items-center gap-3">
+        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent-primary)] text-[11px] font-bold text-white shadow">
+          {currentQuestion}
+        </div>
+        <div className="relative h-2 flex-1 overflow-hidden rounded-full bg-[var(--color-border-subtle)]">
+          <motion.div
+            className="absolute left-0 top-0 h-full rounded-full bg-[var(--color-accent-primary)]"
+            initial={{ width: 0 }}
+            animate={{ width: `${progressPct}%` }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          />
+        </div>
+        <span className="shrink-0 font-mono text-[10px] text-[var(--color-text-muted)]">
+          {currentQuestion}/{totalQuestions}
+        </span>
+      </div>
+
       <div className="flex select-none flex-wrap items-center gap-2">
         <Badge variant="outline">
           {bloomLevelLabel(question.bloomLevel)}
@@ -149,7 +173,7 @@ export function QuestionCard({
       </p>
 
       {isQCM ? (
-        <div className="select-none space-y-1" role="radiogroup" aria-label="Answer options">
+        <div className="select-none grid grid-cols-2 gap-2" role="radiogroup" aria-label="Answer options">
           {question.options?.map((option) => {
             const isSelected = selectedOption === option.text;
             const isCorrectOption =
@@ -282,10 +306,10 @@ export function QuestionCard({
               {isSubmitting ? (
                 <>
                   <Spinner size="sm" />
-                  <span className="ml-2">UPDATING...</span>
+                  {/* <span className="ml-2">UPDATING...</span> */}
                 </>
               ) : (
-                "CONTINUE"
+                <>CONTINUE<MoveRight className="h-4 w-4 ml-2" /></>
               )}
             </Button>
           )
@@ -297,7 +321,7 @@ export function QuestionCard({
             {isSubmitting ? <Spinner size="sm" /> : "SUBMIT"}
           </Button>
         ) : (
-          <Button onClick={onContinue} > CONTINUE</Button>
+          <Button onClick={onContinue}>CONTINUE<MoveRight className="h-4 w-4 ml-2" /></Button>
         )}
       </div>
     </motion.div>

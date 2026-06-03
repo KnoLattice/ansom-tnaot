@@ -25,19 +25,19 @@ const options: {
   description: string;
   icon: typeof ListChecks;
 }[] = [
-  {
-    type: "qcm",
-    label: "MULTIPLE CHOICE",
-    description: "Pick the correct answer from a set of options. Great for recognition and quick review.",
-    icon: ListChecks,
-  },
-  {
-    type: "short_answer",
-    label: "SHORT ANSWER",
-    description: "Type your answer in your own words. Better for deeper recall and understanding.",
-    icon: PenLine,
-  },
-];
+    {
+      type: "qcm",
+      label: "MULTIPLE CHOICE",
+      description: "Pick the correct answer from a set of options. Great for recognition and quick review.",
+      icon: ListChecks,
+    },
+    {
+      type: "short_answer",
+      label: "SHORT ANSWER",
+      description: "Type your answer in your own words. Better for deeper recall and understanding.",
+      icon: PenLine,
+    },
+  ];
 
 export function QuestionTypeDialog({ open, onSelect, onClose }: QuestionTypeDialogProps) {
   const [selected, setSelected] = useState<QuestionType>("qcm");
@@ -84,7 +84,7 @@ export function QuestionTypeDialog({ open, onSelect, onClose }: QuestionTypeDial
                 <div className="min-w-0">
                   <p
                     className={cn(
-                      "font-mono text-xs font-bold uppercase tracking-wider",
+                      "font-poppins text-xs font-bold uppercase tracking-wider",
                       isSelected ? "text-[var(--color-text-primary)]" : "text-[var(--color-text-secondary)]",
                     )}
                   >

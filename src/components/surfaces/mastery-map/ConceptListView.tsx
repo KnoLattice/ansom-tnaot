@@ -92,7 +92,7 @@ export function ConceptListView({
             type="button"
             onClick={() => onFilterChange(f.key)}
             className={cn(
-              "border px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider transition",
+              "border px-3 py-1.5 font-poppins text-[10px] font-bold uppercase tracking-wider transition",
               filter === f.key
                 ? "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/10 text-[var(--color-accent-primary)]"
                 : "border-[var(--color-border-default)] text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
@@ -113,17 +113,16 @@ export function ConceptListView({
       </div>
 
       {/* Table header */}
-      <div className="grid grid-cols-[1fr_120px_100px_80px] items-center gap-3 border-b border-[var(--color-border-default)] px-4 pb-2 font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
+      <div className="grid grid-cols-[1fr_120px_100px_80px] items-center gap-4 border-b border-[var(--color-border-default)] px-4 pb-2 font-poppins text-[11px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
         <SortButton label="Concept" sortKey="name" current={sortKey} asc={sortAsc} onClick={handleSort} />
         <SortButton label="Mastery" sortKey="mastery" current={sortKey} asc={sortAsc} onClick={handleSort} />
-        <span>Band</span>
         <SortButton label="Depth" sortKey="depth" current={sortKey} asc={sortAsc} onClick={handleSort} />
       </div>
 
       {/* Rows */}
       <div className="space-y-0">
         {sortedNodes.length === 0 ? (
-          <p className="py-8 text-center font-mono text-xs text-[var(--color-text-muted)]">
+          <p className="py-8 text-center font-poppins text-xs text-[var(--color-text-muted)]">
             NO CONCEPTS MATCH THIS FILTER
           </p>
         ) : (
@@ -133,7 +132,7 @@ export function ConceptListView({
               type="button"
               onClick={() => onSelectNode(node.id)}
               className={cn(
-                "grid w-full grid-cols-[1fr_120px_100px_80px] items-center gap-3 border-b border-[var(--color-border-subtle)] px-4 py-2.5 text-left transition",
+                "grid w-full grid-cols-[1fr_120px_100px_80px] items-center gap-4 border-b border-[var(--color-border-subtle)] px-4 py-2.5 text-left transition",
                 node.id === selectedNodeId
                   ? "border-l-2 border-l-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5"
                   : "hover:bg-[var(--color-surface-elevated)]",

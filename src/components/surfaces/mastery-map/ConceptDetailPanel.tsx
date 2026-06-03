@@ -87,7 +87,7 @@ export function ConceptDetailPanel({
               </h3>
               <div className="mt-2 flex items-center gap-2">
                 <MasteryBadge band={node.masteryBand ?? getMasteryBand(node.masteryScore)} />
-                <span className="font-mono text-[10px] font-bold tabular-nums text-[var(--color-text-secondary)]">
+                <span className="font-poppins text-[10px] font-bold tabular-nums text-[var(--color-text-secondary)]">
                   {formatMastery(node.masteryScore)}
                 </span>
               </div>

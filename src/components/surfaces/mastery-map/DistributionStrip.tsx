@@ -42,7 +42,7 @@ export function DistributionStrip({ nodes, className }: DistributionStripProps) 
         {segments.map((seg) => (
           <span key={seg.label} className="flex items-center gap-1.5">
             <span className={cn("h-2 w-2", seg.color)} />
-            <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
+            <span className="font-poppins text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
               {seg.label} ({seg.count})
             </span>
           </span>

@@ -283,7 +283,7 @@ function SessionContent({ id }: { id: string }) {
     : state.currentNode.masteryScore;
 
   return (
-    <div className="mx-auto max-w-3xl space-y-4">
+    <div className="mx-auto max-w-5xl space-y-4">
       <SessionHeader
         conceptName={state.currentNode.title}
         masteryScore={currentMastery}
@@ -317,6 +317,8 @@ function SessionContent({ id }: { id: string }) {
           isSubmitting={isSubmitting}
           onSubmit={handleSubmit}
           onContinue={handleContinue}
+          currentQuestion={state.questionCount + 1}
+          totalQuestions={MAX_SESSION_QUESTIONS}
         />
       ) : (
         <div className="border border-[var(--color-border-default)] bg-[var(--color-surface)] p-8 text-center">
