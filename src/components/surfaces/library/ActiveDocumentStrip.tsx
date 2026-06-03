@@ -17,7 +17,7 @@ export function ActiveDocumentStrip({ document }: ActiveDocumentStripProps) {
   return (
     <div className="flex flex-col gap-4 border-l-2 border rounded-md border-l-[var(--color-accent-primary)] border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4 md:flex-row md:items-center md:justify-between">
       <div className="min-w-0">
-        <p className="kl-data-label">Active Document</p>
+        <p className="font-poppins text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-[var(--color-text-muted)]">Active Document</p>
         <h2 className="mt-1 truncate font-oswald text-sm font-bold text-[var(--color-text-primary)]">
           {document.originalName}
         </h2>

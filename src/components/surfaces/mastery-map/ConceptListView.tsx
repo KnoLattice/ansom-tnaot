@@ -146,12 +146,12 @@ export function ConceptListView({
               </div>
               <div className="flex items-center gap-2">
                 <MasteryBar score={node.masteryScore} size="xs" animated={false} className="flex-1" />
-                <span className="shrink-0 font-mono text-[10px] font-bold tabular-nums text-[var(--color-text-secondary)]">
+                <span className="shrink-0 font-poppins text-[10px] font-bold tabular-nums text-[var(--color-text-secondary)]">
                   {formatMastery(node.masteryScore)}
                 </span>
               </div>
               <MasteryBadge band={node.masteryBand ?? getMasteryBand(node.masteryScore)} />
-              <span className="font-mono text-[10px] font-bold tabular-nums text-[var(--color-text-muted)]">
+              <span className="font-poppins text-[10px] font-bold tabular-nums text-[var(--color-text-muted)]">
                 {node.isLocked ? "LOCKED" : `L${node.graphDepth}`}
               </span>
             </button>

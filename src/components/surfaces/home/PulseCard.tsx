@@ -42,13 +42,12 @@ export function PulseCard({
         </span>
         {weeklyDelta != null && (
           <span
-            className={`text-xs font-semibold tabular-nums ${
-              weeklyDelta > 0
-                ? "text-[var(--color-accent-secondary)]"
-                : weeklyDelta < 0
-                  ? "text-red-400"
-                  : "text-[var(--color-text-muted)]"
-            }`}
+            className={`text-xs font-semibold tabular-nums ${weeklyDelta > 0
+              ? "text-[var(--color-accent-secondary)]"
+              : weeklyDelta < 0
+                ? "text-red-400"
+                : "text-[var(--color-text-muted)]"
+              }`}
           >
             {weeklyDelta > 0 ? "+" : ""}
             {weeklyDelta}% /wk

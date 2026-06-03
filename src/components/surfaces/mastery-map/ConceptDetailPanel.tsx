@@ -118,7 +118,7 @@ export function ConceptDetailPanel({
               {/* History placeholder */}
               <div className="border rounded-md border-[var(--color-border-subtle)] bg-[var(--color-canvas)] p-3">
                 <p className="kl-data-label">Mastery Over Time</p>
-                <p className="mt-2 font-mono text-[10px] text-[var(--color-text-muted)]">
+                <p className="mt-2 font-poppins text-[10px] text-[var(--color-text-muted)]">
                   PER-CONCEPT HISTORY COMING SOON
                 </p>
               </div>
@@ -133,7 +133,7 @@ export function ConceptDetailPanel({
                         key={prereq.id}
                         type="button"
                         onClick={() => onSelectNode(prereq.id)}
-                        className="inline-flex items-center gap-1 border rounded-md border-[var(--color-border-default)] px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-secondary)] transition hover:text-[var(--color-text-primary)]"
+                        className="inline-flex items-center gap-1 border rounded-md border-[var(--color-border-default)] px-2 py-1 font-poppins text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-secondary)] transition hover:text-[var(--color-text-primary)]"
                       >
                         {prereq.title}
                         <ArrowUpRight className="h-3 w-3" />
@@ -154,7 +154,7 @@ export function ConceptDetailPanel({
                         type="button"
                         onClick={() => onSelectNode(unlock.id)}
                         className={cn(
-                          "inline-flex items-center gap-1 border rounded-md px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-wider transition",
+                          "inline-flex items-center gap-1 border rounded-md px-2 py-1 font-poppins text-[10px] font-bold uppercase tracking-wider transition",
                           unlock.isLocked
                             ? "border-[var(--color-border-subtle)] text-[var(--color-text-muted)]"
                             : "border-[var(--color-accent-primary)]/30 text-[var(--color-accent-primary)] hover:bg-[var(--color-accent-primary)]/5",
@@ -168,7 +168,7 @@ export function ConceptDetailPanel({
                 </div>
               )}
 
-              <p className="font-mono text-[10px] text-[var(--color-text-muted)]">
+              <p className="font-poppins text-[10px] text-[var(--color-text-muted)]">
                 DEPTH: L{node.graphDepth}
               </p>
             </div>
@@ -178,7 +178,7 @@ export function ConceptDetailPanel({
           <div className="border-t border-[var(--color-border-default)] p-4">
             {node.isLocked ? (
               <div className="space-y-3">
-                <p className="font-mono text-[10px] text-[var(--color-text-muted)]">
+                <p className="font-poppins text-[10px] text-[var(--color-text-muted)]">
                   <Lock className="mr-1 inline h-3 w-3" />
                   COMPLETE PREREQUISITES TO UNLOCK
                 </p>
