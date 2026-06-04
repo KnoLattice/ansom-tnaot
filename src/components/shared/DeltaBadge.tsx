@@ -25,7 +25,7 @@ export function DeltaBadge({ delta, className }: DeltaBadgeProps) {
         duration: 0.15,
       }}
       className={cn(
-        "inline-flex items-center rounded-full px-2 py-0.5 font-poppins text-[11px] font-bold tabular-nums",
+        "inline-flex items-center  rounded-full px-2 py-0.5 font-poppins text-[11px] font-bold tabular-nums",
         isPositive
           ? "bg-[var(--color-accent-secondary)]/10 text-[var(--color-accent-secondary)]"
           : "bg-[var(--color-status-danger)]/10 text-[var(--color-status-danger)]",

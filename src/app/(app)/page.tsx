@@ -79,7 +79,7 @@ export default function HomePage() {
   // ── Empty state: no documents ──
   if (!docsLoading && !hasDocuments) {
     return (
-      <div className="mx-auto max-w-5xl space-y-6">
+      <div className="mx-auto max-w-5xl space-y-6 font-poppins">
         <ContinuityBanner
           lastSession={null}
           isFirstVisit
@@ -114,7 +114,7 @@ export default function HomePage() {
   // ── Loading skeleton ──
   if (docsLoading || (hasReadyDoc && dashLoading)) {
     return (
-      <div className="mx-auto max-w-5xl space-y-4">
+      <div className="mx-auto max-w-5xl space-y-4 font-poppins">
         <div className="h-12 kl-shimmer" />
         <div className="grid gap-4 md:grid-cols-2">
           <div className="h-48 kl-shimmer" />
@@ -127,7 +127,7 @@ export default function HomePage() {
 
   // ── Main home ──
   return (
-    <div className="mx-auto max-w-5xl space-y-4">
+    <div className="mx-auto max-w-5xl space-y-4 font-poppins">
       {/* 1. Continuity banner */}
       <ContinuityBanner
         lastSession={lastSession}

@@ -26,8 +26,8 @@ export function DistributionStrip({ nodes, className }: DistributionStripProps) 
 
   return (
     <div className={cn("space-y-2 rounded-md border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4", className)}>
-      {/* Bar — sharp, no radius */}
-      <div className="flex h-2 overflow-hidden bg-[var(--color-border-subtle)]">
+      {/* Bar — rounded */}
+      <div className="flex h-2 overflow-hidden rounded-full bg-[var(--color-border-subtle)]">
         {segments.map((seg) => (
           <div
             key={seg.label}
@@ -41,7 +41,7 @@ export function DistributionStrip({ nodes, className }: DistributionStripProps) 
       <div className="flex flex-wrap items-center gap-4">
         {segments.map((seg) => (
           <span key={seg.label} className="flex items-center gap-1.5">
-            <span className={cn("h-2 w-2", seg.color)} />
+            <span className={cn("h-2 w-2 rounded-full", seg.color)} />
             <span className="font-poppins text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
               {seg.label} ({seg.count})
             </span>

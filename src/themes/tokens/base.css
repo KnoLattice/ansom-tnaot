@@ -34,9 +34,9 @@
   --raw-success: #16A34A;
 
   /* ── Mastery tiers ── */
-  --raw-mastery-mastered: #52F531;
-  --raw-mastery-proficient: #22d3ee;
-  --raw-mastery-developing: #f59e0b;
+  --raw-mastery-mastered: #22C55E;
+  --raw-mastery-proficient: #FFCE1B;
+  --raw-mastery-developing: #FF8531;
   --raw-mastery-low: #FF0000;
   --raw-mastery-locked: #333333;
 

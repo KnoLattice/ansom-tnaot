@@ -156,9 +156,10 @@ function MasteryMapContent({ docId }: { docId: string }) {
       {/* Distribution strip */}
       <DistributionStrip nodes={graphData.nodes} />
 
-      {/* Main content: view + detail panel */}
+      {/* Main content: list + detail panel, always a flex row */}
       <div className="flex gap-4" style={{ minHeight: "60vh" }}>
-        <div className="min-w-0 flex-1">
+        {/* Left: list or graph — shrinks naturally when panel opens */}
+        <div className="min-w-0 flex-1 overflow-hidden">
           {view === "graph" ? (
             <div className="h-[60vh] overflow-hidden border border-[var(--color-border-default)] bg-[var(--color-canvas)]">
               <GraphView
@@ -178,9 +179,13 @@ function MasteryMapContent({ docId }: { docId: string }) {
           )}
         </div>
 
+        {/* Right: detail panel — slots in beside the list, no popup */}
         {selectedNode && (
-          <div className="hidden w-[360px] shrink-0 lg:block">
-            <div className="sticky top-16" style={{ maxHeight: "calc(100vh - 5rem)" }}>
+          <div className="w-[300px] shrink-0 lg:w-[360px]">
+          <div
+              className="sticky top-16"
+              style={{ maxHeight: "calc(100vh - 5rem)" }}
+            >
               <ConceptDetailPanel
                 node={selectedNode}
                 allNodes={graphData.nodes}

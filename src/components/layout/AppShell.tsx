@@ -153,7 +153,7 @@ export function AppShell({ children }: PropsWithChildren) {
                 className="rounded-lg text-sm text-red-500"
                 onClick={() => {
                   logout();
-                  router.replace("/auth");
+                  router.replace("/landing");
                 }}
               >
                 <LogOut className="mr-2 h-3.5 w-3.5" /> Logout

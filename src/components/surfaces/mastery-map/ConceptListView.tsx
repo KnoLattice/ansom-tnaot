@@ -84,18 +84,18 @@ export function ConceptListView({
 
   return (
     <div className="space-y-3">
-      {/* Filter chips — brutalist */}
-      <div className="flex flex-wrap items-center gap-1">
+      {/* Filter chips */}
+      <div className="flex flex-wrap items-center gap-2">
         {FILTERS.map((f) => (
           <button
             key={f.key}
             type="button"
             onClick={() => onFilterChange(f.key)}
             className={cn(
-              "border px-3 py-1.5 font-poppins text-[10px] font-bold uppercase tracking-wider transition",
+              "rounded-full border px-4 py-1.5 font-poppins text-[10px] font-bold uppercase tracking-wider transition",
               filter === f.key
                 ? "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/10 text-[var(--color-accent-primary)]"
-                : "border-[var(--color-border-default)] text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
+                : "border-[var(--color-border-default)] text-[var(--color-text-muted)] hover:border-[var(--color-accent-primary)]/40 hover:text-[var(--color-text-secondary)]",
             )}
           >
             {f.label}
@@ -113,10 +113,10 @@ export function ConceptListView({
       </div>
 
       {/* Table header */}
-      <div className="grid grid-cols-[1fr_120px_100px_80px] items-center gap-4 border-b border-[var(--color-border-default)] px-4 pb-2 font-poppins text-[11px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
+      <div className="grid grid-cols-[1fr_120px_100px] items-center gap-4 border-b border-[var(--color-border-default)] px-4 pb-2 font-poppins text-[11px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
         <SortButton label="Concept" sortKey="name" current={sortKey} asc={sortAsc} onClick={handleSort} />
         <SortButton label="Mastery" sortKey="mastery" current={sortKey} asc={sortAsc} onClick={handleSort} />
-        <SortButton label="Depth" sortKey="depth" current={sortKey} asc={sortAsc} onClick={handleSort} />
+        <SortButton label="Status" sortKey="band" current={sortKey} asc={sortAsc} onClick={handleSort} />
       </div>
 
       {/* Rows */}
@@ -132,7 +132,7 @@ export function ConceptListView({
               type="button"
               onClick={() => onSelectNode(node.id)}
               className={cn(
-                "grid w-full grid-cols-[1fr_120px_100px_80px] items-center gap-4 border-b border-[var(--color-border-subtle)] px-4 py-2.5 text-left transition",
+                "grid w-full grid-cols-[1fr_120px_100px] items-center gap-4 border-b border-[var(--color-border-subtle)] px-4 py-2.5 text-left transition",
                 node.id === selectedNodeId
                   ? "border-l-2 border-l-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5"
                   : "hover:bg-[var(--color-surface-elevated)]",
@@ -151,9 +151,6 @@ export function ConceptListView({
                 </span>
               </div>
               <MasteryBadge band={node.masteryBand ?? getMasteryBand(node.masteryScore)} />
-              <span className="font-poppins text-[10px] font-bold tabular-nums text-[var(--color-text-muted)]">
-                {node.isLocked ? "LOCKED" : `L${node.graphDepth}`}
-              </span>
             </button>
           ))
         )}
@@ -181,8 +178,10 @@ function SortButton({
       type="button"
       onClick={() => onClick(sortKey)}
       className={cn(
-        "inline-flex items-center gap-1 text-left",
-        isActive && "text-[var(--color-accent-primary)]",
+        "inline-flex items-center gap-1 font-poppins text-left text-[11px] font-bold uppercase tracking-wider",
+        isActive
+          ? "text-[var(--color-accent-primary)]"
+          : "text-[var(--color-text-muted)]",
       )}
     >
       {label}

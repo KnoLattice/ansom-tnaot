@@ -33,7 +33,7 @@ export function ActiveDocumentStrip({ document }: ActiveDocumentStripProps) {
           disabled={!isReady}
           onClick={() => router.push(`/mastery/${document.id}`)}
         >
-          <Map className="mr-2 h-3.5 w-3.5" />
+          <Map className="mr-2 h-3.5 w-3.5" style={{ color: "var(--color-accent-primary)" }} />
           MAP
         </Button>
         <Button

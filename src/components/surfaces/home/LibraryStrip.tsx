@@ -17,8 +17,8 @@ export function LibraryStrip({ activeDocumentName }: LibraryStripProps) {
       className="flex items-center justify-between rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-4 py-3 shadow-sm transition-all duration-200 hover:shadow-md"
     >
       <div className="flex min-w-0 items-center gap-3 text-sm text-[var(--color-text-muted)]">
-        <BookOpen className="h-4 w-4 shrink-0" />
-        <span className="kl-data-label shrink-0">Active Doc:</span>
+        <BookOpen className="h-4 w-4 shrink-0" style={{ color: "var(--color-accent-primary)" }} />
+        <span className="kl-data-label text-xs font-poppins shrink-0">Active Doc:</span>
         <span className="truncate text-sm text-[var(--color-text-secondary)]">
           {activeDocumentName ?? "None"}
         </span>

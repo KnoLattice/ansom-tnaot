@@ -39,6 +39,8 @@ const config: Config = {
         sans: ["var(--font-body)", "Inter", "system-ui", "sans-serif"],
         display: ["var(--font-display)", "Syne", "sans-serif"],
         mono: ["var(--font-mono)", "\"JetBrains Mono\"", "monospace"],
+        poppins: ["var(--font-poppins)", "Poppins", "sans-serif"],
+        oswald: ["var(--font-oswald)", "Oswald", "sans-serif"],
       },
       boxShadow: {
         glow: "0 0 40px rgba(124, 92, 252, 0.25)",

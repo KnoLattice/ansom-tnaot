@@ -108,9 +108,10 @@ export function QuickUploadZone({ onUploadComplete, showFullUploadCTA = true }: 
         )}>
           <Upload
             className={cn(
-              "h-5 w-5 text-[var(--color-text-muted)] transition-colors duration-200",
-              isDragActive && "text-[var(--color-accent-primary)]",
+              "h-5 w-5 transition-colors duration-200",
+              isDragActive ? "text-[var(--color-accent-primary)]" : "",
             )}
+            style={{ color: isDragActive ? undefined : "var(--color-accent-primary)" }}
           />
         </div>
         <p className="mt-3 text-sm font-medium text-[var(--color-text-secondary)]">

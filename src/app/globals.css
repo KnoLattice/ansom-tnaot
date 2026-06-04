@@ -3,6 +3,11 @@
 @import "../themes/tokens/base.css";
 @import "../themes/tokens/semantic.css";
 
+@theme {
+  --font-family-poppins: var(--font-poppins), "Poppins", sans-serif;
+  --font-family-oswald: var(--font-oswald), "Oswald", sans-serif;
+}
+
 @layer base {
   *,
   *::before,

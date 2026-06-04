@@ -90,7 +90,7 @@ export function RecentDocuments({ documents, activeDocumentId }: RecentDocuments
                   ? "bg-[var(--color-accent-primary)]/10 text-[var(--color-accent-primary)]"
                   : "bg-[var(--color-surface-elevated)] text-[var(--color-text-muted)]",
               )}>
-                <FileText className="h-4 w-4" />
+                <FileText className="h-4 w-4" style={{ color: isActive ? undefined : "var(--color-accent-primary)" }} />
               </div>
 
               <div className="min-w-0 flex-1">

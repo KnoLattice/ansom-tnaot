@@ -27,7 +27,7 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401) {
       useAuthStore.getState().logout();
       if (typeof window !== "undefined") {
-        window.location.href = "/auth";
+        window.location.href = "/landing";
       }
     }
     return Promise.reject(error);
