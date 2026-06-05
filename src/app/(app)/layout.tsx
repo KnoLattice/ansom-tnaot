@@ -15,7 +15,7 @@ export default function AppLayout({ children }: PropsWithChildren) {
   const router = useRouter();
 
   useEffect(() => {
-    if (hydrated && !token) router.replace("/auth");
+    if (hydrated && !token) router.replace("/landing");
   }, [hydrated, router, token]);
 
   useEffect(() => {

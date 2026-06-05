@@ -12,7 +12,7 @@ export function getMasteryColor(band: MasteryBand): string {
     mastered: "#22c55e",
     proficient: "#84cc16",
     developing: "#f59e0b",
-    low: "#ef4444",
+    low: "#FF0000",
   };
   return map[band];
 }

@@ -90,7 +90,7 @@ function MasteryMapContent({ docId }: { docId: string }) {
   if (error || !graphData) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
-        <p className="font-mono text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+        <p className="font-poppins text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
           UNABLE TO LOAD GRAPH
         </p>
         <p className="mt-2 text-sm text-[var(--color-text-secondary)]">
@@ -114,10 +114,10 @@ function MasteryMapContent({ docId }: { docId: string }) {
       {/* Header */}
       <div className="flex flex-col gap-4 border-b border-[var(--color-border-default)] pb-4 md:flex-row md:items-start md:justify-between">
         <div>
-          <h1 className="font-mono text-lg font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+          <h1 className="font-poppins text-lg font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
             Mastery Map
           </h1>
-          <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
+          <p className="mt-0.5 font-poppins text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
             {docName.replace(/\.[^.]+$/, "")} / {graphData.nodes.length} concepts
           </p>
         </div>
@@ -128,7 +128,7 @@ function MasteryMapContent({ docId }: { docId: string }) {
             type="button"
             onClick={() => setView("graph")}
             className={cn(
-              "flex items-center gap-2 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition border-r rounded-l-lg border-[var(--color-border-default)]",
+              "flex items-center gap-2 px-4 py-2 font-poppins text-[10px] font-bold uppercase tracking-wider transition border-r rounded-l-lg border-[var(--color-border-default)]",
               view === "graph"
                 ? "bg-[var(--color-accent-primary)] text-white"
                 : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
@@ -141,7 +141,7 @@ function MasteryMapContent({ docId }: { docId: string }) {
             type="button"
             onClick={() => setView("list")}
             className={cn(
-              "flex items-center gap-2 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition rounded-r-lg border-[var(--color-border-default)]",
+              "flex items-center gap-2 px-4 py-2 font-poppins text-[10px] font-bold uppercase tracking-wider transition rounded-r-lg border-[var(--color-border-default)]",
               view === "list"
                 ? "bg-[var(--color-accent-primary)] text-white"
                 : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
@@ -156,9 +156,10 @@ function MasteryMapContent({ docId }: { docId: string }) {
       {/* Distribution strip */}
       <DistributionStrip nodes={graphData.nodes} />
 
-      {/* Main content: view + detail panel */}
+      {/* Main content: list + detail panel, always a flex row */}
       <div className="flex gap-4" style={{ minHeight: "60vh" }}>
-        <div className="min-w-0 flex-1">
+        {/* Left: list or graph — shrinks naturally when panel opens */}
+        <div className="min-w-0 flex-1 overflow-hidden">
           {view === "graph" ? (
             <div className="h-[60vh] overflow-hidden border border-[var(--color-border-default)] bg-[var(--color-canvas)]">
               <GraphView
@@ -178,9 +179,13 @@ function MasteryMapContent({ docId }: { docId: string }) {
           )}
         </div>
 
+        {/* Right: detail panel — slots in beside the list, no popup */}
         {selectedNode && (
-          <div className="hidden w-[360px] shrink-0 lg:block">
-            <div className="sticky top-16" style={{ maxHeight: "calc(100vh - 5rem)" }}>
+          <div className="w-[300px] shrink-0 lg:w-[360px]">
+          <div
+              className="sticky top-16"
+              style={{ maxHeight: "calc(100vh - 5rem)" }}
+            >
               <ConceptDetailPanel
                 node={selectedNode}
                 allNodes={graphData.nodes}

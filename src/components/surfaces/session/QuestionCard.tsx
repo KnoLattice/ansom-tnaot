@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { Check, X as XIcon, Clock } from "lucide-react";
+import { Check, X as XIcon, Clock ,MoveRight} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -17,6 +17,8 @@ interface QuestionCardProps {
   isSubmitting: boolean;
   onSubmit: (answer: string) => void;
   onContinue: () => void;
+  currentQuestion?: number;
+  totalQuestions?: number;
 }
 
 const TIMER_SECONDS_QCM = 30;
@@ -28,6 +30,8 @@ export function QuestionCard({
   isSubmitting,
   onSubmit,
   onContinue,
+  currentQuestion = 1,
+  totalQuestions = 12,
 }: QuestionCardProps) {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [shortAnswer, setShortAnswer] = useState("");
@@ -106,12 +110,14 @@ export function QuestionCard({
     onSubmit(shortAnswer.trim());
   };
 
+  const progressPct = Math.min((currentQuestion / totalQuestions) * 100, 100);
+
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.1 }}
-      className="space-y-5 border  border-[var(--color-border-default)] bg-[var(--color-surface)] p-5"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: "easeOut" }}
+      className="space-y-5 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-6 shadow-sm"
       onKeyDown={handleKeyDown}
       onContextMenu={(e) => {
         if ((e.target as HTMLElement).tagName === "TEXTAREA") return;
@@ -119,6 +125,24 @@ export function QuestionCard({
       }}
       onDragStart={(e) => e.preventDefault()}
     >
+      {/* Progress bar */}
+      <div className="flex items-center gap-3">
+        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent-primary)] text-[11px] font-bold text-white shadow">
+          {currentQuestion}
+        </div>
+        <div className="relative h-2 flex-1 overflow-hidden rounded-full bg-[var(--color-border-subtle)]">
+          <motion.div
+            className="absolute left-0 top-0 h-full rounded-full bg-[var(--color-accent-primary)]"
+            initial={{ width: 0 }}
+            animate={{ width: `${progressPct}%` }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          />
+        </div>
+        <span className="shrink-0 font-mono text-[10px] text-[var(--color-text-muted)]">
+          {currentQuestion}/{totalQuestions}
+        </span>
+      </div>
+
       <div className="flex select-none flex-wrap items-center gap-2">
         <Badge variant="outline">
           {bloomLevelLabel(question.bloomLevel)}
@@ -149,13 +173,13 @@ export function QuestionCard({
       </p>
 
       {isQCM ? (
-        <div className="select-none space-y-1" role="radiogroup" aria-label="Answer options">
+        <div className="select-none grid grid-cols-2 gap-2" role="radiogroup" aria-label="Answer options">
           {question.options?.map((option) => {
             const isSelected = selectedOption === option.text;
             const isCorrectOption =
               hasAnswered &&
               option.text.trim().toLowerCase() ===
-              (question.correctAnswer ?? "").trim().toLowerCase();
+                (question.correctAnswer ?? "").trim().toLowerCase();
             const isWrongSelected = hasAnswered && isSelected && !localCorrect;
 
             return (
@@ -169,17 +193,17 @@ export function QuestionCard({
                 className={cn(
                   "group flex w-full items-center gap-3 border rounded-md px-4 py-3 text-left text-sm transition",
                   !hasAnswered &&
-                  !isSelected &&
-                  "border-[var(--color-border-subtle)] bg-[var(--color-canvas)] hover:border-[var(--color-border-default)] hover:bg-[var(--color-surface-elevated)]",
+                    !isSelected &&
+                    "border-[var(--color-border-subtle)] bg-[var(--color-canvas)] hover:border-[var(--color-border-default)] hover:bg-[var(--color-surface-elevated)]",
                   !hasAnswered &&
-                  isSelected &&
-                  "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5",
+                    isSelected &&
+                    "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5",
                   isCorrectOption && "border-green-500 bg-green-500/10",
                   isWrongSelected && "border-red-500 bg-red-500/10",
                   hasAnswered &&
-                  !isCorrectOption &&
-                  !isWrongSelected &&
-                  "opacity-30",
+                    !isCorrectOption &&
+                    !isWrongSelected &&
+                    "opacity-30",
                 )}
               >
                 {hasAnswered && isCorrectOption && (
@@ -190,7 +214,7 @@ export function QuestionCard({
                 )}
 
                 <span>
-                  <span className="font-mono text-xs font-bold text-[var(--color-text-muted)]">
+                  <span className="font-poppins text-xs font-bold text-[var(--color-text-muted)]">
                     {option.label}.
                   </span>{" "}
                   <span className="text-[var(--color-text-primary)]">{option.text}</span>
@@ -223,7 +247,7 @@ export function QuestionCard({
         >
           <p
             className={cn(
-              "font-mono text-xs font-bold uppercase tracking-wider",
+              "font-poppins text-xs font-bold uppercase tracking-wider",
               localCorrect ? "text-green-400" : "text-red-400",
             )}
           >
@@ -249,12 +273,12 @@ export function QuestionCard({
             "select-none border-l-2 p-4",
             feedback.isCorrect
               ? "border-l-green-500 bg-green-500/5"
-              : "border-l-red-500 rounded-r-md bg-red-500/5",
+              : "border-l-red-500bg-red-500/5",
           )}
         >
           <p
             className={cn(
-              "font-mono text-xs font-bold uppercase tracking-wider",
+              "font-poppins text-xs font-bold uppercase tracking-wider",
               feedback.isCorrect ? "text-green-400" : "text-red-400",
             )}
           >
@@ -278,14 +302,14 @@ export function QuestionCard({
       <div className="flex justify-end">
         {isQCM ? (
           hasAnswered && (
-            <Button onClick={onContinue} disabled={isSubmitting} className="rounded-md" >
+            <Button onClick={onContinue} disabled={isSubmitting}>
               {isSubmitting ? (
                 <>
                   <Spinner size="sm" />
-                  <span className="ml-2">UPDATING...</span>
+                  {/* <span className="ml-2">UPDATING...</span> */}
                 </>
               ) : (
-                "CONTINUE"
+                <>CONTINUE<MoveRight className="h-4 w-4 ml-2" /></>
               )}
             </Button>
           )
@@ -293,12 +317,11 @@ export function QuestionCard({
           <Button
             disabled={!shortAnswer.trim() || isSubmitting}
             onClick={handleShortAnswerSubmit}
-            className="rounded-md"
           >
             {isSubmitting ? <Spinner size="sm" /> : "SUBMIT"}
           </Button>
         ) : (
-          <Button onClick={onContinue}> Continue </Button>
+          <Button onClick={onContinue}>CONTINUE<MoveRight className="h-4 w-4 ml-2" /></Button>
         )}
       </div>
     </motion.div>

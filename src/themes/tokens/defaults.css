@@ -7,8 +7,8 @@
   --color-text-primary: var(--raw-text-primary);
   --color-text-secondary: var(--raw-text-secondary);
   --color-text-muted: var(--raw-text-muted);
-  --color-accent-primary: #1454E1;
-  --color-accent-secondary: #73E2A4;
+  --color-accent-primary: #1988e3;
+  --color-accent-secondary: #16A34A;
   --color-border-subtle: var(--raw-border-subtle);
   --color-border-default: var(--raw-border-default);
   --color-node-mastered: var(--raw-mastery-mastered);
@@ -25,4 +25,9 @@
   --space-nebula-opacity: 0;
   --space-nebula-primary: transparent;
   --space-nebula-secondary: transparent;
+
+  /* Status — semantic aliases */
+  --color-status-success: var(--raw-success);
+  --color-status-warning: var(--raw-warning);
+  --color-status-danger: var(--raw-danger);
 }

@@ -93,10 +93,10 @@ export default function LibraryPage() {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-[var(--color-border-default)] pb-4">
         <div>
-          <h1 className="font-mono text-lg font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+          <h1 className="font-oswald text-lg font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
             Library
           </h1>
-          <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
+          <p className="mt-0.5 font-poppins text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
             {documents.length > 0
               ? `${documents.length} document${documents.length !== 1 ? "s" : ""} loaded`
               : "Empty"}
@@ -116,7 +116,7 @@ export default function LibraryPage() {
       {/* Documents list */}
       {documents.length === 0 ? (
         <div className="flex min-h-[40vh] flex-col items-center justify-center border-2 border rounded-lg border-dashed border-[var(--color-border-default)] bg-[var(--color-surface)] p-12 text-center">
-          <p className="font-mono text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+          <p className="font-poppins text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
             No documents loaded
           </p>
           <p className="mt-2 max-w-md text-sm text-[var(--color-text-secondary)]">
@@ -135,7 +135,7 @@ export default function LibraryPage() {
             <Button
               variant="ghost"
               size="sm"
-              className="font-mono text-[10px]"
+              className="font-poppins text-[11px]"
               onClick={() =>
                 setSortBy((s) => (s === "recency" ? "name" : "recency"))
               }

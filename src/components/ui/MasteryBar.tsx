@@ -27,7 +27,7 @@ const sizeClasses: Record<MasterySize, string> = {
 export function MasteryBar({
   score,
   band,
-  size = "sm",
+  size = "xs",
   showLabel = false,
   animated = true,
   className,
@@ -37,12 +37,12 @@ export function MasteryBar({
 
   return (
     <div className={cn("w-full space-y-1", className)}>
-      <div className={cn("w-full bg-[var(--color-border-subtle)]", sizeClasses[size])}>
+      <div className={cn("w-full rounded-full bg-[var(--color-border-subtle)]", sizeClasses[size])}>
         <motion.div
           initial={{ width: animated ? 0 : `${percent}%` }}
           animate={{ width: `${percent}%` }}
           transition={{ duration: 0.3 }}
-          className="h-full"
+          className="h-full rounded-full"
           style={{ backgroundColor: color }}
         />
       </div>

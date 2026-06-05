@@ -103,7 +103,7 @@ export function useAuth() {
       // ignore best-effort logout
     }
     clearAuth();
-    router.replace("/auth");
+    router.replace("/landing");
   }, [clearAuth, router]);
 
   const googleLogin = useCallback(() => {

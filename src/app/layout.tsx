@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Space_Mono, DM_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Space_Mono, DM_Sans, Poppins, Oswald } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { ClientToaster } from "@/components/providers/ClientToaster";
 import "./globals.css";
@@ -16,10 +16,16 @@ const body = DM_Sans({
   variable: "--font-body",
 });
 
-const mono = IBM_Plex_Mono({
+const oswald = Oswald({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
-  variable: "--font-mono",
+  variable: "--font-oswald",
+});
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-poppins",
 });
 
 export const metadata: Metadata = {
@@ -36,7 +42,7 @@ export default function RootLayout({
     <html
       lang="en"
       data-theme="ink"
-      className={`${display.variable} ${body.variable} ${mono.variable} antialiased`}
+      className={`${display.variable} ${body.variable} ${oswald.variable} ${poppins.variable} antialiased`}
     >
       <body className="min-h-screen bg-canvas text-text-primary">
         <Providers>{children}</Providers>

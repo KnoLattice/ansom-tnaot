@@ -44,15 +44,15 @@ export function ProcessingPipeline({
   const isComplete = status === "completed";
 
   return (
-    <div className="w-full space-y-6 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-8">
+    <div className="w-full space-y-6 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-8 shadow-sm">
       {/* Header */}
       <div>
-        <p className="text-xs uppercase tracking-widest text-text-muted">
+        <p className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
           {isFailed ? "Processing failed" : isComplete ? "Processing complete" : "Processing"}
         </p>
         <h3 className="mt-1 text-lg font-semibold text-[var(--color-text-primary)]">{documentName}</h3>
         {!isComplete && !isFailed && (
-          <p className="mt-0.5 text-sm text-text-muted tabular-nums">
+          <p className="mt-0.5 text-sm tabular-nums text-[var(--color-text-muted)]">
             {elapsedSeconds}s elapsed
           </p>
         )}
@@ -69,33 +69,33 @@ export function ProcessingPipeline({
             <div
               key={stage.label}
               className={cn(
-                "flex flex-col items-center gap-2 rounded-xl border border-[var(--color-border-subtle)] px-3 py-4 text-center transition",
+                "flex flex-col items-center gap-2 rounded-xl border border-[var(--color-border-subtle)] px-3 py-4 text-center transition-all duration-300",
                 isDone && "border-green-500/20 bg-green-500/5",
-                isActive && "border-accent-primary/30 bg-accent-primary/5",
+                isActive && "border-[var(--color-accent-primary)]/30 bg-[var(--color-accent-primary)]/5",
                 isFailed && "border-red-500/20 bg-red-500/5",
               )}
             >
-              <div className="flex h-8 w-8 items-center justify-center">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-surface-elevated)]">
                 {isFailed ? (
-                  <AlertCircle className="h-5 w-5 text-red-400" />
+                  <AlertCircle className="h-5 w-5 text-red-500" />
                 ) : isDone ? (
-                  <CheckCircle2 className="h-5 w-5 text-green-400" />
+                  <CheckCircle2 className="h-5 w-5 text-green-500" />
                 ) : isActive ? (
-                  <Loader2 className="h-5 w-5 animate-spin text-accent-primary" />
+                  <Loader2 className="h-5 w-5 animate-spin text-[var(--color-accent-primary)]" />
                 ) : (
-                  <Icon className="h-5 w-5 text-text-muted" />
+                  <Icon className="h-5 w-5 text-[var(--color-text-muted)]" />
                 )}
               </div>
               <p
                 className={cn(
                   "text-xs font-medium",
                   isDone
-                    ? "text-green-400"
+                    ? "text-green-600"
                     : isActive
                       ? "text-[var(--color-text-primary)]"
                       : isFailed
-                        ? "text-red-400"
-                        : "text-text-muted",
+                        ? "text-red-500"
+                        : "text-[var(--color-text-muted)]",
                 )}
               >
                 {stage.label}
@@ -110,8 +110,8 @@ export function ProcessingPipeline({
         <div className="h-2 overflow-hidden rounded-full bg-[var(--color-border-subtle)]">
           <div
             className={cn(
-              "h-full rounded-full transition-all duration-500",
-              isComplete ? "bg-green-500" : "bg-accent-primary",
+              "h-full rounded-full transition-all duration-700 ease-out",
+              isComplete ? "bg-green-500" : "bg-[var(--color-accent-primary)]",
             )}
             style={{
               width: `${isComplete ? 100 : Math.min(95, (activeIndex / STAGES.length) * 100)}%`,
@@ -122,7 +122,7 @@ export function ProcessingPipeline({
 
       {/* Error message */}
       {isFailed && errorMessage && (
-        <p className="text-sm text-red-400">
+        <p className="rounded-xl bg-red-500/10 px-4 py-2 text-sm text-red-500">
           We couldn&apos;t process this file: {errorMessage}
         </p>
       )}

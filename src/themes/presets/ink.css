@@ -1,31 +1,31 @@
 :root[data-theme="ink"] {
-  /* Canvas & surfaces — light mode */
-  --color-canvas: #F3F3F2;
+  /* Canvas & surfaces — alice blue light mode */
+  --color-canvas: #f8fdff;
   --color-surface: #FFFFFF;
-  --color-surface-elevated: #F8F8F7;
-  --color-halo: #E8E8E7;
+  --color-surface-elevated: #eef5fa;
+  --color-halo: #E1EFF9;
 
-  /* Text — high contrast for light mode */
-  --color-text-primary: #1a1a1a;
-  --color-text-secondary: #666666;
-  --color-text-muted: #999999;
+  /* Text — refined contrast */
+  --color-text-primary: #1C1C1C;
+  --color-text-secondary: #5C5C5C;
+  --color-text-muted: #9CA3AF;
 
-  /* Accent — blue primary, green secondary */
-  --color-accent-primary: #1454E1;
-  --color-accent-secondary: #73E2A4;
+  /* Accent — warm indigo + emerald */
+  --color-accent-primary: #0083ef;
+  --color-accent-secondary: #16A34A;
 
-  /* Borders — solid, visible, structural for light mode */
-  --color-border-subtle: #E0E0DF;
-  --color-border-default: #D0D0CF;
+  /* Borders — softer, warmer */
+  --color-border-subtle: #E5E5E3;
+  --color-border-default: #D4D4D2;
 
-  /* Panel — opaque, no effects for light mode */
+  /* Panel — modern, clean */
   --panel-bg: #FFFFFF;
-  --panel-border: #E0E0DF;
+  --panel-border: #E5E5E3;
 
   /* All space effects disabled */
   --space-starfield-opacity: 0;
   --space-nebula-opacity: 0;
 
-  /* Glow uses the new accent for light mode */
-  --glow-accent: rgba(20, 84, 225, 0.08);
+  /* Glow uses warm indigo */
+  --glow-accent: rgba(79, 70, 229, 0.08);
 }
