@@ -22,14 +22,7 @@ const PARTICLE_SPEED        = 0.28;
 const PARTICLE_MIN_RADIUS   = 1.0;
 const PARTICLE_RADIUS_RANGE = 1.5;
 
-// ── Book animation constants ───────────────────────────────────────────────
-const BOOK_FLOAT_RANGE    = 7;
-const BOOK_FLOAT_DURATION = 5;
-
-// ── SVG stroke colors ──────────────────────────────────────────────────────
-const BOOK_S  = "rgba(80,160,220,0.75)";
-const BOOK_SL = "rgba(140,200,240,0.6)";
-const BOOK_SS = "rgba(60,130,200,0.9)";
+// (Open-book visual removed)
 
 // ── Canvas Particle Animation ──────────────────────────────────────────────
 function ParticleCanvas() {
@@ -138,73 +131,7 @@ function FlowingWaves() {
   );
 }
 
-// ── Open Book Wireframe SVG ────────────────────────────────────────────────
-// Proper open book: two trapezoidal pages side-by-side, vertical center spine,
-// horizontal page lines + diagonal triangulation on each page.
-function CrystalBook() {
-  const s  = BOOK_S;
-  const sl = BOOK_SL;
-  const ss = BOOK_SS;
-
-  return (
-    <svg width="180" height="110" viewBox="0 0 180 110" fill="none">
-
-      {/* Ghost depth layers */}
-      <g opacity="0.13" transform="translate(-6,7)">
-        <path d="M 90,8 L 12,22 L 8,88 L 90,102 Z"   stroke={s} strokeWidth="1.0" fill="none"/>
-        <path d="M 90,8 L 168,22 L 172,88 L 90,102 Z" stroke={s} strokeWidth="1.0" fill="none"/>
-      </g>
-      <g opacity="0.08" transform="translate(-12,13)">
-        <path d="M 90,8 L 12,22 L 8,88 L 90,102 Z"   stroke={s} strokeWidth="0.8" fill="none"/>
-        <path d="M 90,8 L 168,22 L 172,88 L 90,102 Z" stroke={s} strokeWidth="0.8" fill="none"/>
-      </g>
-
-      {/* Left page */}
-      <path d="M 90,8 L 12,22 L 8,88 L 90,102 Z"
-        fill="rgba(190,225,250,0.07)" stroke={s} strokeWidth="1.3" strokeLinejoin="round"/>
-
-      {/* Right page */}
-      <path d="M 90,8 L 168,22 L 172,88 L 90,102 Z"
-        fill="rgba(190,225,250,0.05)" stroke={s} strokeWidth="1.3" strokeLinejoin="round"/>
-
-      {/* Left horizontal ribs */}
-      <line x1="90" y1="30" x2="10"  y2="38" stroke={sl} strokeWidth="0.8" opacity="0.65"/>
-      <line x1="90" y1="50" x2="9"   y2="56" stroke={sl} strokeWidth="0.8" opacity="0.65"/>
-      <line x1="90" y1="68" x2="9"   y2="72" stroke={sl} strokeWidth="0.8" opacity="0.60"/>
-      <line x1="90" y1="84" x2="9"   y2="86" stroke={sl} strokeWidth="0.8" opacity="0.55"/>
-
-      {/* Left diagonals */}
-      <line x1="90"  y1="8"  x2="8"  y2="88"  stroke={sl} strokeWidth="0.7" opacity="0.50"/>
-      <line x1="12"  y1="22" x2="90" y2="102" stroke={sl} strokeWidth="0.7" opacity="0.50"/>
-      <line x1="9"   y1="56" x2="90" y2="8"   stroke={sl} strokeWidth="0.6" opacity="0.40"/>
-      <line x1="9"   y1="56" x2="90" y2="102" stroke={sl} strokeWidth="0.6" opacity="0.40"/>
-      <line x1="12"  y1="22" x2="9"  y2="72"  stroke={sl} strokeWidth="0.6" opacity="0.38"/>
-      <line x1="10"  y1="38" x2="8"  y2="88"  stroke={sl} strokeWidth="0.6" opacity="0.35"/>
-
-      {/* Right horizontal ribs */}
-      <line x1="90" y1="30" x2="170" y2="38" stroke={sl} strokeWidth="0.8" opacity="0.65"/>
-      <line x1="90" y1="50" x2="171" y2="56" stroke={sl} strokeWidth="0.8" opacity="0.65"/>
-      <line x1="90" y1="68" x2="171" y2="72" stroke={sl} strokeWidth="0.8" opacity="0.60"/>
-      <line x1="90" y1="84" x2="171" y2="86" stroke={sl} strokeWidth="0.8" opacity="0.55"/>
-
-      {/* Right diagonals */}
-      <line x1="90"  y1="8"  x2="172" y2="88"  stroke={sl} strokeWidth="0.7" opacity="0.50"/>
-      <line x1="168" y1="22" x2="90"  y2="102" stroke={sl} strokeWidth="0.7" opacity="0.50"/>
-      <line x1="171" y1="56" x2="90"  y2="8"   stroke={sl} strokeWidth="0.6" opacity="0.40"/>
-      <line x1="171" y1="56" x2="90"  y2="102" stroke={sl} strokeWidth="0.6" opacity="0.40"/>
-      <line x1="168" y1="22" x2="171" y2="72"  stroke={sl} strokeWidth="0.6" opacity="0.38"/>
-      <line x1="170" y1="38" x2="172" y2="88"  stroke={sl} strokeWidth="0.6" opacity="0.35"/>
-
-      {/* Center spine */}
-      <line x1="90" y1="8" x2="90" y2="102" stroke={ss} strokeWidth="1.7"/>
-
-      {/* Top arch */}
-      <path d="M 12,22 Q 90,4 168,22" fill="none" stroke={sl} strokeWidth="0.9" opacity="0.6"/>
-      {/* Bottom arch */}
-      <path d="M 8,88 Q 90,106 172,88" fill="none" stroke={sl} strokeWidth="0.9" opacity="0.5"/>
-    </svg>
-  );
-}
+/* CrystalBook removed */
 
 // ── Main Hero Section ──────────────────────────────────────────────────────
 export function HeroSection() {
@@ -219,15 +146,7 @@ export function HeroSection() {
       {/* Particle network — z:2 */}
       <ParticleCanvas />
 
-      {/* Floating book — z:8 */}
-      <motion.div
-        animate={{ y: [-BOOK_FLOAT_RANGE, BOOK_FLOAT_RANGE, -BOOK_FLOAT_RANGE] }}
-        transition={{ duration: BOOK_FLOAT_DURATION, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[14%] left-[62%] z-[8]"
-        style={{ filter: "drop-shadow(0 6px 20px rgba(21,101,192,0.20))" }}
-      >
-        <CrystalBook />
-      </motion.div>
+      {/* Floating book removed */}
 
       {/* Hero content — z:10 */}
       <div className="relative z-10 text-center max-w-[960px] px-8">
@@ -260,7 +179,7 @@ export function HeroSection() {
         >
           <Link
             href={CTA_HREF}
-            className="inline-block rounded-full font-bold text-[1.05rem] no-underline transition-[transform,box-shadow] duration-200 text-blue-700 bg-white border border-white/90"
+            className="inline-block rounded-full font-bold text-[1.05rem] no-underline transition-[transform,box-shadow] duration-200 text-blue-600 bg-white border border-white/90"
             style={{
               padding: "14px 58px",
               boxShadow: "0 4px 28px rgba(0,0,0,0.13), 0 1px 6px rgba(0,0,0,0.07)",
