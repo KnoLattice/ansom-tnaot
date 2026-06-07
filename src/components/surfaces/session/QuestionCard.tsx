@@ -37,25 +37,33 @@ export function QuestionCard({
   const [timeLeft, setTimeLeft] = useState(timerDuration);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "c") {
-        if ((e.target as HTMLElement).tagName === "TEXTAREA") return;
-        e.preventDefault();
-      }
-    },
-    [],
-  );
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === "c") {
+      if ((e.target as HTMLElement).tagName === "TEXTAREA") return;
+      e.preventDefault();
+    }
+  }, []);
 
   const [localCorrect, setLocalCorrect] = useState<boolean | null>(null);
+  const [timedOut, setTimedOut] = useState(false);
 
-  const hasAnswered = isQCM ? localCorrect !== null : feedback !== null;
+  const hasAnswered = isQCM
+    ? localCorrect !== null || timedOut
+    : feedback !== null;
   const hasFeedback = feedback !== null;
 
   const shortAnswerRef = useRef(shortAnswer);
   shortAnswerRef.current = shortAnswer;
   const onSubmitRef = useRef(onSubmit);
   onSubmitRef.current = onSubmit;
+
+  useEffect(() => {
+    setSelectedOption(null);
+    setShortAnswer("");
+    setLocalCorrect(null);
+    setTimedOut(false);
+    setTimeLeft(timerDuration);
+  }, [question.id, timerDuration]);
 
   useEffect(() => {
     if (hasAnswered) {
@@ -67,14 +75,16 @@ export function QuestionCard({
       setTimeLeft((prev) => {
         if (prev <= 1) {
           if (timerRef.current) clearInterval(timerRef.current);
+
           queueMicrotask(() => {
             if (isQCM) {
-              setLocalCorrect(false);
+              setTimedOut(true);
               onSubmitRef.current("");
             } else {
               onSubmitRef.current(shortAnswerRef.current.trim() || "");
             }
           });
+
           return 0;
         }
         return prev - 1;
@@ -88,17 +98,19 @@ export function QuestionCard({
 
   const handleOptionClick = useCallback(
     (optionText: string) => {
-      if (localCorrect !== null) return;
+      if (hasAnswered) return;
+
       setSelectedOption(optionText);
 
       const isCorrect =
         optionText.trim().toLowerCase() ===
         (question.correctAnswer ?? "").trim().toLowerCase();
+
       setLocalCorrect(isCorrect);
 
       onSubmit(optionText);
     },
-    [localCorrect, question.correctAnswer, onSubmit],
+    [hasAnswered, question.correctAnswer, onSubmit],
   );
 
   const handleShortAnswerSubmit = () => {
@@ -120,12 +132,8 @@ export function QuestionCard({
       onDragStart={(e) => e.preventDefault()}
     >
       <div className="flex select-none flex-wrap items-center gap-2">
-        <Badge variant="outline">
-          {bloomLevelLabel(question.bloomLevel)}
-        </Badge>
-        <Badge variant="outline" >
-          {isQCM ? "MCQ" : "SHORT"}
-        </Badge>
+        <Badge variant="outline">{bloomLevelLabel(question.bloomLevel)}</Badge>
+        <Badge variant="outline">{isQCM ? "MCQ" : "SHORT"}</Badge>
 
         {!hasAnswered && (
           <div
@@ -138,7 +146,8 @@ export function QuestionCard({
           >
             <Clock className="h-3 w-3" />
             <span>
-              {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, "0")}
+              {Math.floor(timeLeft / 60)}:
+              {String(timeLeft % 60).padStart(2, "0")}
             </span>
           </div>
         )}
@@ -149,14 +158,21 @@ export function QuestionCard({
       </p>
 
       {isQCM ? (
-        <div className="select-none space-y-1" role="radiogroup" aria-label="Answer options">
+        <div
+          className="select-none space-y-1"
+          role="radiogroup"
+          aria-label="Answer options"
+        >
           {question.options?.map((option) => {
             const isSelected = selectedOption === option.text;
             const isCorrectOption =
+              !timedOut &&
               hasAnswered &&
               option.text.trim().toLowerCase() ===
-              (question.correctAnswer ?? "").trim().toLowerCase();
-            const isWrongSelected = hasAnswered && isSelected && !localCorrect;
+                (question.correctAnswer ?? "").trim().toLowerCase();
+
+            const isWrongSelected =
+              !timedOut && hasAnswered && isSelected && localCorrect === false;
 
             return (
               <button
@@ -169,17 +185,17 @@ export function QuestionCard({
                 className={cn(
                   "group flex w-full items-center gap-3 border rounded-md px-4 py-3 text-left text-sm transition",
                   !hasAnswered &&
-                  !isSelected &&
-                  "border-[var(--color-border-subtle)] bg-[var(--color-canvas)] hover:border-[var(--color-border-default)] hover:bg-[var(--color-surface-elevated)]",
+                    !isSelected &&
+                    "border-[var(--color-border-subtle)] bg-[var(--color-canvas)] hover:border-[var(--color-border-default)] hover:bg-[var(--color-surface-elevated)]",
                   !hasAnswered &&
-                  isSelected &&
-                  "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5",
+                    isSelected &&
+                    "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5",
                   isCorrectOption && "border-green-500 bg-green-500/10",
                   isWrongSelected && "border-red-500 bg-red-500/10",
                   hasAnswered &&
-                  !isCorrectOption &&
-                  !isWrongSelected &&
-                  "opacity-30",
+                    !isCorrectOption &&
+                    !isWrongSelected &&
+                    "opacity-30",
                 )}
               >
                 {hasAnswered && isCorrectOption && (
@@ -193,7 +209,9 @@ export function QuestionCard({
                   <span className="font-mono text-xs font-bold text-[var(--color-text-muted)]">
                     {option.label}.
                   </span>{" "}
-                  <span className="text-[var(--color-text-primary)]">{option.text}</span>
+                  <span className="text-[var(--color-text-primary)]">
+                    {option.text}
+                  </span>
                 </span>
               </button>
             );
@@ -216,20 +234,27 @@ export function QuestionCard({
           transition={{ duration: 0.1 }}
           className={cn(
             "select-none border-l-2 p-4",
-            localCorrect
-              ? "border-l-green-500 bg-green-500/5"
-              : "border-l-red-500 bg-red-500/5",
+            timedOut
+              ? "border-l-yellow-500 bg-yellow-500/5"
+              : localCorrect
+                ? "border-l-green-500 bg-green-500/5"
+                : "border-l-red-500 bg-red-500/5",
           )}
         >
           <p
             className={cn(
               "font-mono text-xs font-bold uppercase tracking-wider",
-              localCorrect ? "text-green-400" : "text-red-400",
+              timedOut
+                ? "text-yellow-400"
+                : localCorrect
+                  ? "text-green-400"
+                  : "text-red-400",
             )}
           >
-            {localCorrect ? "CORRECT" : "INCORRECT"}
+            {timedOut ? "TIME EXPIRED" : localCorrect ? "CORRECT" : "INCORRECT"}
           </p>
-          {!localCorrect && (
+
+          {(timedOut || !localCorrect) && (
             <p className="mt-2 text-sm text-[var(--color-text-muted)]">
               Correct answer:{" "}
               <span className="font-medium text-[var(--color-text-primary)]">
@@ -278,7 +303,11 @@ export function QuestionCard({
       <div className="flex justify-end">
         {isQCM ? (
           hasAnswered && (
-            <Button onClick={onContinue} disabled={isSubmitting} className="rounded-md" >
+            <Button
+              onClick={onContinue}
+              disabled={isSubmitting}
+              className="rounded-md"
+            >
               {isSubmitting ? (
                 <>
                   <Spinner size="sm" />
