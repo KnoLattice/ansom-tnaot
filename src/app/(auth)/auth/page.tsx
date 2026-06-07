@@ -25,14 +25,14 @@ export default function AuthPage() {
           title={
             view === "onboarding"
               ? "Let's personalize your orbit"
-              : "Welcome to KnowLattice"
+              : "Welcome to Adaptify"
           }
           description={
             view === "onboarding"
               ? "A few quick notes before we generate your universe."
               : "Navigate your documents as constellations of mastery."
           }
-          accent="KNOWLATTICE"
+          accent="Adaptify"
         >
           {view === "onboarding" ? (
             <OnboardingFlow

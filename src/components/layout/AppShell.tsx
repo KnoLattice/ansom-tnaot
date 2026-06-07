@@ -58,7 +58,7 @@ export function AppShell({ children }: PropsWithChildren) {
             }}
             className="font-mono text-[12px] font-bold uppercase tracking-[0.35em] text-[var(--color-accent-primary)]"
           >
-            KNOWLATTICE
+            Adaptify
           </button>
 
           {/* Center nav */}

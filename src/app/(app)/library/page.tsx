@@ -14,7 +14,6 @@ import { apiClient } from "@/lib/api/client";
 import { API_ROUTES } from "@/lib/api/routes";
 
 type SortKey = "recency" | "name";
-type ViewMode = "list" | "grid";
 
 export default function LibraryPage() {
   const router = useRouter();
@@ -28,7 +27,6 @@ export default function LibraryPage() {
     invalidateDocuments,
   } = useDocuments();
   const [sortBy, setSortBy] = useState<SortKey>("recency");
-  const [viewMode, setViewMode] = useState<ViewMode>("list");
 
   const sortedDocuments = useMemo(() => {
     const sorted = [...documents];
