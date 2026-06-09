@@ -146,21 +146,25 @@ function SessionContent({ id }: { id: string }) {
   );
 
   const handleSubmit = useCallback(
-    async (answer: string) => {
+    async (answer: string, matchingAnswer?: Record<string, string>) => {
       if (!state.sessionId || !state.currentNode || !state.currentQuestion)
         return;
       setIsSubmitting(true);
       try {
+        const payload: Record<string, unknown> = {
+          sessionId: state.sessionId,
+          nodeId: state.currentNode.id,
+          questionId: state.currentQuestion.id,
+          selectedAnswer: answer,
+          responseTimeMs: Date.now() - questionStartTime.current,
+          sessionQuestionType: state.questionType,
+        };
+        if (matchingAnswer) {
+          payload.matchingAnswer = matchingAnswer;
+        }
         const { data } = await apiClient.post<RespondResponse>(
           API_ROUTES.SESSIONS.RESPOND,
-          {
-            sessionId: state.sessionId,
-            nodeId: state.currentNode.id,
-            questionId: state.currentQuestion.id,
-            selectedAnswer: answer,
-            responseTimeMs: Date.now() - questionStartTime.current,
-            sessionQuestionType: state.questionType,
-          },
+          payload,
         );
 
         if (data.nextNode) {

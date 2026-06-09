@@ -81,7 +81,7 @@ export interface GraphResponse {
 }
 
 // ─── Session ──────────────────────────────────────────
-export type QuestionType = "qcm" | "short_answer";
+export type QuestionType = "qcm" | "short_answer" | "fill_blank" | "true_false" | "matching";
 
 export interface QuestionOption {
   label: string;
@@ -93,8 +93,10 @@ export interface Question {
   questionType: QuestionType;
   content: string;
   options?: QuestionOption[] | null;
-  /** Sent by backend for QCM questions; null for short_answer */
+  /** Sent by backend for QCM and true_false questions; null for others */
   correctAnswer?: string | null;
+  /** Matching pairs: left items in order, right items shuffled. Only for matching questions. */
+  matchingPairs?: { left: string[]; right: string[] } | null;
   bloomLevel: number;
   difficulty: number;
 }

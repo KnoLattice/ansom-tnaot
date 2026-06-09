@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ListChecks, PenLine } from "lucide-react";
+import { ListChecks, PenLine, TextCursorInput, ToggleLeft, ArrowLeftRight } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -36,6 +36,24 @@ const options: {
     label: "SHORT ANSWER",
     description: "Type your answer in your own words. Better for deeper recall and understanding.",
     icon: PenLine,
+  },
+  {
+    type: "fill_blank",
+    label: "FILL IN THE BLANK",
+    description: "Complete the sentence by filling in the missing word or phrase. Tests precise recall.",
+    icon: TextCursorInput,
+  },
+  {
+    type: "true_false",
+    label: "TRUE / FALSE",
+    description: "Decide whether each statement is true or false. Fast-paced knowledge check.",
+    icon: ToggleLeft,
+  },
+  {
+    type: "matching",
+    label: "MATCHING",
+    description: "Match terms on the left with their definitions on the right. Great for associations.",
+    icon: ArrowLeftRight,
   },
 ];
 

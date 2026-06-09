@@ -101,7 +101,7 @@ export function AppShell({ children }: PropsWithChildren) {
               </button>
             )}
 
-            {hydrated && activeDocumentId && (
+            {/*{hydrated && activeDocumentId && (
               <button
                 type="button"
                 onClick={() => {
@@ -120,7 +120,7 @@ export function AppShell({ children }: PropsWithChildren) {
               </button>
 
               // <Button>SESSION</Button>
-            )}
+            )}*/}
           </div>
 
           {/* User */}
