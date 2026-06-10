@@ -21,7 +21,7 @@ function MasteryMapContent({ docId }: { docId: string }) {
   const { activeDocument } = useDocuments();
   const { data: graphData, isLoading, error } = useGraph(docId);
 
-  const view = (searchParams.get("view") as "graph" | "list") || "graph";
+  const view = (searchParams.get("view") as "graph" | "list") || "list";
   const setView = useCallback(
     (v: "graph" | "list") => {
       const params = new URLSearchParams(searchParams.toString());
@@ -126,29 +126,29 @@ function MasteryMapContent({ docId }: { docId: string }) {
         <div className="flex border rounded-lg border-[var(--color-border-default)]">
           <button
             type="button"
-            onClick={() => setView("graph")}
-            className={cn(
-              "flex items-center gap-2 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition border-r rounded-l-lg border-[var(--color-border-default)]",
-              view === "graph"
-                ? "bg-[var(--color-accent-primary)] text-white"
-                : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
-            )}
-          >
-            <Network className="h-3.5 w-3.5" />
-            GRAPH
-          </button>
-          <button
-            type="button"
             onClick={() => setView("list")}
             className={cn(
-              "flex items-center gap-2 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition rounded-r-lg border-[var(--color-border-default)]",
+              "flex items-center gap-2 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition border-r rounded-l-lg border-[var(--color-border-default)]",
               view === "list"
                 ? "bg-[var(--color-accent-primary)] text-white"
                 : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
             )}
           >
-            <LayoutList className="h-3.5 w-3.5" />
+            <Network className="h-3.5 w-3.5" />
             LIST
+          </button>
+          <button
+            type="button"
+            onClick={() => setView("graph")}
+            className={cn(
+              "flex items-center gap-2 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition rounded-r-lg border-[var(--color-border-default)]",
+              view === "graph"
+                ? "bg-[var(--color-accent-primary)] text-white"
+                : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
+            )}
+          >
+            <LayoutList className="h-3.5 w-3.5" />
+            GRAPH
           </button>
         </div>
       </div>
