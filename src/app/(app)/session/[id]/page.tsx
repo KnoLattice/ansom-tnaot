@@ -90,6 +90,7 @@ function SessionContent({ id }: { id: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const documentId = searchParams.get("documentId");
+  const collectionId = searchParams.get("collectionId");
   const nodeId = searchParams.get("nodeId");
   const [state, setState] = useState<SessionState>(initialState);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -125,7 +126,7 @@ function SessionContent({ id }: { id: string }) {
   } | null>(null);
 
   const startSession = useCallback(async () => {
-    if (!documentId) return;
+    if (!documentId && !collectionId) return;
     setLoading(true);
     try {
       const firstType = typeSequence.current[0];
@@ -133,7 +134,8 @@ function SessionContent({ id }: { id: string }) {
         API_ROUTES.SESSIONS.START,
         {
           params: {
-            documentId,
+            ...(documentId && { documentId }),
+            ...(collectionId && { collectionId }),
             questionType: firstType,
             ...(nodeId && { nodeId }),
           },
@@ -170,7 +172,7 @@ function SessionContent({ id }: { id: string }) {
         questionKey: 0,
       });
       questionStartTime.current = Date.now();
-      setSessionActive(data.sessionId, documentId);
+      setSessionActive(data.sessionId, documentId ?? collectionId ?? "");
     } catch {
       toast.error("Unable to start session. Check if your document is ready.");
       router.replace(documentId ? `/mastery/${documentId}` : "/");
@@ -181,11 +183,11 @@ function SessionContent({ id }: { id: string }) {
 
   // Auto-start session on mount (no type-selection dialog)
   useEffect(() => {
-    if (documentId && !startedRef.current) {
+    if ((documentId || collectionId) && !startedRef.current) {
       startedRef.current = true;
       startSession();
     }
-  }, [documentId, startSession]);
+  }, [documentId, collectionId, startSession]);
 
   useEffect(() => {
     return () => {

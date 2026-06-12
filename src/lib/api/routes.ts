@@ -9,12 +9,18 @@ export const API_ROUTES = {
   LEARNER: {
     ME: "/learners/me",
   },
+  COLLECTIONS: {
+    ROOT: "/collections",
+    ONE: (id: string) => `/collections/${id}`,
+    MASTERY: (id: string) => `/collections/${id}/mastery`,
+  },
   DOCUMENTS: {
     ROOT: "/documents",
     UPLOAD: "/documents/upload",
     STATUS: (id: string) => `/documents/${id}/status`,
     DOWNLOAD: (id: string) => `/documents/${id}/download`,
     DELETE: (id: string) => `/documents/${id}`,
+    ASSIGN_COLLECTION: (id: string) => `/documents/${id}/collection`,
   },
   GRAPH: {
     TOPOLOGY: "/progress/graph",

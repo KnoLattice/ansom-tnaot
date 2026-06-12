@@ -19,8 +19,43 @@ export interface Document {
   originalName: string;
   fileSizeBytes: string;
   processingStatus: ProcessingStatus;
+  collectionId: string | null;
   uploadedAt: string;
   processedAt: string | null;
+}
+
+// ─── Collections ─────────────────────────────────────
+export interface Collection {
+  id: string;
+  name: string;
+  description: string | null;
+  documentCount: number;
+  overallMastery: number | null;
+  createdAt: string;
+}
+
+export interface CollectionsResponse {
+  collections: Collection[];
+}
+
+export interface CollectionMasteryResponse {
+  collectionId: string;
+  overallMastery: number | null;
+  masteryBands: {
+    mastered: number;
+    proficient: number;
+    developing: number;
+    low: number;
+  };
+  totalNodes: number;
+  lastReviewed: string | null;
+  perDocument: {
+    documentId: string;
+    originalName: string;
+    processingStatus: string;
+    mastery: number | null;
+    nodeCount: number;
+  }[];
 }
 
 export interface DocumentsResponse {
@@ -118,7 +153,8 @@ export interface SessionStats {
 
 export interface StartSessionResponse {
   sessionId: string;
-  documentId: string;
+  documentId: string | null;
+  collectionId: string | null;
   questionType: QuestionType;
   focusMode?: boolean;
   targetNode: TargetNode;
