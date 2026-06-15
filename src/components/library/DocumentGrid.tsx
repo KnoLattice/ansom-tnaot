@@ -25,7 +25,7 @@ export function DocumentGrid({
     return (
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
         {Array.from({ length: 3 }).map((_, index) => (
-          <Skeleton key={index} className="h-[320px] rounded-3xl bg-white/5" />
+          <Skeleton key={index} className="h-[320px] rounded-3xl" />
         ))}
       </div>
     );

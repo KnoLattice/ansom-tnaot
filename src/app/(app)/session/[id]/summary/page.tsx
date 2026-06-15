@@ -44,12 +44,14 @@ export default function SessionSummaryPage({
 
   if (!summary) {
     return (
-      <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 text-center">
         <Spinner />
-        <p className="mt-4 font-mono text-[10px] text-[var(--color-text-muted)]">LOADING SUMMARY...</p>
+        <p className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
+          LOADING SUMMARY...
+        </p>
         <button
           type="button"
-          className="mt-4 font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-accent-primary)]"
+          className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-accent-primary)]"
           onClick={() => router.push("/")}
         >
           BACK TO HOME
