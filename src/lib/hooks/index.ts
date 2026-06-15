@@ -1,4 +1,5 @@
 export { useAuth } from "./useAuth";
+export { useCollections, useCollectionMastery } from "./useCollections";
 export {
   useDocuments,
   useDocumentStatus,

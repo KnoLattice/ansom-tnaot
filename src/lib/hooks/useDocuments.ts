@@ -17,6 +17,7 @@ export function useDocuments() {
   const queryClient = useQueryClient();
   const activeDocumentId = useGraphStore((state) => state.activeDocumentId);
   const setActiveDocument = useGraphStore((state) => state.setActiveDocument);
+  const hasHydrated = useGraphStore((state) => state.hasHydrated);
 
   const query = useQuery<DocumentsResponse>({
     queryKey: ["documents"],
@@ -39,19 +40,29 @@ export function useDocuments() {
   const documents = useMemo(() => query.data?.documents ?? [], [query.data?.documents]);
 
   useEffect(() => {
+    if (!hasHydrated) return;
+
     if (!documents.length) {
       setActiveDocument(null);
       return;
     }
+
     if (activeDocumentId && documents.some((doc) => doc.id === activeDocumentId)) {
       return;
     }
+
     const fallback =
       documents.find((doc) => doc.processingStatus === "completed") ?? documents[0];
+
     if (fallback) {
       setActiveDocument(fallback.id);
     }
-  }, [activeDocumentId, documents, setActiveDocument]);
+  }, [
+    hasHydrated,
+    activeDocumentId,
+    documents,
+    setActiveDocument,
+  ]);
 
   const activeDocument = useMemo(
     () => documents.find((doc) => doc.id === activeDocumentId) ?? null,

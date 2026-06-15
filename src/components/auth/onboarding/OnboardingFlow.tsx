@@ -73,7 +73,7 @@ export function OnboardingFlow({ defaultWorkspaceName, onComplete }: OnboardingF
             className="space-y-5"
           >
             <p className="text-lg text-text-secondary">
-              KnowLattice builds your personal learning universe.
+              Adaptify builds your personal learning universe.
             </p>
             <div className="space-y-3 text-sm">
               <StepItem

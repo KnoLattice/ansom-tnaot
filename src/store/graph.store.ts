@@ -8,6 +8,9 @@ interface GraphStore {
   selectedNodeId: string | null;
   isPanelOpen: boolean;
   activeDocumentId: string | null;
+  hasHydrated: boolean;
+
+  setHasHydrated: (value: boolean) => void;
   setViewMode: (mode: ViewMode) => void;
   selectNode: (nodeId: string | null) => void;
   togglePanel: (open?: boolean) => void;
@@ -22,6 +25,10 @@ export const useGraphStore = create<GraphStore>()(
       selectedNodeId: null,
       isPanelOpen: true,
       activeDocumentId: null,
+      hasHydrated: false,
+
+      setHasHydrated: (hasHydrated) => set({ hasHydrated }),
+
       setViewMode: (viewMode) => set({ viewMode }),
       selectNode: (selectedNodeId) => set({ selectedNodeId }),
       togglePanel: (open) =>
@@ -29,6 +36,7 @@ export const useGraphStore = create<GraphStore>()(
           isPanelOpen: typeof open === "boolean" ? open : !state.isPanelOpen,
         })),
       setActiveDocument: (activeDocumentId) => set({ activeDocumentId }),
+
       reset: () =>
         set({
           viewMode: "universe",
@@ -37,6 +45,11 @@ export const useGraphStore = create<GraphStore>()(
           activeDocumentId: null,
         }),
     }),
-    { name: "kl_graph" },
+    {
+      name: "kl_graph",
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
+    },
   ),
 );

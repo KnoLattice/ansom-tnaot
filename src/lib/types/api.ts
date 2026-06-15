@@ -19,8 +19,43 @@ export interface Document {
   originalName: string;
   fileSizeBytes: string;
   processingStatus: ProcessingStatus;
+  collectionId: string | null;
   uploadedAt: string;
   processedAt: string | null;
+}
+
+// ─── Collections ─────────────────────────────────────
+export interface Collection {
+  id: string;
+  name: string;
+  description: string | null;
+  documentCount: number;
+  overallMastery: number | null;
+  createdAt: string;
+}
+
+export interface CollectionsResponse {
+  collections: Collection[];
+}
+
+export interface CollectionMasteryResponse {
+  collectionId: string;
+  overallMastery: number | null;
+  masteryBands: {
+    mastered: number;
+    proficient: number;
+    developing: number;
+    low: number;
+  };
+  totalNodes: number;
+  lastReviewed: string | null;
+  perDocument: {
+    documentId: string;
+    originalName: string;
+    processingStatus: string;
+    mastery: number | null;
+    nodeCount: number;
+  }[];
 }
 
 export interface DocumentsResponse {
@@ -81,7 +116,7 @@ export interface GraphResponse {
 }
 
 // ─── Session ──────────────────────────────────────────
-export type QuestionType = "qcm" | "short_answer";
+export type QuestionType = "qcm" | "short_answer" | "fill_blank" | "true_false" | "matching";
 
 export interface QuestionOption {
   label: string;
@@ -93,8 +128,10 @@ export interface Question {
   questionType: QuestionType;
   content: string;
   options?: QuestionOption[] | null;
-  /** Sent by backend for QCM questions; null for short_answer */
+  /** Sent by backend for QCM and true_false questions; null for others */
   correctAnswer?: string | null;
+  /** Matching pairs: left items in order, right items shuffled. Only for matching questions. */
+  matchingPairs?: { left: string[]; right: string[] } | null;
   bloomLevel: number;
   difficulty: number;
 }
@@ -116,8 +153,10 @@ export interface SessionStats {
 
 export interface StartSessionResponse {
   sessionId: string;
-  documentId: string;
+  documentId: string | null;
+  collectionId: string | null;
   questionType: QuestionType;
+  focusMode?: boolean;
   targetNode: TargetNode;
   sessionStats: SessionStats;
   question: Question | null;

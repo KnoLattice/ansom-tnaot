@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Upload } from "lucide-react";
 import { useDocuments, useDashboard, useWeakNodes } from "@/lib/hooks";
 import { useAuthStore } from "@/store/auth.store";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { ContinuityBanner } from "@/components/surfaces/home/ContinuityBanner";
 import { PulseCard } from "@/components/surfaces/home/PulseCard";
@@ -76,8 +77,22 @@ export default function HomePage() {
     }
   };
 
+  // ── Loading skeleton ──
+  if (docsLoading || (hasReadyDoc && dashLoading)) {
+    return (
+      <div className="mx-auto max-w-3xl space-y-4">
+        <Skeleton className="h-10" />
+        <div className="grid gap-4 md:grid-cols-2">
+          <Skeleton className="h-48" />
+          <Skeleton className="h-48" />
+        </div>
+        <Skeleton className="h-14" />
+      </div>
+    );
+  }
+
   // ── Empty state: no documents ──
-  if (!docsLoading && !hasDocuments) {
+  if (!hasDocuments) {
     return (
       <div className="mx-auto max-w-3xl space-y-6">
         <ContinuityBanner
@@ -105,20 +120,6 @@ export default function HomePage() {
             </Button>
           </div>
         </motion.div>
-      </div>
-    );
-  }
-
-  // ── Loading skeleton ──
-  if (docsLoading || (hasReadyDoc && dashLoading)) {
-    return (
-      <div className="mx-auto max-w-3xl space-y-4">
-        <div className="h-10 animate-pulse bg-[var(--color-surface)]" />
-        <div className="grid gap-4 md:grid-cols-2">
-          <div className="h-48 animate-pulse bg-[var(--color-surface)]" />
-          <div className="h-48 animate-pulse bg-[var(--color-surface)]" />
-        </div>
-        <div className="h-14 animate-pulse bg-[var(--color-surface)]" />
       </div>
     );
   }

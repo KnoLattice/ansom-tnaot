@@ -8,14 +8,17 @@ function SessionRedirect() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const documentId = searchParams.get("documentId");
+  const nodeId = searchParams.get("nodeId");
 
   useEffect(() => {
     if (documentId) {
-      router.replace(`/session/new?documentId=${documentId}`);
+      const params = new URLSearchParams({ documentId });
+      if (nodeId) params.set("nodeId", nodeId);
+      router.replace(`/session/new?${params.toString()}`);
     } else {
       router.replace("/");
     }
-  }, [documentId, router]);
+  }, [documentId, nodeId, router]);
 
   return (
     <div className="flex min-h-[60vh] items-center justify-center">

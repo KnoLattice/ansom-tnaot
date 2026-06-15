@@ -28,9 +28,6 @@ function CallbackHandler() {
     <div className="flex min-h-screen items-center justify-center">
       <div className="text-center">
         <Spinner />
-        <p className="mt-4 text-sm text-text-secondary">
-          Completing your sign in...
-        </p>
       </div>
     </div>
   );

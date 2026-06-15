@@ -8,12 +8,11 @@ import { Spinner } from "@/components/ui/Spinner";
 import { SessionHeader } from "@/components/surfaces/session/SessionHeader";
 import { QuestionCard } from "@/components/surfaces/session/QuestionCard";
 import { ConceptTransition } from "@/components/surfaces/session/ConceptTransition";
-import { QuestionTypeDialog } from "@/components/surfaces/session/QuestionTypeDialog";
 import { ThresholdCallout } from "@/components/shared/ThresholdCallout";
 import { apiClient } from "@/lib/api/client";
 import { API_ROUTES } from "@/lib/api/routes";
 import { useSessionStore } from "@/store/session.store";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 import type {
   EndSessionResponse,
   FeedbackResult,
@@ -24,40 +23,75 @@ import type {
   TargetNode,
 } from "@/lib/types/api";
 
-const MAX_SESSION_QUESTIONS = 12;
+const MAX_SESSION_QUESTIONS = 15;
+
+const ALL_QUESTION_TYPES: QuestionType[] = [
+  "qcm",
+  "short_answer",
+  "fill_blank",
+  "true_false",
+  "matching",
+];
+
+/** Generate a shuffled sequence of 15 question types (3 of each format). */
+function generateTypeSequence(): QuestionType[] {
+  const sequence = ALL_QUESTION_TYPES.flatMap((t) => [t, t, t]);
+  for (let i = sequence.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [sequence[i], sequence[j]] = [sequence[j], sequence[i]];
+  }
+  return sequence;
+}
+
+interface RetryEntry {
+  question: Question;
+  node: TargetNode;
+  attemptsUsed: number;
+  slotIndex: number;
+}
 
 interface SessionState {
   sessionId: string | null;
   documentId: string | null;
   questionType: QuestionType;
+  focusMode: boolean;
   currentNode: TargetNode | null;
   currentQuestion: Question | null;
   feedback: FeedbackResult | null;
   previousNodeId: string | null;
   questionCount: number;
   correctCount: number;
+  resolvedCount: number;
+  resolvedCorrectCount: number;
   previousMastery: number | undefined;
   isTransitioning: boolean;
+  questionKey: number;
 }
 
 const initialState: SessionState = {
   sessionId: null,
   documentId: null,
   questionType: "qcm",
+  focusMode: false,
   currentNode: null,
   currentQuestion: null,
   feedback: null,
   previousNodeId: null,
   questionCount: 0,
   correctCount: 0,
+  resolvedCount: 0,
+  resolvedCorrectCount: 0,
   previousMastery: undefined,
   isTransitioning: false,
+  questionKey: 0,
 };
 
 function SessionContent({ id }: { id: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const documentId = searchParams.get("documentId");
+  const collectionId = searchParams.get("collectionId");
+  const nodeId = searchParams.get("nodeId");
   const [state, setState] = useState<SessionState>(initialState);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -65,54 +99,96 @@ function SessionContent({ id }: { id: string }) {
   const startedRef = useRef(false);
   const nodeTitles = useRef<Record<string, string>>({});
 
-  const [showTypeDialog, setShowTypeDialog] = useState(true);
-  const questionTypeRef = useRef<QuestionType>("qcm");
   const setSessionActive = useSessionStore((s) => s.startSession);
   const clearSession = useSessionStore((s) => s.endSession);
 
+  // Mixed-type session tracking (normal mode)
+  const typeSequence = useRef<QuestionType[]>(generateTypeSequence());
+  const nextNewSlot = useRef(1); // slot 0 is served by startSession
+  const currentSlotIndex = useRef(0);
+  const retryQueue = useRef<RetryEntry[]>([]);
+  const currentRetry = useRef<RetryEntry | null>(null);
+  const resolvedSlots = useRef<Set<number>>(new Set());
+
+  // Prevents retries from appearing back-to-back
+  const lastWasRetry = useRef(false);
+
+  // Buffered next question from backend (consumed when showing a new question)
+  const bufferedNext = useRef<{
+    node: TargetNode | null;
+    question: Question | null;
+  } | null>(null);
+
+  // Used only for concept transition animations
   const pendingNext = useRef<{
     node: TargetNode | null;
     question: Question | null;
   } | null>(null);
 
-  const handleCloseTypeDialog = useCallback(() => {
-    router.back();
-    setShowTypeDialog(false);
-  }, [router]);
-
   const startSession = useCallback(async () => {
-    if (!documentId) return;
+    if (!documentId && !collectionId) return;
     setLoading(true);
     try {
+      const firstType = typeSequence.current[0];
       const { data } = await apiClient.get<StartSessionResponse>(
         API_ROUTES.SESSIONS.START,
-        { params: { documentId, questionType: questionTypeRef.current } },
+        {
+          params: {
+            ...(documentId && { documentId }),
+            ...(collectionId && { collectionId }),
+            questionType: firstType,
+            ...(nodeId && { nodeId }),
+          },
+          timeout: nodeId ? 60000 : undefined,
+        },
       );
       nodeTitles.current = { [data.targetNode.id]: data.targetNode.title };
+
+      // Reset mixed-session refs
+      nextNewSlot.current = 1;
+      currentSlotIndex.current = 0;
+      retryQueue.current = [];
+      currentRetry.current = null;
+      resolvedSlots.current = new Set();
+      lastWasRetry.current = false;
+      bufferedNext.current = null;
+      pendingNext.current = null;
+
       setState({
         sessionId: data.sessionId,
         documentId,
-        questionType: data.questionType ?? questionTypeRef.current,
+        questionType: data.questionType ?? firstType,
+        focusMode: data.focusMode ?? false,
         currentNode: data.targetNode,
         currentQuestion: data.question,
         feedback: null,
         previousNodeId: null,
         questionCount: 0,
         correctCount: 0,
+        resolvedCount: 0,
+        resolvedCorrectCount: 0,
         previousMastery: undefined,
         isTransitioning: false,
+        questionKey: 0,
       });
       questionStartTime.current = Date.now();
-      setSessionActive(data.sessionId, documentId);
+      setSessionActive(data.sessionId, documentId ?? collectionId ?? "");
     } catch {
       toast.error("Unable to start session. Check if your document is ready.");
       router.replace(documentId ? `/mastery/${documentId}` : "/");
     } finally {
       setLoading(false);
     }
-  }, [documentId, router, setSessionActive]);
+  }, [documentId, nodeId, router, setSessionActive]);
 
-  // Cleanup: if component unmounts while a session is active, clear the store
+  // Auto-start session on mount (no type-selection dialog)
+  useEffect(() => {
+    if ((documentId || collectionId) && !startedRef.current) {
+      startedRef.current = true;
+      startSession();
+    }
+  }, [documentId, collectionId, startSession]);
+
   useEffect(() => {
     return () => {
       clearSession();
@@ -125,44 +201,85 @@ function SessionContent({ id }: { id: string }) {
     }
   }, [documentId, router]);
 
-  const handleTypeSelect = useCallback(
-    (type: QuestionType) => {
-      questionTypeRef.current = type;
-      setShowTypeDialog(false);
-      if (!startedRef.current) {
-        startedRef.current = true;
-        startSession();
-      }
-    },
-    [startSession],
-  );
-
   const handleSubmit = useCallback(
-    async (answer: string) => {
+    async (answer: string, matchingAnswer?: Record<string, string>) => {
       if (!state.sessionId || !state.currentNode || !state.currentQuestion)
         return;
       setIsSubmitting(true);
       try {
+        // Request the next planned type for the backend to generate
+        const desiredNextType =
+          nextNewSlot.current < MAX_SESSION_QUESTIONS
+            ? typeSequence.current[nextNewSlot.current]
+            : state.currentQuestion.questionType;
+
+        const payload: Record<string, unknown> = {
+          sessionId: state.sessionId,
+          nodeId: state.currentNode.id,
+          questionId: state.currentQuestion.id,
+          selectedAnswer: answer,
+          responseTimeMs: Date.now() - questionStartTime.current,
+          sessionQuestionType: desiredNextType,
+        };
+        if (matchingAnswer) {
+          payload.matchingAnswer = matchingAnswer;
+        }
         const { data } = await apiClient.post<RespondResponse>(
           API_ROUTES.SESSIONS.RESPOND,
-          {
-            sessionId: state.sessionId,
-            nodeId: state.currentNode.id,
-            questionId: state.currentQuestion.id,
-            selectedAnswer: answer,
-            responseTimeMs: Date.now() - questionStartTime.current,
-            sessionQuestionType: state.questionType,
-          },
+          payload,
         );
 
         if (data.nextNode) {
           nodeTitles.current[data.nextNode.id] = data.nextNode.title;
         }
 
-        pendingNext.current = {
-          node: data.nextNode,
-          question: data.question,
-        };
+        // ── Mixed-type with retry queue (both normal & focused) ──
+        const isRetry = currentRetry.current !== null;
+        let resolvedViaCorrect = false;
+
+        if (data.feedback.isCorrect) {
+          resolvedSlots.current.add(currentSlotIndex.current);
+          resolvedViaCorrect = true;
+          currentRetry.current = null;
+        } else if (isRetry) {
+          const retry = currentRetry.current!;
+          const newAttempts = retry.attemptsUsed + 1;
+          if (
+            newAttempts >= 2 ||
+            resolvedSlots.current.has(retry.slotIndex)
+          ) {
+            // Exhausted all attempts or already resolved — done
+            resolvedSlots.current.add(retry.slotIndex);
+          } else {
+            // Re-insert into retry queue at a random position
+            const insertAt = Math.floor(
+              Math.random() * (retryQueue.current.length + 1),
+            );
+            retryQueue.current.splice(insertAt, 0, {
+              ...retry,
+              attemptsUsed: newAttempts,
+            });
+          }
+          currentRetry.current = null;
+        } else if (!resolvedSlots.current.has(currentSlotIndex.current)) {
+          // First attempt wrong — add to retry queue
+          retryQueue.current.push({
+            question: state.currentQuestion,
+            node: state.currentNode,
+            attemptsUsed: 1,
+            slotIndex: currentSlotIndex.current,
+          });
+        }
+
+        // Buffer the backend's next question for when we need a new one
+        if (data.question && !bufferedNext.current) {
+          bufferedNext.current = {
+            node: data.nextNode,
+            question: data.question,
+          };
+        }
+
+        const newResolvedCount = resolvedSlots.current.size;
 
         setState((prev) => ({
           ...prev,
@@ -170,11 +287,10 @@ function SessionContent({ id }: { id: string }) {
           previousMastery: data.feedback.masteryBefore,
           questionCount: prev.questionCount + 1,
           correctCount: prev.correctCount + (data.feedback.isCorrect ? 1 : 0),
+          resolvedCount: newResolvedCount,
+          resolvedCorrectCount:
+            prev.resolvedCorrectCount + (resolvedViaCorrect ? 1 : 0),
         }));
-
-        if (data.sessionComplete) {
-          pendingNext.current = { node: null, question: null };
-        }
       } catch {
         toast.error("Could not submit answer. Please retry.");
       } finally {
@@ -193,9 +309,18 @@ function SessionContent({ id }: { id: string }) {
         { sessionId: state.sessionId },
       );
       if (typeof window !== "undefined") {
-        Cookies.set(`session_summary_${state.sessionId}`, JSON.stringify(data));
-        Cookies.set(`session_titles_${state.sessionId}`, JSON.stringify(nodeTitles.current));
-        Cookies.set(`session_docId_${state.sessionId}`, state.documentId ?? "");
+        Cookies.set(
+          `session_summary_${state.sessionId}`,
+          JSON.stringify(data),
+        );
+        Cookies.set(
+          `session_titles_${state.sessionId}`,
+          JSON.stringify(nodeTitles.current),
+        );
+        Cookies.set(
+          `session_docId_${state.sessionId}`,
+          state.documentId ?? "",
+        );
       }
       router.replace(`/session/${state.sessionId}/summary`);
       clearSession();
@@ -204,38 +329,116 @@ function SessionContent({ id }: { id: string }) {
     } finally {
       setIsSubmitting(false);
     }
-  }, [state.sessionId, state.documentId, router]);
+  }, [state.sessionId, state.documentId, router, clearSession]);
 
   const handleContinue = useCallback(() => {
-    const next = pendingNext.current;
-    if (!next) return;
-
-    if (!next.question) {
-      handleEndSession();
+    // ── Mixed-type with retry queue (both normal & focused) ──
+    const allResolved =
+      resolvedSlots.current.size >= MAX_SESSION_QUESTIONS &&
+      retryQueue.current.length === 0;
+    if (allResolved) {
+      // Show SESSION COMPLETE screen
+      setState((prev) => ({
+        ...prev,
+        currentQuestion: null,
+        feedback: null,
+      }));
       return;
     }
 
-    const switchingConcepts =
-      next.node && state.currentNode && next.node.id !== state.currentNode.id;
+    // Purge already-resolved entries from the retry queue
+    retryQueue.current = retryQueue.current.filter(
+      (r) => !resolvedSlots.current.has(r.slotIndex),
+    );
 
-    if (switchingConcepts && next.node) {
-      setState((prev) => ({
-        ...prev,
-        feedback: null,
-        previousNodeId: prev.currentNode?.id ?? null,
-        currentNode: next.node!,
-        isTransitioning: true,
-      }));
+    const hasRetries = retryQueue.current.length > 0;
+    const canShowNew =
+      nextNewSlot.current < MAX_SESSION_QUESTIONS &&
+      bufferedNext.current?.question != null;
+
+    // Decide whether to show a retry or a new question.
+    // Never show two retries in a row — space them out with new questions.
+    let showRetry = false;
+    if (hasRetries && !canShowNew) {
+      showRetry = true; // no new questions available, must show retry
+    } else if (hasRetries && canShowNew && !lastWasRetry.current) {
+      showRetry = Math.random() < 0.35;
+    }
+
+    if (showRetry) {
+      const retry = retryQueue.current.shift()!;
+      currentRetry.current = retry;
+      currentSlotIndex.current = retry.slotIndex;
+      lastWasRetry.current = true;
+
+      const switchingConcepts =
+        state.currentNode && retry.node.id !== state.currentNode.id;
+
+      if (switchingConcepts) {
+        pendingNext.current = {
+          node: retry.node,
+          question: retry.question,
+        };
+        setState((prev) => ({
+          ...prev,
+          feedback: null,
+          previousNodeId: prev.currentNode?.id ?? null,
+          currentNode: retry.node,
+          isTransitioning: true,
+        }));
+      } else {
+        setState((prev) => ({
+          ...prev,
+          currentNode: retry.node,
+          currentQuestion: retry.question,
+          feedback: null,
+          previousMastery: undefined,
+          isTransitioning: false,
+          questionKey: prev.questionKey + 1,
+        }));
+        questionStartTime.current = Date.now();
+      }
+    } else if (canShowNew) {
+      const next = bufferedNext.current!;
+      bufferedNext.current = null;
+      currentRetry.current = null;
+      currentSlotIndex.current = nextNewSlot.current;
+      nextNewSlot.current++;
+      lastWasRetry.current = false;
+
+      const switchingConcepts =
+        next.node &&
+        state.currentNode &&
+        next.node.id !== state.currentNode.id;
+
+      if (switchingConcepts && next.node) {
+        pendingNext.current = { node: next.node, question: next.question };
+        setState((prev) => ({
+          ...prev,
+          feedback: null,
+          previousNodeId: prev.currentNode?.id ?? null,
+          currentNode: next.node!,
+          isTransitioning: true,
+        }));
+      } else {
+        setState((prev) => ({
+          ...prev,
+          currentNode: next.node ?? prev.currentNode,
+          currentQuestion: next.question,
+          feedback: null,
+          previousMastery: undefined,
+          isTransitioning: false,
+          questionKey: prev.questionKey + 1,
+        }));
+        questionStartTime.current = Date.now();
+      }
     } else {
+      // No new questions available and no retries — end session
       setState((prev) => ({
         ...prev,
-        currentQuestion: next.question,
+        currentQuestion: null,
         feedback: null,
-        previousMastery: undefined,
-        isTransitioning: false,
       }));
-      questionStartTime.current = Date.now();
-      pendingNext.current = null;
     }
   }, [state.currentNode, handleEndSession]);
 
@@ -247,6 +450,7 @@ function SessionContent({ id }: { id: string }) {
       feedback: null,
       previousMastery: undefined,
       isTransitioning: false,
+      questionKey: prev.questionKey + 1,
     }));
     questionStartTime.current = Date.now();
     pendingNext.current = null;
@@ -256,16 +460,15 @@ function SessionContent({ id }: { id: string }) {
     return null;
   }
 
-  if (showTypeDialog) {
-    return (
-      <QuestionTypeDialog open={showTypeDialog} onSelect={handleTypeSelect} onClose={handleCloseTypeDialog} />
-    );
-  }
-
   if (loading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3">
         <Spinner />
+        {nodeId && (
+          <p className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
+            PREPARING QUESTIONS...
+          </p>
+        )}
       </div>
     );
   }
@@ -273,7 +476,9 @@ function SessionContent({ id }: { id: string }) {
   if (!state.currentNode) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <p className="font-mono text-xs text-[var(--color-text-muted)]">NO SESSION DATA</p>
+        <p className="font-mono text-xs text-[var(--color-text-muted)]">
+          NO SESSION DATA
+        </p>
       </div>
     );
   }
@@ -282,15 +487,25 @@ function SessionContent({ id }: { id: string }) {
     ? state.feedback.masteryAfter
     : state.currentNode.masteryScore;
 
+  const maxQuestions = MAX_SESSION_QUESTIONS;
+
   return (
     <div className="mx-auto max-w-3xl space-y-4">
+      {state.focusMode && (
+        <div className="border-l-2 border-l-[var(--color-accent-primary)] bg-[var(--color-surface)] px-3 py-1.5">
+          <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-accent-primary)]">
+            FOCUSED: {state.currentNode.title}
+          </p>
+        </div>
+      )}
+
       <SessionHeader
         conceptName={state.currentNode.title}
         masteryScore={currentMastery}
         previousMasteryScore={state.previousMastery}
-        currentQuestion={state.questionCount + 1}
-        totalQuestions={MAX_SESSION_QUESTIONS}
-        correctCount={state.correctCount}
+        currentQuestion={state.resolvedCount}
+        totalQuestions={maxQuestions}
+        correctCount={state.resolvedCorrectCount}
         isSubmitting={isSubmitting}
         onEndSession={handleEndSession}
       />
@@ -311,7 +526,7 @@ function SessionContent({ id }: { id: string }) {
         />
       ) : state.currentQuestion ? (
         <QuestionCard
-          key={state.currentQuestion.id}
+          key={`${state.currentQuestion.id}-${state.questionKey}`}
           question={state.currentQuestion}
           feedback={state.feedback}
           isSubmitting={isSubmitting}

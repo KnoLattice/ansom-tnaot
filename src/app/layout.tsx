@@ -23,7 +23,7 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "KnowLattice",
+  title: "Adaptify",
   description: "Adaptive learning platform for self-paced mastery.",
 };
 

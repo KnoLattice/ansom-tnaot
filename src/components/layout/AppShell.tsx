@@ -18,6 +18,7 @@ import {
 import { useAuthStore } from "@/store/auth.store";
 import { useDocuments, useHydrated } from "@/lib/hooks";
 import { useSessionNavGuard } from "@/components/shared/SessionNavGuard";
+import { ThemeSwitcher } from "@/components/layout/ThemeSwitcher";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
@@ -57,7 +58,7 @@ export function AppShell({ children }: PropsWithChildren) {
             }}
             className="font-mono text-[12px] font-bold uppercase tracking-[0.35em] text-[var(--color-accent-primary)]"
           >
-            KNOWLATTICE
+            Adaptify
           </button>
 
           {/* Center nav */}
@@ -100,7 +101,7 @@ export function AppShell({ children }: PropsWithChildren) {
               </button>
             )}
 
-            {hydrated && activeDocumentId && (
+            {/*{hydrated && activeDocumentId && (
               <button
                 type="button"
                 onClick={() => {
@@ -117,10 +118,14 @@ export function AppShell({ children }: PropsWithChildren) {
                 <PlayCircle className="h-3.5 w-3.5" />
                 SESSION
               </button>
-            )}
+
+              // <Button>SESSION</Button>
+            )}*/}
           </div>
 
-          {/* User */}
+          {/* Theme + User */}
+          <div className="flex items-center gap-3">
+          <ThemeSwitcher />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
@@ -157,6 +162,7 @@ export function AppShell({ children }: PropsWithChildren) {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          </div>
         </nav>
       </header>
 

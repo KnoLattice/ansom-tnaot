@@ -1,8 +1,15 @@
 "use client";
 
 import dayjs from "dayjs";
-import { Check, MoreVertical, Trash2, Map, Star } from "lucide-react";
-import type { Document } from "@/lib/types/api";
+import {
+  ArrowRightLeft,
+  FolderPlus,
+  Map,
+  MoreVertical,
+  Trash2,
+  X,
+} from "lucide-react";
+import type { Collection, Document } from "@/lib/types/api";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -10,6 +17,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -24,13 +34,13 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-interface DocumentRowProps {
+interface CollectionDocumentRowProps {
   document: Document;
-  isActive: boolean;
-  onSetActive: (id: string) => void;
-  onViewMastery: (id: string) => void;
+  collections: Collection[];
+  currentCollectionId: string | null;
   onDelete: (id: string) => void;
-  onClick?: (id: string) => void;
+  onAssign: (documentId: string, collectionId: string | null) => void;
+  onViewMastery: (documentId: string) => void;
 }
 
 const statusColors: Record<string, string> = {
@@ -40,41 +50,31 @@ const statusColors: Record<string, string> = {
   failed: "text-red-400 border-red-500",
 };
 
-export function DocumentRow({
+export function CollectionDocumentRow({
   document,
-  isActive,
-  onSetActive,
-  onViewMastery,
+  collections,
+  currentCollectionId,
   onDelete,
-  onClick,
-}: DocumentRowProps) {
+  onAssign,
+  onViewMastery,
+}: CollectionDocumentRowProps) {
   const isReady = document.processingStatus === "completed";
   const fileSizeMB = Number(document.fileSizeBytes ?? 0) / (1024 * 1024);
+  const isUncollected = currentCollectionId === null;
+  const otherCollections = collections.filter(
+    (c) => c.id !== currentCollectionId,
+  );
 
   return (
-    <div
-      className={cn(
-        "group flex items-center gap-4 border rounded-md border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-4 py-3 transition",
-        isActive && "border-l-2 border-l-[var(--color-accent-primary)]",
-        isReady && "hover:bg-[var(--color-surface-elevated)]",
-        onClick && "cursor-pointer",
-      )}
-      onClick={() => onClick?.(document.id)}
-    >
-      {/* Active indicator */}
-      <div className="flex h-6 w-6 shrink-0 items-center justify-center">
-        {isActive && (
-          <Star className="h-3.5 w-3.5 fill-[var(--color-accent-primary)] text-[var(--color-accent-primary)]" />
-        )}
-      </div>
-
+    <div className="group flex items-center gap-3 rounded px-3 py-2 transition bg-[var(--color-surface)] hover:bg-[var(--color-canvas)]">
       {/* Document info */}
-      <div className="min-w-0 flex-1 border-l border-[var(--color-border-subtle)] pl-4">
-        <p className="truncate text-sm font-medium text-[var(--color-text-primary)]">
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm text-[var(--color-text-primary)]">
           {document.originalName}
         </p>
         <p className="font-mono text-[10px] text-[var(--color-text-muted)]">
-          {dayjs(document.uploadedAt).format("YYYY-MM-DD")} / {fileSizeMB.toFixed(1)}MB
+          {dayjs(document.uploadedAt).format("YYYY-MM-DD")} /{" "}
+          {fileSizeMB.toFixed(1)}MB
         </p>
       </div>
 
@@ -82,7 +82,7 @@ export function DocumentRow({
       <Badge
         variant="outline"
         className={cn(
-          "shrink-0 rounded-sm border border-[var(--color-border-subtle)]",
+          "shrink-0 rounded-sm border border-[var(--color-border-subtle)] text-[10px]",
           statusColors[document.processingStatus] ?? "",
         )}
       >
@@ -95,24 +95,15 @@ export function DocumentRow({
           <DropdownMenuTrigger asChild>
             <button
               type="button"
-              className="border border-[var(--color-border-default)] bg-[var(--color-canvas)] p-1.5 text-[var(--color-text-muted)] opacity-0 transition hover:text-[var(--color-text-primary)] group-hover:opacity-100"
+              className="border border-[var(--color-border-default)] bg-[var(--color-canvas)] p-1 text-[var(--color-text-muted)] opacity-0 transition hover:text-[var(--color-text-primary)] group-hover:opacity-100"
             >
-              <MoreVertical className="h-4 w-4" />
+              <MoreVertical className="h-3.5 w-3.5" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
-            className="w-44 border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]"
+            className="w-52 border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]"
           >
-            {/*{!isActive && (
-              <DropdownMenuItem
-                className="font-mono text-xs uppercase tracking-wider"
-                onClick={() => onSetActive(document.id)}
-              >
-                <Check className="mr-2 h-4 w-4" />
-                Set active
-              </DropdownMenuItem>
-            )}*/}
             {isReady && (
               <DropdownMenuItem
                 className="font-mono text-xs uppercase tracking-wider"
@@ -122,6 +113,43 @@ export function DocumentRow({
                 Mastery map
               </DropdownMenuItem>
             )}
+
+            {/* Assign / Move to collection */}
+            {otherCollections.length > 0 && (
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger className="font-mono text-xs uppercase tracking-wider">
+                  {isUncollected ? (
+                    <FolderPlus className="mr-2 h-4 w-4" />
+                  ) : (
+                    <ArrowRightLeft className="mr-2 h-4 w-4" />
+                  )}
+                  {isUncollected ? "Add to collection" : "Move to collection"}
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent className="border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]">
+                  {otherCollections.map((col) => (
+                    <DropdownMenuItem
+                      key={col.id}
+                      className="text-xs"
+                      onClick={() => onAssign(document.id, col.id)}
+                    >
+                      {col.name}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+            )}
+
+            {/* Remove from collection (only if in a collection) */}
+            {!isUncollected && (
+              <DropdownMenuItem
+                className="font-mono text-xs uppercase tracking-wider"
+                onClick={() => onAssign(document.id, null)}
+              >
+                <X className="mr-2 h-4 w-4" />
+                Remove from collection
+              </DropdownMenuItem>
+            )}
+
             <DropdownMenuSeparator className="bg-[var(--color-border-default)]" />
             <AlertDialogTrigger asChild>
               <DropdownMenuItem className="font-mono text-xs uppercase tracking-wider text-red-400 focus:text-red-400">
@@ -132,7 +160,7 @@ export function DocumentRow({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <AlertDialogContent className=" rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]">
+        <AlertDialogContent className="rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]">
           <AlertDialogHeader>
             <AlertDialogTitle>DELETE DOCUMENT?</AlertDialogTitle>
             <AlertDialogDescription className="text-[var(--color-text-secondary)]">

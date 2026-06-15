@@ -29,7 +29,7 @@ export function AuthCard({
 
       <div className="space-y-2">
         <p className="kl-data-label">
-          {accent ?? "KNOWLATTICE"}
+          {accent ?? "Adaptify"}
         </p>
         <h1 className="font-mono text-2xl font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
           {title}
