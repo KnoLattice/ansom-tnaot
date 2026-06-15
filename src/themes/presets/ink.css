@@ -1,0 +1,31 @@
+:root[data-theme="ink"] {
+  /* Canvas & surfaces — light mode */
+  --color-canvas: #F3F3F2;
+  --color-surface: #FFFFFF;
+  --color-surface-elevated: #F8F8F7;
+  --color-halo: #E8E8E7;
+
+  /* Text — high contrast for light mode */
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #666666;
+  --color-text-muted: #999999;
+
+  /* Accent — blue primary, green secondary */
+  --color-accent-primary: #1454E1;
+  --color-accent-secondary: #73E2A4;
+
+  /* Borders — solid, visible, structural for light mode */
+  --color-border-subtle: #E0E0DF;
+  --color-border-default: #D0D0CF;
+
+  /* Panel — opaque, no effects for light mode */
+  --panel-bg: #FFFFFF;
+  --panel-border: #E0E0DF;
+
+  /* All space effects disabled */
+  --space-starfield-opacity: 0;
+  --space-nebula-opacity: 0;
+
+  /* Glow uses the new accent for light mode */
+  --glow-accent: rgba(20, 84, 225, 0.08);
+}

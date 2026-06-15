@@ -1,0 +1,13 @@
+[data-theme="obsidian"] {
+  --color-canvas: var(--raw-obsidian-gray);
+  --color-surface: #111317;
+  --color-surface-elevated: #171a1f;
+  --color-halo: #050607;
+  --color-text-primary: #f5f7ff;
+  --color-text-secondary: #b3b8c9;
+  --color-text-muted: #6b7285;
+  --color-accent-primary: var(--raw-indigo-600);
+  --color-accent-secondary: #0ea5e9;
+  --space-nebula-primary: rgba(79, 70, 229, 0.22);
+  --space-nebula-secondary: rgba(14, 165, 233, 0.18);
+}

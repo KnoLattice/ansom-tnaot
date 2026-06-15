@@ -1,26 +1,141 @@
 @import "tailwindcss";
+@plugin "tailwindcss-animate";
+@import "../themes/tokens/base.css";
+@import "../themes/tokens/semantic.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    color-scheme: dark;
+  }
+
+  body {
+    min-height: 100vh;
+    margin: 0;
+    background-color: var(--color-canvas);
+    color: var(--color-text-primary);
+    font-family: var(--font-body, "DM Sans"), system-ui, sans-serif;
+    line-height: 1.5;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Subtle dot grid background — mission control feel */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image: radial-gradient(circle, #222222 0.5px, transparent 0.5px);
+    background-size: 24px 24px;
+    opacity: 0.5;
+  }
+
+  /* Thin horizontal scan line at top */
+  body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--color-accent-primary);
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  ::selection {
+    background: var(--color-accent-primary);
+    color: #000000;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* React Flow overrides — raw data graph */
+  .react-flow__node {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  .react-flow__node.selected {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .react-flow__node:focus,
+  .react-flow__node:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  .react-flow__edge-path {
+    stroke-linecap: square;
+  }
+
+  /* Brutalist panel — opaque, sharp, structural */
+  .kl-glass-panel {
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 0;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
+  }
+
+  /* Data label — uppercase monospace micro text */
+  .kl-data-label {
+    font-family: var(--font-display, "Space Mono"), monospace;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  /* Data value — large monospace readout */
+  .kl-data-value {
+    font-family: var(--font-display, "Space Mono"), monospace;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Section divider */
+  .kl-divider {
+    height: 1px;
+    background: var(--color-border-default);
+    border: none;
+  }
+
+  /* Card base — brutalist data block */
+  .kl-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-default);
+    border-radius: 0;
+    padding: 1rem;
+  }
+
+  /* Active/selected state */
+  .kl-card-active {
+    border-color: var(--color-accent-primary);
+    box-shadow: inset 0 0 0 1px var(--color-accent-primary);
+  }
 }

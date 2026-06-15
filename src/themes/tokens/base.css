@@ -1,0 +1,56 @@
+:root {
+  /* ── Canvas & surface ── */
+  --raw-space-980: #050505;
+  --raw-space-950: #090909;
+  --raw-space-925: #0e0e0e;
+  --raw-space-900: #141414;
+  --raw-space-850: #1a1a1a;
+  --raw-surface-dim: #111111;
+  --raw-surface-highlight: #1e1e1e;
+
+  /* ── Borders — solid, structural ── */
+  --raw-border-subtle: #222222;
+  --raw-border-default: #333333;
+
+  /* ── Text ── */
+  --raw-text-primary: #e8e8e8;
+  --raw-text-secondary: #999999;
+  --raw-text-muted: #555555;
+
+  /* ── Accent — acid chartreuse + signal orange ── */
+  --raw-chartreuse-400: #d4f74e;
+  --raw-chartreuse-500: #c6f135;
+  --raw-chartreuse-600: #a8d41a;
+  --raw-orange-400: #ff7043;
+  --raw-orange-500: #ff5722;
+  --raw-orange-600: #e64a19;
+  --raw-cyan-400: #22d3ee;
+  --raw-cyan-500: #06b6d4;
+  --raw-cyan-600: #0891b2;
+
+  /* ── Status ── */
+  --raw-danger: #ef4444;
+  --raw-warning: #f59e0b;
+  --raw-success: #22c55e;
+
+  /* ── Mastery tiers ── */
+  --raw-mastery-mastered: #c6f135;
+  --raw-mastery-proficient: #22d3ee;
+  --raw-mastery-developing: #f59e0b;
+  --raw-mastery-low: #ef4444;
+  --raw-mastery-locked: #333333;
+
+  /* ── Panel — opaque, no glass ── */
+  --raw-accent-glow: rgba(198, 241, 53, 0.12);
+  --raw-panel-glass: #111111;
+  --raw-panel-border: #2a2a2a;
+  --raw-panel-blur-md: 0px;
+  --raw-panel-blur-lg: 0px;
+
+  /* ── Space effects — disabled for brutalist ��─ */
+  --raw-starfield-color: transparent;
+  --raw-nebula-indigo: transparent;
+  --raw-nebula-teal: transparent;
+  --raw-nebula-aurora: transparent;
+  --raw-nebula-solar: transparent;
+}

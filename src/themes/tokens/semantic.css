@@ -1,0 +1,6 @@
+@import "./defaults.css";
+@import "../presets/deep-space.css";
+@import "../presets/aurora.css";
+@import "../presets/solar.css";
+@import "../presets/obsidian.css";
+@import "../presets/ink.css";
