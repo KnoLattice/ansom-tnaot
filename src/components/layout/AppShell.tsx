@@ -18,8 +18,8 @@ import {
 import { useAuthStore } from "@/store/auth.store";
 import { useDocuments, useHydrated } from "@/lib/hooks";
 import { useSessionNavGuard } from "@/components/shared/SessionNavGuard";
+import { ThemeSwitcher } from "@/components/layout/ThemeSwitcher";
 import { cn } from "@/lib/utils";
-import { Button } from "../ui/button";
 
 const NAV_ITEMS = [
   { href: "/", label: "HOME", icon: LayoutGrid },
@@ -123,7 +123,9 @@ export function AppShell({ children }: PropsWithChildren) {
             )}*/}
           </div>
 
-          {/* User */}
+          {/* Theme + User */}
+          <div className="flex items-center gap-3">
+          <ThemeSwitcher />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
@@ -160,6 +162,7 @@ export function AppShell({ children }: PropsWithChildren) {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          </div>
         </nav>
       </header>
 
