@@ -541,14 +541,7 @@ export function QuestionCard({
               disabled={isSubmitting}
               className="rounded-md"
             >
-              {isSubmitting ? (
-                <>
-                  <Spinner size="sm" />
-                  <span className="ml-2">UPDATING...</span>
-                </>
-              ) : (
-                "CONTINUE"
-              )}
+              {isSubmitting ? <Spinner size="sm" /> : "CONTINUE"}
             </Button>
           )
         ) : qType === "fill_blank" ? (

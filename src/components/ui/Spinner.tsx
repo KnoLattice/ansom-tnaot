@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 
 interface SpinnerProps {
   size?: "sm" | "md" | "lg";
+  label?: string | false;
   className?: string;
 }
 
@@ -11,7 +12,8 @@ const sizes = {
   lg: "h-6 w-6",
 };
 
-export function Spinner({ size = "md", className }: SpinnerProps) {
+export function Spinner({ size = "md", label, className }: SpinnerProps) {
+  const showLabel = label !== false && size !== "sm";
   return (
     <div className={cn("flex items-center gap-2", className)}>
       <div
@@ -20,7 +22,11 @@ export function Spinner({ size = "md", className }: SpinnerProps) {
           sizes[size],
         )}
       />
-      <span className="kl-data-label animate-pulse">LOADING</span>
+      {showLabel && (
+        <span className="kl-data-label animate-pulse">
+          {label || "LOADING"}
+        </span>
+      )}
     </div>
   );
 }
