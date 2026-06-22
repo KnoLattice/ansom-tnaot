@@ -87,6 +87,12 @@ export interface DocumentStatusResponse {
   processedAt: string | null;
 }
 
+export interface DocumentSummaryResponse {
+  documentId: string;
+  originalName: string;
+  summary: string | null;
+}
+
 // ─── Graph ────────────────────────────────────────────
 export type MasteryBand = "mastered" | "proficient" | "developing" | "low";
 export type RelationshipType = "prerequisite" | "part_of" | "related";

@@ -8,6 +8,7 @@ import { API_ROUTES } from "@/lib/api/routes";
 import type {
   Document,
   DocumentStatusResponse,
+  DocumentSummaryResponse,
   DocumentsResponse,
   UploadResponse,
 } from "@/lib/types/api";
@@ -122,6 +123,21 @@ export function useDocumentStatus(documentId: string | null) {
       query.state.data && ["completed", "failed"].includes(query.state.data.processingStatus)
         ? false
         : 4000,
+  });
+}
+
+export function useDocumentSummary(documentId: string | null) {
+  return useQuery<DocumentSummaryResponse>({
+    queryKey: ["document-summary", documentId],
+    queryFn: async () => {
+      if (!documentId) throw new Error("Missing document id");
+      const { data } = await apiClient.get<DocumentSummaryResponse>(
+        API_ROUTES.DOCUMENTS.SUMMARY(documentId),
+      );
+      return data;
+    },
+    enabled: Boolean(documentId),
+    staleTime: 5 * 60 * 1000,
   });
 }
 
