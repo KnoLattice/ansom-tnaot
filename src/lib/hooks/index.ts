@@ -3,6 +3,7 @@ export { useCollections, useCollectionMastery } from "./useCollections";
 export {
   useDocuments,
   useDocumentStatus,
+  useDocumentSummary,
   useUploadDocument,
   formatDocumentName,
 } from "./useDocuments";

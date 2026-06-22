@@ -19,6 +19,8 @@ export const API_ROUTES = {
     UPLOAD: "/documents/upload",
     STATUS: (id: string) => `/documents/${id}/status`,
     DOWNLOAD: (id: string) => `/documents/${id}/download`,
+    SUMMARY: (id: string) => `/documents/${id}/summary`,
+    GENERATE_SUMMARY: (id: string) => `/documents/${id}/summary`,
     DELETE: (id: string) => `/documents/${id}`,
     ASSIGN_COLLECTION: (id: string) => `/documents/${id}/collection`,
   },
