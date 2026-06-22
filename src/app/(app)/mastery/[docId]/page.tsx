@@ -3,7 +3,7 @@
 import { use, useCallback, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { LayoutList, Network } from "lucide-react";
+import { BookOpen, LayoutList, Network } from "lucide-react";
 import { useGraph, useDocuments } from "@/lib/hooks";
 import { Spinner } from "@/components/ui/Spinner";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -13,13 +13,30 @@ import { ConceptListView, type FilterKey } from "@/components/surfaces/mastery-m
 import { ConceptDetailPanel } from "@/components/surfaces/mastery-map/ConceptDetailPanel";
 import { GraphView } from "@/components/surfaces/mastery-map/GraphView";
 import { BatchActionBar } from "@/components/surfaces/mastery-map/BatchActionBar";
+import { DocumentSummary } from "@/components/surfaces/mastery-map/DocumentSummary";
 import { cn } from "@/lib/utils";
+
+type PageTab = "summary" | "mastery";
 
 function MasteryMapContent({ docId }: { docId: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { activeDocument } = useDocuments();
   const { data: graphData, isLoading, error } = useGraph(docId);
+
+  const tab = (searchParams.get("tab") as PageTab) || "mastery";
+  const setTab = useCallback(
+    (t: PageTab) => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (t === "mastery") {
+        params.delete("tab");
+      } else {
+        params.set("tab", t);
+      }
+      router.replace(`/mastery/${docId}?${params.toString()}`, { scroll: false });
+    },
+    [docId, router, searchParams],
+  );
 
   const view = (searchParams.get("view") as "graph" | "list") || "list";
   const setView = useCallback(
@@ -115,91 +132,135 @@ function MasteryMapContent({ docId }: { docId: string }) {
       <div className="flex flex-col gap-4 border-b border-[var(--color-border-default)] pb-4 md:flex-row md:items-start md:justify-between">
         <div>
           <h1 className="font-mono text-lg font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
-            Mastery Map
+            {tab === "summary" ? "Lesson Summary" : "Mastery Map"}
           </h1>
           <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
-            {docName.replace(/\.[^.]+$/, "")} / {graphData.nodes.length} concepts
+            {docName.replace(/\.[^.]+$/, "")} {tab === "mastery" ? `/ ${graphData.nodes.length} concepts` : ""}
           </p>
         </div>
 
-        {/* View switcher — brutalist toggle */}
-        <div className="flex border rounded-lg border-[var(--color-border-default)]">
-          <button
-            type="button"
-            onClick={() => setView("list")}
-            className={cn(
-              "flex items-center gap-2 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition border-r rounded-l-lg border-[var(--color-border-default)]",
-              view === "list"
-                ? "bg-[var(--color-accent-primary)] text-white"
-                : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
-            )}
-          >
-            <Network className="h-3.5 w-3.5" />
-            LIST
-          </button>
-          <button
-            type="button"
-            onClick={() => setView("graph")}
-            className={cn(
-              "flex items-center gap-2 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition rounded-r-lg border-[var(--color-border-default)]",
-              view === "graph"
-                ? "bg-[var(--color-accent-primary)] text-white"
-                : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
-            )}
-          >
-            <LayoutList className="h-3.5 w-3.5" />
-            GRAPH
-          </button>
-        </div>
-      </div>
+        <div className="flex items-center gap-3">
+          {/* Page tab switcher */}
+          <div className="flex border rounded-lg border-[var(--color-border-default)]">
+            <button
+              type="button"
+              onClick={() => setTab("summary")}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition border-r rounded-l-lg border-[var(--color-border-default)]",
+                tab === "summary"
+                  ? "bg-[var(--color-accent-primary)] text-white"
+                  : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
+              )}
+            >
+              <BookOpen className="h-3.5 w-3.5" />
+              SUMMARY
+            </button>
+            <button
+              type="button"
+              onClick={() => setTab("mastery")}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition rounded-r-lg border-[var(--color-border-default)]",
+                tab === "mastery"
+                  ? "bg-[var(--color-accent-primary)] text-white"
+                  : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
+              )}
+            >
+              <Network className="h-3.5 w-3.5" />
+              MASTERY MAP
+            </button>
+          </div>
 
-      {/* Distribution strip */}
-      <DistributionStrip nodes={graphData.nodes} />
-
-      {/* Main content: view + detail panel */}
-      <div className="flex gap-4" style={{ minHeight: "60vh" }}>
-        <div className="min-w-0 flex-1">
-          {view === "graph" ? (
-            <div className="h-[60vh] overflow-hidden border border-[var(--color-border-default)] bg-[var(--color-canvas)]">
-              <GraphView
-                data={graphData}
-                selectedNodeId={selectedNodeId}
-                onSelectNode={setSelectedNodeId}
-              />
+          {/* View switcher (only show on mastery tab) */}
+          {tab === "mastery" && (
+            <div className="flex border rounded-lg border-[var(--color-border-default)]">
+              <button
+                type="button"
+                onClick={() => setView("list")}
+                className={cn(
+                  "flex items-center gap-2 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition border-r rounded-l-lg border-[var(--color-border-default)]",
+                  view === "list"
+                    ? "bg-[var(--color-accent-primary)] text-white"
+                    : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
+                )}
+              >
+                <Network className="h-3.5 w-3.5" />
+                LIST
+              </button>
+              <button
+                type="button"
+                onClick={() => setView("graph")}
+                className={cn(
+                  "flex items-center gap-2 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition rounded-r-lg border-[var(--color-border-default)]",
+                  view === "graph"
+                    ? "bg-[var(--color-accent-primary)] text-white"
+                    : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
+                )}
+              >
+                <LayoutList className="h-3.5 w-3.5" />
+                GRAPH
+              </button>
             </div>
-          ) : (
-            <ConceptListView
-              nodes={graphData.nodes}
-              selectedNodeId={selectedNodeId}
-              onSelectNode={setSelectedNodeId}
-              filter={filter}
-              onFilterChange={setFilter}
-            />
           )}
         </div>
-
-        {selectedNode && (
-          <div className="hidden w-[360px] shrink-0 lg:block">
-            <div className="sticky top-16" style={{ maxHeight: "calc(100vh - 5rem)" }}>
-              <ConceptDetailPanel
-                node={selectedNode}
-                allNodes={graphData.nodes}
-                edges={graphData.edges}
-                onSelectNode={setSelectedNodeId}
-                onClose={() => setSelectedNodeId(null)}
-                documentId={docId}
-              />
-            </div>
-          </div>
-        )}
       </div>
 
-      {view === "list" && (
-        <BatchActionBar
-          conceptCount={filteredCount}
-          documentId={docId}
-          visible={filter !== "all" && filteredCount > 0}
-        />
+      {tab === "summary" ? (
+        /* Summary tab content */
+        <div className="border rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)]">
+          <DocumentSummary documentId={docId} />
+        </div>
+      ) : (
+        /* Mastery Map tab content */
+        <>
+          {/* Distribution strip */}
+          <DistributionStrip nodes={graphData.nodes} />
+
+          {/* Main content: view + detail panel */}
+          <div className="flex gap-4" style={{ minHeight: "60vh" }}>
+            <div className="min-w-0 flex-1">
+              {view === "graph" ? (
+                <div className="h-[60vh] overflow-hidden border border-[var(--color-border-default)] bg-[var(--color-canvas)]">
+                  <GraphView
+                    data={graphData}
+                    selectedNodeId={selectedNodeId}
+                    onSelectNode={setSelectedNodeId}
+                  />
+                </div>
+              ) : (
+                <ConceptListView
+                  nodes={graphData.nodes}
+                  selectedNodeId={selectedNodeId}
+                  onSelectNode={setSelectedNodeId}
+                  filter={filter}
+                  onFilterChange={setFilter}
+                />
+              )}
+            </div>
+
+            {selectedNode && (
+              <div className="hidden w-[360px] shrink-0 lg:block">
+                <div className="sticky top-16" style={{ maxHeight: "calc(100vh - 5rem)" }}>
+                  <ConceptDetailPanel
+                    node={selectedNode}
+                    allNodes={graphData.nodes}
+                    edges={graphData.edges}
+                    onSelectNode={setSelectedNodeId}
+                    onClose={() => setSelectedNodeId(null)}
+                    documentId={docId}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {view === "list" && (
+            <BatchActionBar
+              conceptCount={filteredCount}
+              documentId={docId}
+              visible={filter !== "all" && filteredCount > 0}
+            />
+          )}
+        </>
       )}
     </div>
   );
