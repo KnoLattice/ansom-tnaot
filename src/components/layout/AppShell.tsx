@@ -1,6 +1,7 @@
 "use client";
 
-import type { PropsWithChildren } from "react";
+import type { PropsWithChildren, MouseEvent } from "react";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   BookOpen,
@@ -51,24 +52,26 @@ export function AppShell({ children }: PropsWithChildren) {
       <header className="fixed inset-x-0 top-0 z-50 border-b border-[var(--color-border-default)] bg-[var(--color-canvas)]">
         <nav className="mx-auto flex h-12 max-w-7xl items-center justify-between px-4">
           {/* Brand */}
-          <button
-            type="button"
-            onClick={() => {
-              if (guardNavigation("/")) router.push("/");
+          <Link
+            href="/"
+            prefetch
+            onClick={(e: MouseEvent) => {
+              if (!guardNavigation("/")) e.preventDefault();
             }}
             className="font-mono text-[12px] font-bold uppercase tracking-[0.35em] text-[var(--color-accent-primary)]"
           >
             Adaptify
-          </button>
+          </Link>
 
           {/* Center nav */}
           <div className="flex items-center gap-0">
             {NAV_ITEMS.map(({ href, label, icon: Icon }) => (
-              <button
+              <Link
                 key={href}
-                type="button"
-                onClick={() => {
-                  if (guardNavigation(href)) router.push(href);
+                href={href}
+                prefetch
+                onClick={(e: MouseEvent) => {
+                  if (!guardNavigation(href)) e.preventDefault();
                 }}
                 className={cn(
                   "flex h-12 items-center gap-2 border-b-2 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.2em] transition-colors",
@@ -79,15 +82,16 @@ export function AppShell({ children }: PropsWithChildren) {
               >
                 <Icon className="h-3.5 w-3.5" />
                 {label}
-              </button>
+              </Link>
             ))}
 
             {hydrated && activeDocumentId && (
-              <button
-                type="button"
-                onClick={() => {
+              <Link
+                href={`/mastery/${activeDocumentId}`}
+                prefetch
+                onClick={(e: MouseEvent) => {
                   const target = `/mastery/${activeDocumentId}`;
-                  if (guardNavigation(target)) router.push(target);
+                  if (!guardNavigation(target)) e.preventDefault();
                 }}
                 className={cn(
                   "flex h-12 items-center gap-2 border-b-2 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.2em] transition-colors",
@@ -98,7 +102,7 @@ export function AppShell({ children }: PropsWithChildren) {
               >
                 <Map className="h-3.5 w-3.5" />
                 MAP
-              </button>
+              </Link>
             )}
 
             {/*{hydrated && activeDocumentId && (
