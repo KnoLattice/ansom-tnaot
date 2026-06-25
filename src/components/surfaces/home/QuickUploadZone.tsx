@@ -2,25 +2,20 @@
 
 import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Upload } from "lucide-react";
+import { Upload, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useUploadDocument } from "@/lib/hooks";
-import { Button } from "@/components/ui/button";
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
-const ACCEPTED_TYPES = [
-  "application/pdf",
-  "text/plain",
-];
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const ACCEPTED_TYPES = ["application/pdf", "text/plain"];
 
 interface QuickUploadZoneProps {
   onUploadComplete?: () => void;
   showFullUploadCTA?: boolean;
 }
 
-export function QuickUploadZone({ onUploadComplete, showFullUploadCTA = true }: QuickUploadZoneProps) {
-  const router = useRouter();
+export function QuickUploadZone({ onUploadComplete }: QuickUploadZoneProps) {
   const uploadDocument = useUploadDocument();
   const [isDragActive, setIsDragActive] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -44,8 +39,7 @@ export function QuickUploadZone({ onUploadComplete, showFullUploadCTA = true }: 
         await uploadDocument(file);
         onUploadComplete?.();
       } catch (err: unknown) {
-        const message =
-          err instanceof Error ? err.message : "Upload failed";
+        const message = err instanceof Error ? err.message : "Upload failed";
         toast.error(message);
       } finally {
         setIsUploading(false);
@@ -55,70 +49,61 @@ export function QuickUploadZone({ onUploadComplete, showFullUploadCTA = true }: 
   );
 
   return (
-    <div className="border rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)]">
-      <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] px-4 py-2">
-        <p className="kl-data-label">Quick Upload</p>
-        {showFullUploadCTA && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => router.push("/upload")}
-            className="text-[10px]"
-          >
-            FULL UPLOAD PAGE
-          </Button>
-        )}
-      </div>
-      <label
-        htmlFor="home-upload-input"
-        onDrop={(e) => {
-          e.preventDefault();
-          setIsDragActive(false);
-          if (e.dataTransfer?.files) {
-            handleFiles(Array.from(e.dataTransfer.files));
+    <label
+      htmlFor="home-upload-input"
+      onDrop={(e) => {
+        e.preventDefault();
+        setIsDragActive(false);
+        if (e.dataTransfer?.files) {
+          handleFiles(Array.from(e.dataTransfer.files));
+        }
+      }}
+      onDragOver={(e) => {
+        e.preventDefault();
+        setIsDragActive(true);
+      }}
+      onDragLeave={() => setIsDragActive(false)}
+      className={cn(
+        "flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-6 text-center transition-all",
+        isDragActive
+          ? "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5"
+          : "border-[var(--color-border-default)] hover:border-[var(--color-accent-primary)]/40 hover:bg-[var(--color-surface-elevated)]",
+        isUploading && "pointer-events-none opacity-60",
+      )}
+    >
+      <input
+        id="home-upload-input"
+        type="file"
+        accept=".pdf,.txt"
+        className="sr-only"
+        onChange={(e) => {
+          if (e.target.files) {
+            handleFiles(Array.from(e.target.files));
           }
+          e.target.value = "";
         }}
-        onDragOver={(e) => {
-          e.preventDefault();
-          setIsDragActive(true);
-        }}
-        onDragLeave={() => setIsDragActive(false)}
-        className={cn(
-          "flex cursor-pointer flex-col items-center justify-center border-2 border-dashed border-[var(--color-border-subtle)] p-6 text-center transition-colors",
-          isDragActive && "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5",
-          isUploading && "pointer-events-none opacity-60",
-        )}
-      >
-        <input
-          id="home-upload-input"
-          type="file"
-          accept=".pdf,.txt"
-          className="sr-only"
-          onChange={(e) => {
-            if (e.target.files) {
-              handleFiles(Array.from(e.target.files));
-            }
-            e.target.value = "";
-          }}
-        />
+      />
 
+      {isUploading ? (
+        <Loader2 className="h-5 w-5 animate-spin text-[var(--color-accent-primary)]" />
+      ) : (
         <Upload
           className={cn(
-            "h-5 w-5 text-[var(--color-text-muted)]",
-            isDragActive && "text-[var(--color-accent-primary)]",
+            "h-5 w-5",
+            isDragActive ? "text-[var(--color-accent-primary)]" : "text-[var(--color-text-muted)]",
           )}
         />
-        <p className="mt-2 font-mono text-xs font-medium uppercase tracking-wider text-[var(--color-text-secondary)]">
-          {isUploading
-            ? "UPLOADING..."
-            : isDragActive
-              ? "DROP TO UPLOAD"
-              : "DROP FILE HERE OR CLICK TO BROWSE"}
-        </p>
-        <p className="mt-1 font-mono text-[9px] text-[var(--color-text-muted)]">
-          PDF / TXT -- MAX 10MB
-        </p>
-      </label>
-    </div>
+      )}
+      <p className="mt-2 text-sm font-medium text-[var(--color-text-secondary)]">
+        {isUploading
+          ? "Uploading..."
+          : isDragActive
+            ? "Drop to upload"
+            : "Drop a file here or click to browse"}
+      </p>
+      <p className="mt-1 text-xs text-[var(--color-text-muted)]">
+        PDF or TXT, up to 10 MB
+      </p>
+    </label>
   );
 }

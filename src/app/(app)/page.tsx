@@ -77,21 +77,21 @@ export default function HomePage() {
     }
   };
 
-  // ── Loading skeleton ──
+  // Loading skeleton
   if (docsLoading || (hasReadyDoc && dashLoading)) {
     return (
-      <div className="mx-auto max-w-3xl space-y-4">
-        <Skeleton className="h-10" />
-        <div className="grid gap-4 md:grid-cols-2">
-          <Skeleton className="h-48" />
-          <Skeleton className="h-48" />
+      <div className="mx-auto max-w-3xl space-y-5">
+        <Skeleton className="h-12 rounded-xl" />
+        <div className="grid gap-5 md:grid-cols-2">
+          <Skeleton className="h-56 rounded-2xl" />
+          <Skeleton className="h-56 rounded-2xl" />
         </div>
-        <Skeleton className="h-14" />
+        <Skeleton className="h-14 rounded-xl" />
       </div>
     );
   }
 
-  // ── Empty state: no documents ──
+  // Empty state: no documents
   if (!hasDocuments) {
     return (
       <div className="mx-auto max-w-3xl space-y-6">
@@ -101,22 +101,27 @@ export default function HomePage() {
           learnerName={learner?.fullName?.split(" ")[0]}
         />
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.15 }}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="flex min-h-[40vh] flex-col items-center justify-center text-center"
         >
-          <div className="border-2 border rounded-md border-dashed border-[var(--color-border-default)] bg-[var(--color-surface)] p-12">
-            <Upload className="mx-auto h-8 w-8 text-[var(--color-text-muted)]" />
-            <h2 className="mt-4 font-mono text-lg font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
-              No documents loaded
+          <div className="rounded-2xl border-2 border-dashed border-[var(--color-border-default)] bg-[var(--color-surface)] p-12">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--color-accent-primary)]/10">
+              <Upload className="h-6 w-6 text-[var(--color-accent-primary)]" />
+            </div>
+            <h2 className="mt-5 font-display text-2xl text-[var(--color-text-primary)]">
+              No documents yet
             </h2>
             <p className="mt-2 max-w-sm text-sm text-[var(--color-text-secondary)]">
-              Upload a PDF to extract concepts and build your knowledge graph.
-              Processing takes approximately 60 seconds.
+              Upload a PDF to extract concepts and build your personal knowledge map.
+              Processing takes about a minute.
             </p>
-            <Button className="mt-6 border rounded-md" onClick={() => router.push("/upload")}>
-              UPLOAD DOCUMENT
+            <Button
+              className="mt-6 rounded-xl bg-[var(--color-accent-primary)] px-6 py-3 text-white shadow-soft hover:opacity-90 transition-opacity"
+              onClick={() => router.push("/upload")}
+            >
+              Upload your first document
             </Button>
           </div>
         </motion.div>
@@ -124,9 +129,9 @@ export default function HomePage() {
     );
   }
 
-  // ── Main home ──
+  // Main home
   return (
-    <div className="mx-auto max-w-3xl space-y-4">
+    <div className="mx-auto max-w-3xl space-y-5">
       {/* 1. Continuity banner */}
       <ContinuityBanner
         lastSession={lastSession}
@@ -134,9 +139,9 @@ export default function HomePage() {
         learnerName={learner?.fullName?.split(" ")[0]}
       />
 
-      {/* 2 & 3. Pulse + Attention — data grid */}
+      {/* 2 & 3. Pulse + Attention cards */}
       {hasReadyDoc && dashboard && (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-5 md:grid-cols-2">
           <PulseCard
             overallMasteryPercent={dashboard.overallMasteryPercent}
             sparklineData={sparklineData}
@@ -159,29 +164,31 @@ export default function HomePage() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.15 }}
-          className="border border-[var(--color-border-default)] bg-[var(--color-surface)] p-6"
+          transition={{ duration: 0.3 }}
+          className="flex items-center gap-4 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-5 shadow-soft-sm"
         >
-          <div className="flex items-center gap-3">
-            <span className="inline-block h-2 w-2 animate-pulse bg-[var(--color-accent-primary)]" />
-            <p className="font-mono text-sm font-medium text-[var(--color-text-primary)]">
-              PROCESSING
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50">
+            <span className="inline-block h-2.5 w-2.5 animate-pulse rounded-full bg-amber-500" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-[var(--color-text-primary)]">
+              Processing your document
+            </p>
+            <p className="mt-0.5 text-xs text-[var(--color-text-muted)]">
+              This usually takes about a minute.{" "}
+              <button
+                type="button"
+                className="font-semibold text-[var(--color-accent-primary)]"
+                onClick={() => router.push("/library")}
+              >
+                View in Library
+              </button>
             </p>
           </div>
-          <p className="mt-2 text-xs text-[var(--color-text-muted)]">
-            Document is being analyzed. This usually takes about a minute.{" "}
-            <button
-              type="button"
-              className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-accent-primary)]"
-              onClick={() => router.push("/library")}
-            >
-              VIEW IN LIBRARY
-            </button>
-          </p>
         </motion.div>
       )}
 
-
+      {/* Last session recap */}
       {lastSession && lastSessionCache.nodesStudied.length > 0 && (
         <LastSessionSummary
           lastSession={lastSession}
@@ -190,10 +197,11 @@ export default function HomePage() {
         />
       )}
 
-      <div className="flex flex-col gap-4 border border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-4 py-2.5">
+      {/* Bottom section: Library + Upload + Recent */}
+      <div className="space-y-4 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-5 shadow-soft-sm">
         <LibraryStrip activeDocumentName={activeDocument?.originalName ?? null} />
         <QuickUploadZone showFullUploadCTA={false} />
-        <RecentDocuments documents={documents}/>
+        <RecentDocuments documents={documents} />
       </div>
     </div>
   );

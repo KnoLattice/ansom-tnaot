@@ -12,6 +12,10 @@
   }
 
   :root {
+    color-scheme: light;
+  }
+
+  :root[data-theme="atelier-dark"] {
     color-scheme: dark;
   }
 
@@ -21,40 +25,14 @@
     background-color: var(--color-canvas);
     color: var(--color-text-primary);
     font-family: var(--font-body, "DM Sans"), system-ui, sans-serif;
-    line-height: 1.5;
+    line-height: 1.6;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Subtle dot grid background — mission control feel */
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    background-image: radial-gradient(circle, #222222 0.5px, transparent 0.5px);
-    background-size: 24px 24px;
-    opacity: 0.5;
-  }
-
-  /* Thin horizontal scan line at top */
-  body::after {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: var(--color-accent-primary);
-    opacity: 0.3;
-    pointer-events: none;
-    z-index: 100;
-  }
-
   ::selection {
     background: var(--color-accent-primary);
-    color: #000000;
+    color: #ffffff;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -68,7 +46,7 @@
 }
 
 @layer components {
-  /* React Flow overrides — raw data graph */
+  /* React Flow overrides */
   .react-flow__node {
     background: transparent !important;
     border: none !important;
@@ -89,86 +67,83 @@
   }
 
   .react-flow__edge-path {
-    stroke-linecap: square;
+    stroke-linecap: round;
   }
 
-  /* Brutalist panel — opaque, sharp, structural */
-  .kl-glass-panel {
-    background: var(--panel-bg);
-    border: 1px solid var(--panel-border);
-    border-radius: 0;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    box-shadow: none;
-  }
+  /* ── Atelier design tokens as utility classes ── */
 
-  /* Data label — uppercase monospace micro text */
+  /* Data label — small caps, tracking, subtle */
   .kl-data-label {
-    font-family: var(--font-display, "Space Mono"), monospace;
-    font-size: 0.625rem;
-    font-weight: 700;
-    letter-spacing: 0.15em;
+    font-family: var(--font-body, "DM Sans"), sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--color-text-muted);
   }
 
-  /* Data value — large monospace readout */
+  /* Data value — display serif for big numbers */
   .kl-data-value {
-    font-family: var(--font-display, "Space Mono"), monospace;
-    font-weight: 700;
+    font-family: var(--font-display, "Instrument Serif"), serif;
+    font-weight: 400;
     font-variant-numeric: tabular-nums;
   }
 
-  /* Section divider */
+  /* Section divider — warm, subtle */
   .kl-divider {
     height: 1px;
-    background: var(--color-border-default);
+    background: var(--color-border-subtle);
     border: none;
   }
 
-  /* Card base — brutalist data block */
+  /* Card base — warm, elevated */
   .kl-card {
     background: var(--color-surface);
-    border: 1px solid var(--color-border-default);
-    border-radius: 0;
-    padding: 1rem;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 1rem;
+    padding: 1.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
   }
 
-  /* Active/selected state */
+  /* Active/selected card state */
   .kl-card-active {
     border-color: var(--color-accent-primary);
-    box-shadow: inset 0 0 0 1px var(--color-accent-primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1), 0 1px 3px rgba(0, 0, 0, 0.04);
+  }
+
+  /* Glass panel — soft elevation */
+  .kl-glass-panel {
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 1rem;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
   }
 
   /* ── Document Summary Markdown ─────────────────────── */
   .kl-summary-prose {
-    line-height: 1.7;
+    line-height: 1.75;
     color: var(--color-text-secondary);
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
     overflow-wrap: break-word;
     word-break: break-word;
   }
 
   .kl-summary-prose h1 {
-    font-family: var(--font-mono, monospace);
-    font-size: 1.35rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+    font-family: var(--font-display, "Instrument Serif"), serif;
+    font-size: 1.75rem;
+    font-weight: 400;
     color: var(--color-text-primary);
-    border-bottom: 2px solid var(--color-border-default);
+    border-bottom: 1px solid var(--color-border-subtle);
     padding-bottom: 0.75rem;
     margin-top: 0;
     margin-bottom: 1.75rem;
   }
 
   .kl-summary-prose h2 {
-    font-family: var(--font-mono, monospace);
-    font-size: 1.05rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--color-accent-primary);
+    font-family: var(--font-display, "Instrument Serif"), serif;
+    font-size: 1.375rem;
+    font-weight: 400;
+    color: var(--color-text-primary);
     border-left: 3px solid var(--color-accent-primary);
     padding-left: 0.75rem;
     margin-top: 2.5rem;
@@ -176,8 +151,7 @@
   }
 
   .kl-summary-prose h3 {
-    font-family: var(--font-mono, monospace);
-    font-size: 0.925rem;
+    font-size: 1.0625rem;
     font-weight: 600;
     color: var(--color-text-primary);
     margin-top: 2rem;
@@ -185,10 +159,9 @@
   }
 
   .kl-summary-prose h4 {
-    font-family: var(--font-mono, monospace);
-    font-size: 0.8rem;
+    font-size: 0.875rem;
     font-weight: 600;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--color-text-secondary);
     margin-top: 1.5rem;
@@ -229,7 +202,7 @@
   .kl-summary-prose li {
     margin-top: 0.35rem;
     margin-bottom: 0.35rem;
-    line-height: 1.7;
+    line-height: 1.75;
     padding-left: 0.25rem;
   }
 
@@ -239,10 +212,10 @@
 
   .kl-summary-prose blockquote {
     border-left: 3px solid var(--color-accent-primary);
-    background: color-mix(in srgb, var(--color-accent-primary) 6%, transparent);
+    background: color-mix(in srgb, var(--color-accent-primary) 4%, transparent);
     padding: 0.75rem 1rem;
     margin: 1rem 0;
-    border-radius: 0 0.375rem 0.375rem 0;
+    border-radius: 0 0.75rem 0.75rem 0;
     font-style: normal;
   }
 
@@ -253,17 +226,17 @@
 
   .kl-summary-prose code {
     font-family: var(--font-mono, monospace);
-    font-size: 0.8rem;
+    font-size: 0.8125rem;
     color: var(--color-accent-primary);
-    background: color-mix(in srgb, var(--color-accent-primary) 10%, transparent);
+    background: color-mix(in srgb, var(--color-accent-primary) 8%, transparent);
     padding: 0.15rem 0.4rem;
-    border-radius: 0.25rem;
+    border-radius: 0.375rem;
   }
 
   .kl-summary-prose pre {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border-default);
-    border-radius: 0.375rem;
+    background: var(--color-surface-elevated);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 0.75rem;
     padding: 1rem;
     overflow-x: auto;
     margin: 1rem 0;
@@ -272,13 +245,13 @@
   .kl-summary-prose pre code {
     background: transparent;
     padding: 0;
-    font-size: 0.8rem;
+    font-size: 0.8125rem;
     color: var(--color-text-secondary);
   }
 
   .kl-summary-prose hr {
     border: none;
-    border-top: 1px solid var(--color-border-default);
+    border-top: 1px solid var(--color-border-subtle);
     margin: 2rem 0;
   }
 
@@ -286,25 +259,24 @@
     width: 100%;
     border-collapse: collapse;
     margin: 1rem 0;
-    font-size: 0.85rem;
+    font-size: 0.875rem;
     display: block;
     overflow-x: auto;
   }
 
   .kl-summary-prose th {
-    font-family: var(--font-mono, monospace);
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     text-align: left;
-    padding: 0.5rem 0.75rem;
+    padding: 0.625rem 0.75rem;
     border-bottom: 2px solid var(--color-border-default);
     color: var(--color-text-primary);
   }
 
   .kl-summary-prose td {
-    padding: 0.5rem 0.75rem;
+    padding: 0.625rem 0.75rem;
     border-bottom: 1px solid var(--color-border-subtle);
     color: var(--color-text-secondary);
   }

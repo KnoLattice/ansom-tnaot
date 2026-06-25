@@ -38,10 +38,10 @@ export function SessionHeader({
   onEndSession,
 }: SessionHeaderProps) {
   return (
-    <div className="flex items-center gap-4 border border-[var(--color-border-default)] bg-[var(--color-surface)] px-4 py-3">
+    <div className="flex items-center gap-4 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-5 py-3.5 shadow-soft-sm">
       {/* Concept name */}
       <div className="min-w-0 shrink-0">
-        <p className="truncate font-mono text-xs font-bold uppercase tracking-wider text-[var(--color-accent-primary)]">
+        <p className="truncate text-sm font-semibold text-[var(--color-accent-primary)]">
           {conceptName}
         </p>
       </div>
@@ -73,30 +73,31 @@ export function SessionHeader({
             variant="ghost"
             size="icon"
             aria-label="End session"
-            className="h-8 w-8 shrink-0 border  border-[var(--color-border-default)] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
+            className="h-9 w-9 shrink-0 rounded-lg text-[var(--color-text-muted)] hover:bg-[var(--color-surface-elevated)] hover:text-[var(--color-text-primary)]"
           >
             <X className="h-4 w-4" />
           </Button>
         </AlertDialogTrigger>
-        <AlertDialogContent className=" rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]">
+        <AlertDialogContent className="rounded-2xl border-[var(--color-border-subtle)] bg-[var(--color-surface)] shadow-soft-lg">
           <AlertDialogHeader>
-            <AlertDialogTitle>END SESSION?</AlertDialogTitle>
+            <AlertDialogTitle className="font-display text-xl text-[var(--color-text-primary)]">
+              End this session?
+            </AlertDialogTitle>
             <AlertDialogDescription className="text-[var(--color-text-secondary)]">
               Your progress will be saved. You can review your results in the
               summary.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel
-               className="border rounded-md">
-                KEEP STUDYING
+            <AlertDialogCancel className="rounded-xl border-[var(--color-border-default)]">
+              Keep studying
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={onEndSession}
               disabled={isSubmitting}
-              className="border rounded-md"
+              className="rounded-xl bg-[var(--color-accent-primary)] text-white"
             >
-              END SESSION
+              End session
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

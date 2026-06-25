@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import type { Collection, Document } from "@/lib/types/api";
 import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -43,11 +42,18 @@ interface CollectionDocumentRowProps {
   onViewMastery: (documentId: string) => void;
 }
 
-const statusColors: Record<string, string> = {
-  completed: "text-green-400 border-green-500",
-  processing: "text-yellow-400 border-yellow-500",
-  pending: "text-cyan-400 border-cyan-500",
-  failed: "text-red-400 border-red-500",
+const statusStyles: Record<string, string> = {
+  completed: "bg-emerald-50 text-emerald-600",
+  processing: "bg-amber-50 text-amber-600",
+  pending: "bg-blue-50 text-blue-600",
+  failed: "bg-red-50 text-red-600",
+};
+
+const statusLabels: Record<string, string> = {
+  completed: "Completed",
+  processing: "Processing",
+  pending: "Pending",
+  failed: "Failed",
 };
 
 export function CollectionDocumentRow({
@@ -66,28 +72,26 @@ export function CollectionDocumentRow({
   );
 
   return (
-    <div className="group flex items-center gap-3 rounded px-3 py-2 transition bg-[var(--color-surface)] hover:bg-[var(--color-canvas)]">
+    <div className="group flex items-center gap-3 rounded-xl px-3 py-2.5 transition hover:bg-[var(--color-surface-elevated)]">
       {/* Document info */}
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm text-[var(--color-text-primary)]">
           {document.originalName}
         </p>
-        <p className="font-mono text-[10px] text-[var(--color-text-muted)]">
-          {dayjs(document.uploadedAt).format("YYYY-MM-DD")} /{" "}
-          {fileSizeMB.toFixed(1)}MB
+        <p className="text-xs text-[var(--color-text-muted)]">
+          {dayjs(document.uploadedAt).format("MMM D, YYYY")} · {fileSizeMB.toFixed(1)} MB
         </p>
       </div>
 
       {/* Status badge */}
-      <Badge
-        variant="outline"
+      <span
         className={cn(
-          "shrink-0 rounded-sm border border-[var(--color-border-subtle)] text-[10px]",
-          statusColors[document.processingStatus] ?? "",
+          "shrink-0 rounded-full px-2.5 py-0.5 text-xs font-medium",
+          statusStyles[document.processingStatus] ?? "bg-[var(--color-surface-elevated)] text-[var(--color-text-muted)]",
         )}
       >
-        {document.processingStatus.toUpperCase()}
-      </Badge>
+        {statusLabels[document.processingStatus] ?? document.processingStatus}
+      </span>
 
       {/* Actions */}
       <AlertDialog>
@@ -95,18 +99,18 @@ export function CollectionDocumentRow({
           <DropdownMenuTrigger asChild>
             <button
               type="button"
-              className="border border-[var(--color-border-default)] bg-[var(--color-canvas)] p-1 text-[var(--color-text-muted)] opacity-0 transition hover:text-[var(--color-text-primary)] group-hover:opacity-100"
+              className="rounded-lg p-1.5 text-[var(--color-text-muted)] opacity-0 transition hover:bg-[var(--color-surface-elevated)] hover:text-[var(--color-text-primary)] group-hover:opacity-100"
             >
               <MoreVertical className="h-3.5 w-3.5" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
-            className="w-52 border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]"
+            className="w-52 rounded-xl border-[var(--color-border-subtle)] bg-[var(--color-surface)] shadow-soft-md"
           >
             {isReady && (
               <DropdownMenuItem
-                className="font-mono text-xs uppercase tracking-wider"
+                className="rounded-lg text-sm"
                 onClick={() => onViewMastery(document.id)}
               >
                 <Map className="mr-2 h-4 w-4" />
@@ -117,7 +121,7 @@ export function CollectionDocumentRow({
             {/* Assign / Move to collection */}
             {otherCollections.length > 0 && (
               <DropdownMenuSub>
-                <DropdownMenuSubTrigger className="font-mono text-xs uppercase tracking-wider">
+                <DropdownMenuSubTrigger className="rounded-lg text-sm">
                   {isUncollected ? (
                     <FolderPlus className="mr-2 h-4 w-4" />
                   ) : (
@@ -125,11 +129,11 @@ export function CollectionDocumentRow({
                   )}
                   {isUncollected ? "Add to collection" : "Move to collection"}
                 </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent className="border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]">
+                <DropdownMenuSubContent className="rounded-xl border-[var(--color-border-subtle)] bg-[var(--color-surface)] shadow-soft-md">
                   {otherCollections.map((col) => (
                     <DropdownMenuItem
                       key={col.id}
-                      className="text-xs"
+                      className="rounded-lg text-sm"
                       onClick={() => onAssign(document.id, col.id)}
                     >
                       {col.name}
@@ -142,7 +146,7 @@ export function CollectionDocumentRow({
             {/* Remove from collection (only if in a collection) */}
             {!isUncollected && (
               <DropdownMenuItem
-                className="font-mono text-xs uppercase tracking-wider"
+                className="rounded-lg text-sm"
                 onClick={() => onAssign(document.id, null)}
               >
                 <X className="mr-2 h-4 w-4" />
@@ -150,9 +154,9 @@ export function CollectionDocumentRow({
               </DropdownMenuItem>
             )}
 
-            <DropdownMenuSeparator className="bg-[var(--color-border-default)]" />
+            <DropdownMenuSeparator className="bg-[var(--color-border-subtle)]" />
             <AlertDialogTrigger asChild>
-              <DropdownMenuItem className="font-mono text-xs uppercase tracking-wider text-red-400 focus:text-red-400">
+              <DropdownMenuItem className="rounded-lg text-sm text-red-500 focus:text-red-500">
                 <Trash2 className="mr-2 h-4 w-4" />
                 Delete
               </DropdownMenuItem>
@@ -160,23 +164,23 @@ export function CollectionDocumentRow({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <AlertDialogContent className="rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]">
+        <AlertDialogContent className="rounded-2xl border-[var(--color-border-subtle)] bg-[var(--color-surface)] shadow-soft-lg">
           <AlertDialogHeader>
-            <AlertDialogTitle>DELETE DOCUMENT?</AlertDialogTitle>
+            <AlertDialogTitle className="font-display text-xl">Delete document?</AlertDialogTitle>
             <AlertDialogDescription className="text-[var(--color-text-secondary)]">
               This will permanently delete &ldquo;{document.originalName}&rdquo;
               and all associated concepts, mastery data, and session history.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="rounded-md border-[var(--color-border-default)] bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)] hover:bg-[var(--color-border-default)]">
-              CANCEL
+            <AlertDialogCancel className="rounded-xl border-[var(--color-border-default)]">
+              Cancel
             </AlertDialogCancel>
             <AlertDialogAction
-              className="rounded-md bg-red-600 text-white hover:bg-red-700"
+              className="rounded-xl bg-red-600 text-white hover:bg-red-700"
               onClick={() => onDelete(document.id)}
             >
-              DELETE
+              Delete
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

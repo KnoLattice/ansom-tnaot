@@ -1,0 +1,39 @@
+/* Warm Atelier — light, scholarly, inviting */
+:root[data-theme="atelier"] {
+  /* Canvas & surfaces — warm off-whites */
+  --color-canvas: #FAFAF7;
+  --color-surface: #FFFFFF;
+  --color-surface-elevated: #F5F4F0;
+  --color-halo: #EFEEE8;
+
+  /* Text — warm charcoal hierarchy */
+  --color-text-primary: #1C1917;
+  --color-text-secondary: #57534E;
+  --color-text-muted: #A8A29E;
+
+  /* Accent — scholarly indigo + warm amber */
+  --color-accent-primary: #4F46E5;
+  --color-accent-secondary: #F59E0B;
+
+  /* Borders — warm stone tones */
+  --color-border-subtle: #E7E5E4;
+  --color-border-default: #D6D3D1;
+
+  /* Panel — clean, opaque */
+  --panel-bg: #FFFFFF;
+  --panel-border: #E7E5E4;
+
+  /* Mastery node colors — warm, organic gradient */
+  --color-node-mastered: #059669;
+  --color-node-proficient: #0891B2;
+  --color-node-developing: #D97706;
+  --color-node-low: #DC2626;
+  --color-node-locked: #D6D3D1;
+
+  /* All space effects disabled */
+  --space-starfield-opacity: 0;
+  --space-nebula-opacity: 0;
+
+  /* Glow — soft indigo */
+  --glow-accent: rgba(79, 70, 229, 0.08);
+}

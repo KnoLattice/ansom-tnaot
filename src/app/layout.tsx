@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import { Space_Mono, DM_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Instrument_Serif, DM_Sans, JetBrains_Mono } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { ClientToaster } from "@/components/providers/ClientToaster";
 import "./globals.css";
 
-const display = Space_Mono({
+const display = Instrument_Serif({
   subsets: ["latin"],
-  weight: ["400", "700"],
+  weight: ["400"],
+  style: ["normal", "italic"],
   variable: "--font-display",
 });
 
@@ -16,9 +17,9 @@ const body = DM_Sans({
   variable: "--font-body",
 });
 
-const mono = IBM_Plex_Mono({
+const mono = JetBrains_Mono({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-mono",
 });
 
@@ -35,7 +36,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      data-theme="ink"
+      data-theme="atelier"
       className={`${display.variable} ${body.variable} ${mono.variable} antialiased`}
     >
       <body className="min-h-screen bg-canvas text-text-primary">

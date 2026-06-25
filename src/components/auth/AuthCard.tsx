@@ -1,4 +1,5 @@
 import type { PropsWithChildren, ReactNode } from "react";
+import { Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface AuthCardProps extends PropsWithChildren {
@@ -12,7 +13,6 @@ interface AuthCardProps extends PropsWithChildren {
 export function AuthCard({
   title,
   description,
-  accent,
   footer,
   className,
   children,
@@ -20,18 +20,21 @@ export function AuthCard({
   return (
     <div
       className={cn(
-        "relative w-full max-w-md border border-[var(--color-border-default)] bg-[var(--color-surface)] p-8 text-[var(--color-text-primary)]",
+        "relative w-full max-w-md rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-8 shadow-soft-lg",
         className,
       )}
     >
-      {/* Top accent line */}
-      <div className="absolute inset-x-0 top-0 h-[2px] bg-[var(--color-accent-primary)]" />
+      <div className="flex items-center gap-2 mb-6">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--color-accent-primary)]">
+          <Sparkles className="h-4 w-4 text-white" />
+        </div>
+        <span className="font-display text-lg text-[var(--color-text-primary)]">
+          Adaptify
+        </span>
+      </div>
 
       <div className="space-y-2">
-        <p className="kl-data-label">
-          {accent ?? "Adaptify"}
-        </p>
-        <h1 className="font-mono text-2xl font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+        <h1 className="font-display text-2xl text-[var(--color-text-primary)]">
           {title}
         </h1>
         {description && (

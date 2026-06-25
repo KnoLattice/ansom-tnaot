@@ -22,13 +22,13 @@ export function DeltaBadge({ delta, className }: DeltaBadgeProps) {
       animate={{ opacity: 1 }}
       transition={{
         delay: MASTERY_ANIMATION.deltaBadgeDelay,
-        duration: 0.15,
+        duration: 0.2,
       }}
       className={cn(
-        "inline-flex items-center border px-2 py-0.5 font-mono text-[10px] font-bold tabular-nums",
+        "inline-flex items-center rounded-full px-2 py-0.5 font-mono text-xs font-semibold tabular-nums",
         isPositive
-          ? "border-green-500 text-green-400"
-          : "border-red-500 text-red-400",
+          ? "bg-emerald-50 text-emerald-600"
+          : "bg-red-50 text-red-600",
         className,
       )}
     >

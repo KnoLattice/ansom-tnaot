@@ -21,9 +21,9 @@ interface MasteryBarProps {
 
 const sizeClasses: Record<MasterySize, string> = {
   xs: "h-1.5",
-  sm: "h-2.5",
-  md: "h-3.5",
-  lg: "h-5",
+  sm: "h-2",
+  md: "h-3",
+  lg: "h-4",
 };
 
 export function MasteryBar({
@@ -50,7 +50,7 @@ export function MasteryBar({
           aria-valuemin={0}
           aria-valuemax={100}
           aria-label={`Mastery ${percent}%`}
-          className={cn("relative w-full overflow-hidden rounded-full bg-white/10", sizeClasses[size])}
+          className={cn("relative w-full overflow-hidden rounded-full bg-[var(--color-surface-elevated)]", sizeClasses[size])}
         >
           <motion.div
             className="h-full rounded-full"
@@ -65,7 +65,7 @@ export function MasteryBar({
           />
         </div>
         {showLabel && (
-          <span className="shrink-0 text-xs font-medium tabular-nums text-text-secondary">
+          <span className="shrink-0 font-mono text-xs font-semibold tabular-nums text-[var(--color-text-secondary)]">
             {formatMastery(score)}
           </span>
         )}

@@ -26,29 +26,34 @@ const config: Config = {
         "node-low": "var(--color-node-low)",
         "node-locked": "var(--color-node-locked)",
         // 5-tier mastery gradient (blueprint spec)
-        "mastery-0": "#ef4444", // red-500 — struggling
-        "mastery-1": "#f97316", // orange-500 — emerging
-        "mastery-2": "#eab308", // yellow-500 — developing
-        "mastery-3": "#84cc16", // lime-500 — proficient
-        "mastery-4": "#22c55e", // green-500 — mastered
+        "mastery-0": "#DC2626", // red-600 — struggling
+        "mastery-1": "#D97706", // amber-600 — emerging
+        "mastery-2": "#CA8A04", // yellow-600 — developing
+        "mastery-3": "#16A34A", // green-600 — proficient
+        "mastery-4": "#059669", // emerald-600 — mastered
       },
       borderColor: {
         DEFAULT: "var(--color-border-subtle)",
       },
       fontFamily: {
-        sans: ["var(--font-body)", "Inter", "system-ui", "sans-serif"],
-        display: ["var(--font-display)", "Syne", "sans-serif"],
-        mono: ["var(--font-mono)", "\"JetBrains Mono\"", "monospace"],
+        sans: ["var(--font-body)", "DM Sans", "system-ui", "sans-serif"],
+        display: ["var(--font-display)", "Instrument Serif", "Georgia", "serif"],
+        mono: ["var(--font-mono)", "JetBrains Mono", "monospace"],
       },
       boxShadow: {
-        glow: "0 0 40px rgba(124, 92, 252, 0.25)",
-        panel: "0 30px 80px rgba(0, 0, 0, 0.45)",
+        "soft-sm": "0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02)",
+        "soft": "0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04)",
+        "soft-md": "0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04)",
+        "soft-lg": "0 8px 32px rgba(0, 0, 0, 0.10), 0 4px 8px rgba(0, 0, 0, 0.04)",
+        glow: "0 0 40px rgba(79, 70, 229, 0.15)",
+        panel: "0 8px 32px rgba(0, 0, 0, 0.08)",
       },
       borderRadius: {
-        xl: "1.5rem",
-        lg: "1.25rem",
-        md: "1rem",
-        sm: "0.5rem",
+        "2xl": "1rem",
+        xl: "0.875rem",
+        lg: "0.75rem",
+        md: "0.5rem",
+        sm: "0.375rem",
       },
     },
   },

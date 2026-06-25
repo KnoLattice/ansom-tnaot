@@ -3,7 +3,7 @@
 import { use, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { PlayCircle, Home } from "lucide-react";
+import { Play, Home, Trophy, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/Spinner";
 import { HeadlineMoment } from "@/components/surfaces/session/HeadlineMoment";
@@ -46,15 +46,15 @@ export default function SessionSummaryPage({
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 text-center">
         <Spinner />
-        <p className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
-          LOADING SUMMARY...
+        <p className="text-sm text-[var(--color-text-muted)]">
+          Loading summary...
         </p>
         <button
           type="button"
-          className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-accent-primary)]"
+          className="text-sm font-semibold text-[var(--color-accent-primary)]"
           onClick={() => router.push("/")}
         >
-          BACK TO HOME
+          Back to home
         </button>
       </div>
     );
@@ -77,27 +77,37 @@ export default function SessionSummaryPage({
 
       {/* Movement map */}
       {nodesStudied.length > 0 && (
-        <MovementMap nodes={nodesStudied} nodeTitles={nodeTitles} />
+        <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-5 shadow-soft-sm">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">
+            Concept Progress
+          </p>
+          <MovementMap nodes={nodesStudied} nodeTitles={nodeTitles} />
+        </div>
       )}
 
       {/* Threshold crossings */}
       {thresholdCrossings.length > 0 && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: nodesStudied.length * MASTERY_ANIMATION.listStagger + 0.2 }}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: nodesStudied.length * MASTERY_ANIMATION.listStagger + 0.2, duration: 0.3 }}
           className="space-y-2"
         >
-          <p className="kl-data-label">Threshold Crossings</p>
-          <div className="space-y-1">
+          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">
+            Milestones
+          </p>
+          <div className="space-y-2">
             {thresholdCrossings.map((node) => (
               <div
                 key={node.nodeId}
-                className="border-l-2 border-l-green-500 bg-green-500/5 px-4 py-3 text-sm text-green-400"
+                className="flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3"
               >
-                MASTERED:{" "}
-                <span className="font-semibold">
-                  {nodeTitles[node.nodeId] ?? node.nodeId.slice(0, 8)}
+                <Trophy className="h-4 w-4 shrink-0 text-emerald-600" />
+                <span className="text-sm text-emerald-800">
+                  Mastered:{" "}
+                  <span className="font-semibold">
+                    {nodeTitles[node.nodeId] ?? node.nodeId.slice(0, 8)}
+                  </span>
                 </span>
               </div>
             ))}
@@ -108,20 +118,27 @@ export default function SessionSummaryPage({
       {/* Still weak */}
       {stillWeak.length > 0 && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: nodesStudied.length * MASTERY_ANIMATION.listStagger + 0.4 }}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: nodesStudied.length * MASTERY_ANIMATION.listStagger + 0.4, duration: 0.3 }}
           className="space-y-2"
         >
-          <p className="kl-data-label">Keep Working On</p>
-          <div className="space-y-1">
+          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">
+            Keep working on
+          </p>
+          <div className="space-y-2">
             {stillWeak.map((node) => (
               <div
                 key={node.nodeId}
-                className="border rounded-md border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-4 py-3 text-sm text-[var(--color-text-secondary)]"
+                className="flex items-center justify-between rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-4 py-3"
               >
-                {nodeTitles[node.nodeId] ?? node.nodeId.slice(0, 8)} —{" "}
-                <span className="font-mono font-bold tabular-nums">
+                <div className="flex items-center gap-3">
+                  <AlertTriangle className="h-4 w-4 shrink-0 text-amber-500" />
+                  <span className="text-sm text-[var(--color-text-primary)]">
+                    {nodeTitles[node.nodeId] ?? node.nodeId.slice(0, 8)}
+                  </span>
+                </div>
+                <span className="font-mono text-sm font-semibold tabular-nums text-[var(--color-text-muted)]">
                   {Math.round(node.masteryAfter * 100)}%
                 </span>
               </div>
@@ -138,7 +155,7 @@ export default function SessionSummaryPage({
         className="flex flex-col gap-3 pt-4 sm:flex-row"
       >
         <Button
-          className="flex-1 rounded-md"
+          className="flex-1 h-12 rounded-xl bg-[var(--color-accent-primary)] text-white font-semibold hover:opacity-90 transition-opacity"
           onClick={() => {
             const docId = Cookies.get(`session_docId_${id}`);
             if (docId) {
@@ -148,16 +165,16 @@ export default function SessionSummaryPage({
             }
           }}
         >
-          <PlayCircle className="mr-2 h-4 w-4" />
-          STUDY AGAIN
+          <Play className="mr-2 h-4 w-4" />
+          Study again
         </Button>
         <Button
           variant="outline"
-          className="flex-1 hover:bg-[var(--color-surface-elevated)] hover:text-[var(--color-text-primary)]"
+          className="flex-1 h-12 rounded-xl border-[var(--color-border-default)] font-medium hover:bg-[var(--color-surface-elevated)]"
           onClick={() => router.push("/")}
         >
           <Home className="mr-2 h-4 w-4" />
-          DONE
+          Done for now
         </Button>
       </motion.div>
     </div>

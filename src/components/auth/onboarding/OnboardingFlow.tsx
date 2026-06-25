@@ -55,9 +55,9 @@ export function OnboardingFlow({ defaultWorkspaceName, onComplete }: OnboardingF
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center gap-2 text-xs uppercase tracking-[0.4em] text-text-muted">
+      <div className="flex items-center gap-2 text-xs text-[var(--color-text-muted)]">
         <span>Onboarding</span>
-        <span className="h-px flex-1 bg-border-default" />
+        <span className="h-px flex-1 bg-[var(--color-border-default)]" />
         <span>
           {stepIndex + 1} / {steps.length}
         </span>
@@ -72,7 +72,7 @@ export function OnboardingFlow({ defaultWorkspaceName, onComplete }: OnboardingF
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             className="space-y-5"
           >
-            <p className="text-lg text-text-secondary">
+            <p className="text-lg text-[var(--color-text-secondary)]">
               Adaptify builds your personal learning universe.
             </p>
             <div className="space-y-3 text-sm">
@@ -103,19 +103,19 @@ export function OnboardingFlow({ defaultWorkspaceName, onComplete }: OnboardingF
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             className="space-y-4"
           >
-            <p className="text-lg text-text-primary">Name your workspace</p>
-            <p className="text-sm text-text-muted">
+            <p className="text-lg text-[var(--color-text-primary)]">Name your workspace</p>
+            <p className="text-sm text-[var(--color-text-muted)]">
               This label personalizes your experience.
             </p>
             <div className="space-y-2">
-              <Label htmlFor="workspace" className="text-text-secondary">
+              <Label htmlFor="workspace" className="text-sm text-[var(--color-text-secondary)]">
                 Workspace name
               </Label>
               <Input
                 id="workspace"
                 value={workspaceName}
                 onChange={(event) => setWorkspaceName(event.target.value)}
-                className="border-border-default bg-white/5 text-text-primary placeholder:text-text-muted"
+                className="rounded-xl border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]"
               />
             </div>
           </motion.div>
@@ -129,11 +129,11 @@ export function OnboardingFlow({ defaultWorkspaceName, onComplete }: OnboardingF
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             className="space-y-4"
           >
-            <p className="text-lg text-text-primary">You&apos;re all set.</p>
-            <p className="text-sm text-text-muted">
+            <p className="text-lg text-[var(--color-text-primary)]">You&apos;re all set.</p>
+            <p className="text-sm text-[var(--color-text-muted)]">
               Upload your first document to get started.
             </p>
-            <div className="rounded-2xl border border-border-default bg-white/5 p-4 text-sm text-text-secondary">
+            <div className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] p-4 text-sm text-[var(--color-text-secondary)]">
               Pro tip: structured PDFs (syllabi, lecture decks) produce cleaner knowledge graphs than photo scans.
             </div>
           </motion.div>
@@ -142,7 +142,7 @@ export function OnboardingFlow({ defaultWorkspaceName, onComplete }: OnboardingF
       <Button
         onClick={goNext}
         disabled={saving}
-        className="w-full bg-accent-primary text-white shadow-glow hover:opacity-90"
+        className="w-full rounded-xl bg-[var(--color-accent-primary)] text-white hover:opacity-90"
       >
         {step === "ready" ? "Get started" : "Next"}
       </Button>
@@ -158,13 +158,13 @@ interface StepItemProps {
 
 function StepItem({ icon, title, description }: StepItemProps) {
   return (
-    <div className="flex gap-3 rounded-2xl border border-border-default bg-white/5 p-3">
-      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-text-primary">
+    <div className="flex gap-3 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] p-3">
+      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-accent-primary)]/10 text-[var(--color-accent-primary)]">
         {icon}
       </div>
       <div>
-        <p className="text-sm font-medium text-text-primary">{title}</p>
-        <p className="text-xs text-text-secondary">{description}</p>
+        <p className="text-sm font-medium text-[var(--color-text-primary)]">{title}</p>
+        <p className="text-xs text-[var(--color-text-secondary)]">{description}</p>
       </div>
     </div>
   );

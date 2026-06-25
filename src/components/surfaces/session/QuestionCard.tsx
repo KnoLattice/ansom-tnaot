@@ -29,14 +29,13 @@ const TIMER_MAP: Record<QuestionType, number> = {
 };
 
 const BADGE_MAP: Record<QuestionType, string> = {
-  qcm: "MCQ",
-  short_answer: "SHORT",
-  fill_blank: "FILL",
-  true_false: "T/F",
-  matching: "MATCH",
+  qcm: "Multiple Choice",
+  short_answer: "Short Answer",
+  fill_blank: "Fill in the Blank",
+  true_false: "True or False",
+  matching: "Matching",
 };
 
-/** Types that support instant local feedback (correctAnswer sent from backend) */
 const LOCAL_FEEDBACK_TYPES: QuestionType[] = ["qcm", "true_false"];
 
 export function QuestionCard({
@@ -82,7 +81,6 @@ export function QuestionCard({
   const onSubmitRef = useRef(onSubmit);
   onSubmitRef.current = onSubmit;
 
-  // Reset state when question changes
   useEffect(() => {
     setSelectedOption(null);
     setShortAnswer("");
@@ -94,7 +92,6 @@ export function QuestionCard({
     setTimeLeft(timerDuration);
   }, [question.id, timerDuration]);
 
-  // Timer
   useEffect(() => {
     if (hasAnswered) {
       if (timerRef.current) clearInterval(timerRef.current);
@@ -105,7 +102,6 @@ export function QuestionCard({
       setTimeLeft((prev) => {
         if (prev <= 1) {
           if (timerRef.current) clearInterval(timerRef.current);
-
           queueMicrotask(() => {
             if (hasLocalFeedback) {
               setTimedOut(true);
@@ -118,7 +114,6 @@ export function QuestionCard({
               onSubmitRef.current(shortAnswerRef.current.trim() || "");
             }
           });
-
           return 0;
         }
         return prev - 1;
@@ -130,7 +125,6 @@ export function QuestionCard({
     };
   }, [hasAnswered, hasLocalFeedback, qType]);
 
-  // ─── MCQ handler ───
   const handleOptionClick = useCallback(
     (optionText: string) => {
       if (hasAnswered) return;
@@ -144,7 +138,6 @@ export function QuestionCard({
     [hasAnswered, question.correctAnswer, onSubmit],
   );
 
-  // ─── True/False handler ───
   const handleTFClick = useCallback(
     (value: string) => {
       if (hasAnswered) return;
@@ -158,19 +151,16 @@ export function QuestionCard({
     [hasAnswered, question.correctAnswer, onSubmit],
   );
 
-  // ─── Fill blank handler ───
   const handleBlankSubmit = () => {
     if (!blankAnswer.trim()) return;
     onSubmit(blankAnswer.trim());
   };
 
-  // ─── Short answer handler ───
   const handleShortAnswerSubmit = () => {
     if (!shortAnswer.trim()) return;
     onSubmit(shortAnswer.trim());
   };
 
-  // ─── Matching handler ───
   const matchingPairs = question.matchingPairs;
   const allMatched =
     matchingPairs &&
@@ -182,11 +172,9 @@ export function QuestionCard({
     onSubmit("", matches);
   };
 
-  // ─── Content rendering for fill_blank ───
   const renderFillBlankContent = () => {
     const parts = question.content.split("___");
     if (parts.length < 2) {
-      // Fallback if no blank marker found
       return (
         <>
           <p className="select-none text-base leading-relaxed text-[var(--color-text-primary)]">
@@ -198,7 +186,7 @@ export function QuestionCard({
             value={blankAnswer}
             onChange={(e) => setBlankAnswer(e.target.value)}
             disabled={hasFeedback}
-            className="border-[var(--color-border-default)] bg-[var(--color-canvas)] font-mono text-sm"
+            className="rounded-xl border-[var(--color-border-default)] bg-[var(--color-surface-elevated)] text-sm"
             onKeyDown={(e) => {
               if (e.key === "Enter" && !hasFeedback) handleBlankSubmit();
             }}
@@ -222,9 +210,9 @@ export function QuestionCard({
           className={cn(
             "mx-1 inline-block w-40 border-b-2 bg-transparent px-1 py-0.5 text-center font-mono text-sm outline-none transition",
             hasFeedback && feedback?.isCorrect
-              ? "border-green-500 text-green-400"
+              ? "border-emerald-500 text-emerald-600"
               : hasFeedback && !feedback?.isCorrect
-                ? "border-red-500 text-red-400"
+                ? "border-red-500 text-red-600"
                 : "border-[var(--color-accent-primary)] text-[var(--color-text-primary)]",
           )}
         />
@@ -233,12 +221,14 @@ export function QuestionCard({
     );
   };
 
+  const timerPercent = (timeLeft / timerDuration) * 100;
+
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.1 }}
-      className="space-y-5 border border-[var(--color-border-default)] bg-[var(--color-surface)] p-5"
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="space-y-5 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-6 shadow-soft-sm"
       onKeyDown={handleKeyDown}
       onContextMenu={(e) => {
         const tag = (e.target as HTMLElement).tagName;
@@ -247,48 +237,50 @@ export function QuestionCard({
       }}
       onDragStart={(e) => e.preventDefault()}
     >
-      {/* Header badges + timer */}
+      {/* Header: type badge + timer */}
       <div className="flex select-none flex-wrap items-center gap-2">
-        <Badge variant="outline">{bloomLevelLabel(question.bloomLevel)}</Badge>
-        <Badge variant="outline">{BADGE_MAP[qType] ?? qType.toUpperCase()}</Badge>
+        <span className="rounded-lg bg-[var(--color-accent-primary)]/10 px-2.5 py-1 text-xs font-semibold text-[var(--color-accent-primary)]">
+          {BADGE_MAP[qType] ?? qType}
+        </span>
+        <span className="rounded-lg bg-[var(--color-surface-elevated)] px-2.5 py-1 text-xs font-medium text-[var(--color-text-muted)]">
+          {bloomLevelLabel(question.bloomLevel)}
+        </span>
 
         {!hasAnswered && (
-          <div
-            className={cn(
-              "ml-auto flex items-center gap-1.5 border px-2 py-1 font-mono text-[10px] font-bold tabular-nums",
-              timeLeft <= 10
-                ? "border-red-500 bg-red-500/10 text-red-400"
-                : "border-[var(--color-border-default)] text-[var(--color-text-secondary)]",
-            )}
-          >
-            <Clock className="h-3 w-3" />
-            <span>
-              {Math.floor(timeLeft / 60)}:
-              {String(timeLeft % 60).padStart(2, "0")}
+          <div className="ml-auto flex items-center gap-2">
+            <div className="h-1.5 w-16 overflow-hidden rounded-full bg-[var(--color-surface-elevated)]">
+              <div
+                className={cn(
+                  "h-full rounded-full transition-all duration-1000",
+                  timeLeft <= 10 ? "bg-red-500" : "bg-[var(--color-accent-primary)]",
+                )}
+                style={{ width: `${timerPercent}%` }}
+              />
+            </div>
+            <span
+              className={cn(
+                "font-mono text-xs font-semibold tabular-nums",
+                timeLeft <= 10 ? "text-red-500" : "text-[var(--color-text-muted)]",
+              )}
+            >
+              {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, "0")}
             </span>
           </div>
         )}
       </div>
 
-      {/* ─── Question content + answer area ─── */}
-
-      {/* Fill in the Blank */}
+      {/* Question content */}
       {qType === "fill_blank" && renderFillBlankContent()}
 
-      {/* All other types: show question text */}
       {qType !== "fill_blank" && (
-        <p className="select-none text-base leading-relaxed text-[var(--color-text-primary)]">
+        <p className="select-none text-lg leading-relaxed text-[var(--color-text-primary)]">
           {question.content}
         </p>
       )}
 
       {/* MCQ options */}
       {qType === "qcm" && (
-        <div
-          className="select-none space-y-1"
-          role="radiogroup"
-          aria-label="Answer options"
-        >
+        <div className="select-none space-y-2" role="radiogroup" aria-label="Answer options">
           {question.options?.map((option) => {
             const isSelected = selectedOption === option.text;
             const isCorrectOption =
@@ -308,29 +300,33 @@ export function QuestionCard({
                 onClick={() => handleOptionClick(option.text)}
                 disabled={hasAnswered}
                 className={cn(
-                  "group flex w-full items-center gap-3 border rounded-md px-4 py-3 text-left text-sm transition",
+                  "group flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-left text-sm transition-all",
                   !hasAnswered &&
                     !isSelected &&
-                    "border-[var(--color-border-subtle)] bg-[var(--color-canvas)] hover:border-[var(--color-border-default)] hover:bg-[var(--color-surface-elevated)]",
+                    "border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] hover:border-[var(--color-border-default)] hover:shadow-soft-sm",
                   !hasAnswered &&
                     isSelected &&
-                    "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5",
-                  isCorrectOption && "border-green-500 bg-green-500/10",
-                  isWrongSelected && "border-red-500 bg-red-500/10",
+                    "border border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5",
+                  isCorrectOption && "border border-emerald-300 bg-emerald-50",
+                  isWrongSelected && "border border-red-300 bg-red-50",
                   hasAnswered &&
                     !isCorrectOption &&
                     !isWrongSelected &&
-                    "opacity-30",
+                    "border border-transparent opacity-40",
                 )}
               >
                 {hasAnswered && isCorrectOption && (
-                  <Check className="h-4 w-4 shrink-0 text-green-400" />
+                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500">
+                    <Check className="h-3 w-3 text-white" />
+                  </div>
                 )}
                 {hasAnswered && isWrongSelected && (
-                  <XIcon className="h-4 w-4 shrink-0 text-red-400" />
+                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500">
+                    <XIcon className="h-3 w-3 text-white" />
+                  </div>
                 )}
                 <span>
-                  <span className="font-mono text-xs font-bold text-[var(--color-text-muted)]">
+                  <span className="font-mono text-xs font-semibold text-[var(--color-text-muted)]">
                     {option.label}.
                   </span>{" "}
                   <span className="text-[var(--color-text-primary)]">
@@ -343,7 +339,7 @@ export function QuestionCard({
         </div>
       )}
 
-      {/* True/False buttons */}
+      {/* True/False */}
       {qType === "true_false" && (
         <div className="flex select-none gap-3">
           {["True", "False"].map((value) => {
@@ -363,27 +359,23 @@ export function QuestionCard({
                 onClick={() => handleTFClick(value)}
                 disabled={hasAnswered}
                 className={cn(
-                  "flex flex-1 items-center justify-center gap-2 border rounded-md py-4 font-mono text-sm font-bold uppercase tracking-wider transition",
+                  "flex flex-1 items-center justify-center gap-2 rounded-xl py-4 text-sm font-semibold transition-all",
                   !hasAnswered &&
                     !isSelected &&
-                    "border-[var(--color-border-subtle)] bg-[var(--color-canvas)] hover:border-[var(--color-border-default)] hover:bg-[var(--color-surface-elevated)]",
+                    "border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] hover:border-[var(--color-border-default)] hover:shadow-soft-sm",
                   !hasAnswered &&
                     isSelected &&
-                    "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5",
-                  isCorrectOption && "border-green-500 bg-green-500/10 text-green-400",
-                  isWrongSelected && "border-red-500 bg-red-500/10 text-red-400",
+                    "border border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5 text-[var(--color-accent-primary)]",
+                  isCorrectOption && "border border-emerald-300 bg-emerald-50 text-emerald-700",
+                  isWrongSelected && "border border-red-300 bg-red-50 text-red-700",
                   hasAnswered &&
                     !isCorrectOption &&
                     !isWrongSelected &&
-                    "opacity-30",
+                    "border border-transparent opacity-40",
                 )}
               >
-                {hasAnswered && isCorrectOption && (
-                  <Check className="h-4 w-4 shrink-0" />
-                )}
-                {hasAnswered && isWrongSelected && (
-                  <XIcon className="h-4 w-4 shrink-0" />
-                )}
+                {hasAnswered && isCorrectOption && <Check className="h-4 w-4" />}
+                {hasAnswered && isWrongSelected && <XIcon className="h-4 w-4" />}
                 {value}
               </button>
             );
@@ -391,54 +383,37 @@ export function QuestionCard({
         </div>
       )}
 
-      {/* Short Answer textarea */}
+      {/* Short Answer */}
       {qType === "short_answer" && (
         <Textarea
           placeholder="Type your answer here..."
           value={shortAnswer}
           onChange={(e) => setShortAnswer(e.target.value)}
           disabled={hasFeedback}
-          className="min-h-[100px] border-[var(--color-border-default)] bg-[var(--color-canvas)] font-mono text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]"
+          className="min-h-[100px] rounded-xl border-[var(--color-border-default)] bg-[var(--color-surface-elevated)] text-sm placeholder:text-[var(--color-text-muted)]"
         />
       )}
 
-      {/* Matching exercise */}
+      {/* Matching */}
       {qType === "matching" && matchingPairs && (
         <div className="space-y-2">
-          {matchingPairs.left.map((leftItem, idx) => {
+          {matchingPairs.left.map((leftItem) => {
             const selected = matches[leftItem] ?? "";
-            const showResult = hasFeedback && feedback;
-
-            // After feedback, check if this pair was correct
-            let pairCorrect: boolean | null = null;
-            if (showResult && feedback) {
-              // feedback.correctAnswer contains the full correct pairs text from backend
-              // We check by seeing if the selected matches the original pair ordering
-              // But we just rely on the overall feedback for display
-              pairCorrect = null; // Will be determined below
-            }
-
             return (
-              <div
-                key={leftItem}
-                className="flex items-center gap-3"
-              >
-                <div className="flex-1 rounded-md border border-[var(--color-border-default)] bg-[var(--color-canvas)] px-3 py-2 text-sm text-[var(--color-text-primary)]">
+              <div key={leftItem} className="flex items-center gap-3">
+                <div className="flex-1 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] px-3.5 py-2.5 text-sm text-[var(--color-text-primary)]">
                   {leftItem}
                 </div>
                 <span className="text-[var(--color-text-muted)]">&rarr;</span>
                 <select
                   value={selected}
                   onChange={(e) =>
-                    setMatches((prev) => ({
-                      ...prev,
-                      [leftItem]: e.target.value,
-                    }))
+                    setMatches((prev) => ({ ...prev, [leftItem]: e.target.value }))
                   }
                   disabled={hasFeedback}
                   className={cn(
-                    "flex-1 rounded-md border px-3 py-2 text-sm outline-none transition",
-                    "border-[var(--color-border-default)] bg-[var(--color-canvas)] text-[var(--color-text-primary)]",
+                    "flex-1 rounded-xl border px-3.5 py-2.5 text-sm outline-none transition",
+                    "border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)]",
                     !selected && "text-[var(--color-text-muted)]",
                   )}
                 >
@@ -455,38 +430,35 @@ export function QuestionCard({
         </div>
       )}
 
-      {/* ─── Feedback panels ─── */}
-
-      {/* Local feedback for QCM and True/False */}
+      {/* Feedback panels */}
       {hasLocalFeedback && hasAnswered && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.1 }}
+          initial={{ opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2 }}
           className={cn(
-            "select-none border-l-2 p-4",
+            "select-none rounded-xl p-4",
             timedOut
-              ? "border-l-yellow-500 bg-yellow-500/5"
+              ? "bg-amber-50 border border-amber-200"
               : localCorrect
-                ? "border-l-green-500 bg-green-500/5"
-                : "border-l-red-500 bg-red-500/5",
+                ? "bg-emerald-50 border border-emerald-200"
+                : "bg-red-50 border border-red-200",
           )}
         >
           <p
             className={cn(
-              "font-mono text-xs font-bold uppercase tracking-wider",
+              "text-sm font-semibold",
               timedOut
-                ? "text-yellow-400"
+                ? "text-amber-700"
                 : localCorrect
-                  ? "text-green-400"
-                  : "text-red-400",
+                  ? "text-emerald-700"
+                  : "text-red-700",
             )}
           >
-            {timedOut ? "TIME EXPIRED" : localCorrect ? "CORRECT" : "INCORRECT"}
+            {timedOut ? "Time expired" : localCorrect ? "Correct!" : "Incorrect"}
           </p>
-
           {(timedOut || !localCorrect) && (
-            <p className="mt-2 text-sm text-[var(--color-text-muted)]">
+            <p className="mt-1.5 text-sm text-[var(--color-text-secondary)]">
               Correct answer:{" "}
               <span className="font-medium text-[var(--color-text-primary)]">
                 {question.correctAnswer}
@@ -496,32 +468,31 @@ export function QuestionCard({
         </motion.div>
       )}
 
-      {/* Server feedback for short_answer, fill_blank, matching */}
       {!hasLocalFeedback && hasFeedback && feedback && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.1 }}
+          initial={{ opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2 }}
           className={cn(
-            "select-none border-l-2 p-4",
+            "select-none rounded-xl p-4",
             feedback.isCorrect
-              ? "border-l-green-500 bg-green-500/5"
-              : "border-l-red-500 rounded-r-md bg-red-500/5",
+              ? "bg-emerald-50 border border-emerald-200"
+              : "bg-red-50 border border-red-200",
           )}
         >
           <p
             className={cn(
-              "font-mono text-xs font-bold uppercase tracking-wider",
-              feedback.isCorrect ? "text-green-400" : "text-red-400",
+              "text-sm font-semibold",
+              feedback.isCorrect ? "text-emerald-700" : "text-red-700",
             )}
           >
-            {feedback.isCorrect ? "CORRECT" : "INCORRECT"}
+            {feedback.isCorrect ? "Correct!" : "Incorrect"}
           </p>
-          <p className="mt-2 text-sm leading-relaxed text-[var(--color-text-secondary)]">
+          <p className="mt-1.5 text-sm leading-relaxed text-[var(--color-text-secondary)]">
             {feedback.evaluatorFeedback}
           </p>
           {!feedback.isCorrect && (
-            <p className="mt-2 text-sm text-[var(--color-text-muted)]">
+            <p className="mt-1.5 text-sm text-[var(--color-text-secondary)]">
               Correct answer:{" "}
               <span className="font-medium text-[var(--color-text-primary)]">
                 {feedback.correctAnswer}
@@ -531,17 +502,16 @@ export function QuestionCard({
         </motion.div>
       )}
 
-      {/* ─── Submit / Continue ─── */}
+      {/* Submit / Continue */}
       <div className="flex justify-end">
-        {/* QCM and True/False: show Continue after local feedback */}
         {hasLocalFeedback ? (
           hasAnswered && (
             <Button
               onClick={onContinue}
               disabled={isSubmitting}
-              className="rounded-md"
+              className="rounded-xl bg-[var(--color-accent-primary)] px-6 text-white hover:opacity-90"
             >
-              {isSubmitting ? <Spinner size="sm" /> : "CONTINUE"}
+              {isSubmitting ? <Spinner size="sm" /> : "Continue"}
             </Button>
           )
         ) : qType === "fill_blank" ? (
@@ -549,13 +519,16 @@ export function QuestionCard({
             <Button
               disabled={!blankAnswer.trim() || isSubmitting}
               onClick={handleBlankSubmit}
-              className="rounded-md"
+              className="rounded-xl bg-[var(--color-accent-primary)] px-6 text-white hover:opacity-90"
             >
-              {isSubmitting ? <Spinner size="sm" /> : "SUBMIT"}
+              {isSubmitting ? <Spinner size="sm" /> : "Submit"}
             </Button>
           ) : (
-            <Button onClick={onContinue} className="rounded-md">
-              CONTINUE
+            <Button
+              onClick={onContinue}
+              className="rounded-xl bg-[var(--color-accent-primary)] px-6 text-white hover:opacity-90"
+            >
+              Continue
             </Button>
           )
         ) : qType === "matching" ? (
@@ -563,27 +536,32 @@ export function QuestionCard({
             <Button
               disabled={!allMatched || isSubmitting}
               onClick={handleMatchSubmit}
-              className="rounded-md"
+              className="rounded-xl bg-[var(--color-accent-primary)] px-6 text-white hover:opacity-90"
             >
-              {isSubmitting ? <Spinner size="sm" /> : "SUBMIT"}
+              {isSubmitting ? <Spinner size="sm" /> : "Submit"}
             </Button>
           ) : (
-            <Button onClick={onContinue} className="rounded-md">
-              CONTINUE
+            <Button
+              onClick={onContinue}
+              className="rounded-xl bg-[var(--color-accent-primary)] px-6 text-white hover:opacity-90"
+            >
+              Continue
             </Button>
           )
-        ) : /* short_answer */
-        !hasFeedback ? (
+        ) : !hasFeedback ? (
           <Button
             disabled={!shortAnswer.trim() || isSubmitting}
             onClick={handleShortAnswerSubmit}
-            className="rounded-md"
+            className="rounded-xl bg-[var(--color-accent-primary)] px-6 text-white hover:opacity-90"
           >
-            {isSubmitting ? <Spinner size="sm" /> : "SUBMIT"}
+            {isSubmitting ? <Spinner size="sm" /> : "Submit"}
           </Button>
         ) : (
-          <Button onClick={onContinue} className="rounded-md">
-            CONTINUE
+          <Button
+            onClick={onContinue}
+            className="rounded-xl bg-[var(--color-accent-primary)] px-6 text-white hover:opacity-90"
+          >
+            Continue
           </Button>
         )}
       </div>

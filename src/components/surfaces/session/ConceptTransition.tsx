@@ -32,20 +32,22 @@ export function ConceptTransition({
     <AnimatePresence onExitComplete={onComplete}>
       {visible && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.15 }}
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.96 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
           className="flex min-h-[40vh] items-center justify-center"
         >
-          <div className="border border-[var(--color-border-default)] bg-[var(--color-surface)] p-8 text-center">
-            <p className="kl-data-label">Switching to</p>
-            <h2 className="mt-3 font-mono text-xl font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+          <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-10 text-center shadow-soft-md">
+            <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">
+              Switching to
+            </p>
+            <h2 className="mt-3 font-display text-2xl text-[var(--color-text-primary)]">
               {conceptName}
             </h2>
-            <p className="mt-3 font-mono text-sm text-[var(--color-text-secondary)]">
+            <p className="mt-3 text-sm text-[var(--color-text-secondary)]">
               Current mastery:{" "}
-              <span className="font-bold tabular-nums" style={{ color }}>
+              <span className="font-display text-lg" style={{ color }}>
                 {formatMastery(masteryScore)}
               </span>
             </p>

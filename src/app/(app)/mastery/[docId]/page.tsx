@@ -98,8 +98,8 @@ function MasteryMapContent({ docId }: { docId: string }) {
   if (isLoading) {
     return (
       <div className="space-y-4">
-        <Skeleton className="h-16" />
-        <Skeleton className="h-[60vh]" />
+        <Skeleton className="h-16 rounded-2xl" />
+        <Skeleton className="h-[60vh] rounded-2xl" />
       </div>
     );
   }
@@ -107,18 +107,18 @@ function MasteryMapContent({ docId }: { docId: string }) {
   if (error || !graphData) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
-        <p className="font-mono text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
-          UNABLE TO LOAD GRAPH
+        <p className="font-display text-xl text-[var(--color-text-primary)]">
+          Unable to load graph
         </p>
         <p className="mt-2 text-sm text-[var(--color-text-secondary)]">
           {error instanceof Error ? error.message : "This document may not be processed yet."}
         </p>
         <Button
           variant="outline"
-          className="mt-4"
+          className="mt-4 rounded-xl"
           onClick={() => router.push("/library")}
         >
-          BACK TO LIBRARY
+          Back to library
         </Button>
       </div>
     );
@@ -127,77 +127,77 @@ function MasteryMapContent({ docId }: { docId: string }) {
   const docName = activeDocument?.originalName ?? "Document";
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {/* Header */}
-      <div className="flex flex-col gap-4 border-b border-[var(--color-border-default)] pb-4 md:flex-row md:items-start md:justify-between">
+      <div className="flex flex-col gap-4 pb-2 md:flex-row md:items-start md:justify-between">
         <div>
-          <h1 className="font-mono text-lg font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+          <h1 className="font-display text-3xl text-[var(--color-text-primary)]">
             {tab === "summary" ? "Lesson Summary" : "Mastery Map"}
           </h1>
-          <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
-            {docName.replace(/\.[^.]+$/, "")} {tab === "mastery" ? `/ ${graphData.nodes.length} concepts` : ""}
+          <p className="mt-1 text-sm text-[var(--color-text-muted)]">
+            {docName.replace(/\.[^.]+$/, "")} {tab === "mastery" ? ` · ${graphData.nodes.length} concepts` : ""}
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           {/* Page tab switcher */}
-          <div className="flex border rounded-lg border-[var(--color-border-default)]">
+          <div className="flex rounded-xl bg-[var(--color-surface-elevated)] p-1">
             <button
               type="button"
               onClick={() => setTab("summary")}
               className={cn(
-                "flex items-center gap-2 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition border-r rounded-l-lg border-[var(--color-border-default)]",
+                "flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition",
                 tab === "summary"
-                  ? "bg-[var(--color-accent-primary)] text-white"
+                  ? "bg-[var(--color-surface)] text-[var(--color-text-primary)] shadow-soft-sm"
                   : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
               )}
             >
-              <BookOpen className="h-3.5 w-3.5" />
-              SUMMARY
+              <BookOpen className="h-4 w-4" />
+              Summary
             </button>
             <button
               type="button"
               onClick={() => setTab("mastery")}
               className={cn(
-                "flex items-center gap-2 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition rounded-r-lg border-[var(--color-border-default)]",
+                "flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition",
                 tab === "mastery"
-                  ? "bg-[var(--color-accent-primary)] text-white"
+                  ? "bg-[var(--color-surface)] text-[var(--color-text-primary)] shadow-soft-sm"
                   : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
               )}
             >
-              <Network className="h-3.5 w-3.5" />
-              MASTERY MAP
+              <Network className="h-4 w-4" />
+              Mastery map
             </button>
           </div>
 
           {/* View switcher (only show on mastery tab) */}
           {tab === "mastery" && (
-            <div className="flex border rounded-lg border-[var(--color-border-default)]">
+            <div className="flex rounded-xl bg-[var(--color-surface-elevated)] p-1">
               <button
                 type="button"
                 onClick={() => setView("list")}
                 className={cn(
-                  "flex items-center gap-2 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition border-r rounded-l-lg border-[var(--color-border-default)]",
+                  "flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition",
                   view === "list"
-                    ? "bg-[var(--color-accent-primary)] text-white"
+                    ? "bg-[var(--color-surface)] text-[var(--color-text-primary)] shadow-soft-sm"
                     : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
                 )}
               >
-                <Network className="h-3.5 w-3.5" />
-                LIST
+                <LayoutList className="h-4 w-4" />
+                List
               </button>
               <button
                 type="button"
                 onClick={() => setView("graph")}
                 className={cn(
-                  "flex items-center gap-2 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition rounded-r-lg border-[var(--color-border-default)]",
+                  "flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition",
                   view === "graph"
-                    ? "bg-[var(--color-accent-primary)] text-white"
+                    ? "bg-[var(--color-surface)] text-[var(--color-text-primary)] shadow-soft-sm"
                     : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
                 )}
               >
-                <LayoutList className="h-3.5 w-3.5" />
-                GRAPH
+                <Network className="h-4 w-4" />
+                Graph
               </button>
             </div>
           )}
@@ -206,7 +206,7 @@ function MasteryMapContent({ docId }: { docId: string }) {
 
       {tab === "summary" ? (
         /* Summary tab content */
-        <div className="border rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)]">
+        <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] shadow-soft-sm">
           <DocumentSummary documentId={docId} />
         </div>
       ) : (
@@ -219,7 +219,7 @@ function MasteryMapContent({ docId }: { docId: string }) {
           <div className="flex gap-4" style={{ minHeight: "60vh" }}>
             <div className="min-w-0 flex-1">
               {view === "graph" ? (
-                <div className="h-[60vh] overflow-hidden border border-[var(--color-border-default)] bg-[var(--color-canvas)]">
+                <div className="h-[60vh] overflow-hidden rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-canvas)]">
                   <GraphView
                     data={graphData}
                     selectedNodeId={selectedNodeId}

@@ -1,0 +1,39 @@
+/* Warm Atelier Dark — cozy evening study */
+:root[data-theme="atelier-dark"] {
+  /* Canvas & surfaces — warm dark tones */
+  --color-canvas: #1A1816;
+  --color-surface: #23201D;
+  --color-surface-elevated: #2C2925;
+  --color-halo: #141210;
+
+  /* Text — warm light hierarchy */
+  --color-text-primary: #F5F0EB;
+  --color-text-secondary: #B8AFA5;
+  --color-text-muted: #78716C;
+
+  /* Accent — lighter indigo for dark bg + amber */
+  --color-accent-primary: #818CF8;
+  --color-accent-secondary: #FBBF24;
+
+  /* Borders — warm dark borders */
+  --color-border-subtle: #33302C;
+  --color-border-default: #44403C;
+
+  /* Panel — warm dark */
+  --panel-bg: #23201D;
+  --panel-border: #33302C;
+
+  /* Mastery node colors — brighter for dark mode */
+  --color-node-mastered: #34D399;
+  --color-node-proficient: #22D3EE;
+  --color-node-developing: #FBBF24;
+  --color-node-low: #F87171;
+  --color-node-locked: #44403C;
+
+  /* Space effects disabled */
+  --space-starfield-opacity: 0;
+  --space-nebula-opacity: 0;
+
+  /* Glow — soft indigo */
+  --glow-accent: rgba(129, 140, 248, 0.12);
+}

@@ -20,26 +20,30 @@ export function LastSessionSummary({
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.15 }}
-      className="space-y-2 border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut", delay: 0.2 }}
+      className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-6 shadow-soft-sm"
     >
-      <p className="kl-data-label flex items-center gap-1.5 font-bold">
-        <History className="h-3.5 w-3.5" />
-        Last Session Recap
-      </p>
-      <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4">
-        <div className="mb-3 flex items-baseline justify-between">
-          <span className="font-mono text-xs font-bold tabular-nums text-[var(--color-text-muted)]">
-            {lastSession.totalInteractions} INTERACTION{lastSession.totalInteractions !== 1 ? "S" : ""}
+      <div className="flex items-center gap-2">
+        <History className="h-4 w-4 text-[var(--color-text-muted)]" />
+        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">
+          Last Session
+        </p>
+      </div>
+
+      <div className="mt-3 flex items-baseline gap-4">
+        <span className="font-mono text-sm font-medium tabular-nums text-[var(--color-text-secondary)]">
+          {lastSession.totalInteractions} question{lastSession.totalInteractions !== 1 ? "s" : ""}
+        </span>
+        {lastSession.accuracyPercent != null && (
+          <span className="font-mono text-sm font-medium tabular-nums text-[var(--color-text-secondary)]">
+            {lastSession.accuracyPercent}% accuracy
           </span>
-          {lastSession.accuracyPercent != null && (
-            <span className="font-mono text-xs font-bold tabular-nums text-[var(--color-text-secondary)]">
-              {lastSession.accuracyPercent}% ACC
-            </span>
-          )}
-        </div>
+        )}
+      </div>
+
+      <div className="mt-4 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] p-4">
         <MovementMap nodes={nodesStudied} nodeTitles={nodeTitles} />
       </div>
     </motion.div>

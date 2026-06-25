@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import type { Collection, Document } from "@/lib/types/api";
 import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -72,10 +71,10 @@ export function CollectionRow({
   };
 
   return (
-    <div className="border rounded-md border-[var(--color-border-subtle)] bg-[var(--color-surface)]">
+    <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] shadow-soft-sm">
       {/* Collection header */}
       <div
-        className="group flex cursor-pointer items-center gap-3 px-4 py-3 transition hover:bg-[var(--color-surface-elevated)]"
+        className="group flex cursor-pointer items-center gap-3 px-5 py-3.5 transition hover:bg-[var(--color-surface-elevated)]"
         onClick={() => setExpanded((e) => !e)}
       >
         <ChevronRight
@@ -117,20 +116,19 @@ export function CollectionRow({
         )}
 
         {/* Mastery badge */}
-        <Badge
-          variant="outline"
+        <span
           className={cn(
-            "shrink-0 rounded-sm border border-[var(--color-border-subtle)] font-mono text-[10px]",
+            "shrink-0 rounded-full px-2.5 py-0.5 text-xs font-medium",
             collection.overallMastery !== null
-              ? "text-[var(--color-accent-primary)]"
-              : "text-[var(--color-text-muted)]",
+              ? "bg-[var(--color-accent-primary)]/10 text-[var(--color-accent-primary)]"
+              : "bg-[var(--color-surface-elevated)] text-[var(--color-text-muted)]",
           )}
         >
           {masteryDisplay} mastery
-        </Badge>
+        </span>
 
         {/* Document count */}
-        <span className="shrink-0 font-mono text-[10px] text-[var(--color-text-muted)]">
+        <span className="shrink-0 text-xs text-[var(--color-text-muted)]">
           {collection.documentCount} doc{collection.documentCount !== 1 ? "s" : ""}
         </span>
 
@@ -140,7 +138,7 @@ export function CollectionRow({
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
-                className="border border-[var(--color-border-default)] bg-[var(--color-canvas)] p-1.5 text-[var(--color-text-muted)] opacity-0 transition hover:text-[var(--color-text-primary)] group-hover:opacity-100"
+                className="rounded-lg p-1.5 text-[var(--color-text-muted)] opacity-0 transition hover:bg-[var(--color-surface-elevated)] hover:text-[var(--color-text-primary)] group-hover:opacity-100"
                 onClick={(e) => e.stopPropagation()}
               >
                 <MoreVertical className="h-4 w-4" />
@@ -148,10 +146,10 @@ export function CollectionRow({
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="w-44 border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]"
+              className="w-44 rounded-xl border-[var(--color-border-subtle)] bg-[var(--color-surface)] shadow-soft-md"
             >
               <DropdownMenuItem
-                className="font-mono text-xs uppercase tracking-wider"
+                className="rounded-lg text-sm"
                 onClick={(e) => {
                   e.stopPropagation();
                   setIsEditing(true);
@@ -161,10 +159,10 @@ export function CollectionRow({
                 <Pencil className="mr-2 h-4 w-4" />
                 Rename
               </DropdownMenuItem>
-              <DropdownMenuSeparator className="bg-[var(--color-border-default)]" />
+              <DropdownMenuSeparator className="bg-[var(--color-border-subtle)]" />
               <AlertDialogTrigger asChild>
                 <DropdownMenuItem
-                  className="font-mono text-xs uppercase tracking-wider text-red-400 focus:text-red-400"
+                  className="rounded-lg text-sm text-red-500 focus:text-red-500"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <Trash2 className="mr-2 h-4 w-4" />
@@ -174,9 +172,9 @@ export function CollectionRow({
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <AlertDialogContent className="rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]">
+          <AlertDialogContent className="rounded-2xl border-[var(--color-border-subtle)] bg-[var(--color-surface)] shadow-soft-lg">
             <AlertDialogHeader>
-              <AlertDialogTitle>DELETE COLLECTION?</AlertDialogTitle>
+              <AlertDialogTitle className="font-display text-xl">Delete collection?</AlertDialogTitle>
               <AlertDialogDescription className="text-[var(--color-text-secondary)]">
                 Delete &ldquo;{collection.name}&rdquo;? Your{" "}
                 {collection.documentCount} document
@@ -185,14 +183,14 @@ export function CollectionRow({
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel className="rounded-md border-[var(--color-border-default)] bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)] hover:bg-[var(--color-border-default)]">
-                CANCEL
+              <AlertDialogCancel className="rounded-xl border-[var(--color-border-default)]">
+                Cancel
               </AlertDialogCancel>
               <AlertDialogAction
-                className="rounded-md bg-red-600 text-white hover:bg-red-700"
+                className="rounded-xl bg-red-600 text-white hover:bg-red-700"
                 onClick={() => onDelete(collection.id)}
               >
-                DELETE
+                Delete
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -201,9 +199,9 @@ export function CollectionRow({
 
       {/* Expanded document list */}
       {expanded && (
-        <div className="border-t border-[var(--color-border-subtle)] bg-[var(--color-canvas)]">
+        <div className="border-t border-[var(--color-border-subtle)]">
           {documents.length === 0 ? (
-            <p className="px-4 py-3 text-center font-mono text-[10px] text-[var(--color-text-muted)]">
+            <p className="px-5 py-4 text-center text-sm text-[var(--color-text-muted)]">
               No documents in this collection
             </p>
           ) : (

@@ -47,7 +47,7 @@ interface ThemeState {
 export const useThemeStore = create<ThemeState>()(
   persist(
     (set) => ({
-      currentTheme: "ink",
+      currentTheme: "atelier",
       userOverrides: {},
       layoutPreferences: cloneLayoutPreferences(),
       graphPreferences: cloneGraphPreferences(),

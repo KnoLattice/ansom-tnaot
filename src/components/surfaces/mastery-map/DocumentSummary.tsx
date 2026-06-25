@@ -41,17 +41,17 @@ export function DocumentSummary({ documentId }: DocumentSummaryProps) {
   if (isLoading) {
     return (
       <div className="space-y-4 p-6">
-        <Skeleton className="h-8 w-2/3" />
-        <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-4 w-5/6" />
-        <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-6 w-1/2 mt-6" />
-        <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-4 w-4/5" />
-        <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-6 w-1/3 mt-6" />
-        <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-4 w-3/4" />
+        <Skeleton className="h-8 w-2/3 rounded-lg" />
+        <Skeleton className="h-4 w-full rounded-lg" />
+        <Skeleton className="h-4 w-5/6 rounded-lg" />
+        <Skeleton className="h-4 w-full rounded-lg" />
+        <Skeleton className="h-6 w-1/2 mt-6 rounded-lg" />
+        <Skeleton className="h-4 w-full rounded-lg" />
+        <Skeleton className="h-4 w-4/5 rounded-lg" />
+        <Skeleton className="h-4 w-full rounded-lg" />
+        <Skeleton className="h-6 w-1/3 mt-6 rounded-lg" />
+        <Skeleton className="h-4 w-full rounded-lg" />
+        <Skeleton className="h-4 w-3/4 rounded-lg" />
       </div>
     );
   }
@@ -59,8 +59,8 @@ export function DocumentSummary({ documentId }: DocumentSummaryProps) {
   if (error) {
     return (
       <div className="flex min-h-[40vh] flex-col items-center justify-center text-center">
-        <p className="font-mono text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
-          UNABLE TO LOAD SUMMARY
+        <p className="font-display text-xl text-[var(--color-text-primary)]">
+          Unable to load summary
         </p>
         <p className="mt-2 text-sm text-[var(--color-text-secondary)]">
           {error instanceof Error ? error.message : "Something went wrong."}
@@ -72,33 +72,35 @@ export function DocumentSummary({ documentId }: DocumentSummaryProps) {
   if (!data?.summary) {
     return (
       <div className="flex min-h-[40vh] flex-col items-center justify-center text-center px-4">
-        <FileText className="h-10 w-10 text-[var(--color-text-muted)]" />
-        <p className="mt-4 font-mono text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
-          NO SUMMARY AVAILABLE
+        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--color-surface-elevated)]">
+          <FileText className="h-6 w-6 text-[var(--color-text-muted)]" />
+        </div>
+        <p className="font-display text-xl text-[var(--color-text-primary)]">
+          No summary available
         </p>
         <p className="mt-2 max-w-md text-sm text-[var(--color-text-secondary)]">
           This document was processed before summary generation was available.
           You can generate one now.
         </p>
         <Button
-          className="mt-6 border rounded-lg"
+          className="mt-6 rounded-xl bg-[var(--color-accent-primary)] text-white hover:opacity-90"
           onClick={handleGenerate}
           disabled={generating}
         >
           {generating ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              GENERATING...
+              Generating...
             </>
           ) : (
             <>
               <Sparkles className="mr-2 h-4 w-4" />
-              GENERATE SUMMARY
+              Generate summary
             </>
           )}
         </Button>
         {generating && (
-          <p className="mt-3 font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
+          <p className="mt-3 text-xs text-[var(--color-text-muted)]">
             This may take a minute depending on document size
           </p>
         )}

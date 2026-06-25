@@ -41,7 +41,6 @@ export default function LibraryPage() {
 
   const isLoading = docsLoading || collectionsLoading;
 
-  // Group documents by collection
   const { collectionDocs, uncollectedDocs } = useMemo(() => {
     const collectionDocs = new Map<string, typeof documents>();
     const uncollected: typeof documents = [];
@@ -123,10 +122,10 @@ export default function LibraryPage() {
   if (isLoading) {
     return (
       <div className="space-y-4">
-        <Skeleton className="h-20" />
-        <Skeleton className="h-10 w-48" />
+        <Skeleton className="h-20 rounded-2xl" />
+        <Skeleton className="h-10 w-48 rounded-xl" />
         {Array.from({ length: 3 }).map((_, i) => (
-          <Skeleton key={i} className="h-14" />
+          <Skeleton key={i} className="h-14 rounded-xl" />
         ))}
       </div>
     );
@@ -137,38 +136,38 @@ export default function LibraryPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-[var(--color-border-default)] pb-4">
+      <div className="flex items-center justify-between pb-2">
         <div>
-          <h1 className="font-mono text-lg font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+          <h1 className="font-display text-3xl text-[var(--color-text-primary)]">
             My Library
           </h1>
-          <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
+          <p className="mt-1 text-sm text-[var(--color-text-muted)]">
             {collections.length > 0
               ? `${collections.length} collection${collections.length !== 1 ? "s" : ""}`
               : ""}
-            {collections.length > 0 && documents.length > 0 ? " / " : ""}
+            {collections.length > 0 && documents.length > 0 ? " · " : ""}
             {documents.length > 0
               ? `${documents.length} document${documents.length !== 1 ? "s" : ""}`
               : isEmpty
-                ? "Empty"
+                ? "No documents yet"
                 : ""}
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
-            className="border rounded-md"
+            className="rounded-xl border-[var(--color-border-default)]"
             onClick={() => setShowNewInput(true)}
           >
             <FolderPlus className="mr-2 h-4 w-4" />
-            NEW COLLECTION
+            New collection
           </Button>
           <Button
             onClick={() => router.push("/upload")}
-            className="border rounded-md"
+            className="rounded-xl bg-[var(--color-accent-primary)] text-white hover:opacity-90"
           >
             <Plus className="mr-2 h-4 w-4" />
-            UPLOAD
+            Upload
           </Button>
         </div>
       </div>
@@ -180,7 +179,7 @@ export default function LibraryPage() {
 
       {/* Inline create collection input */}
       {showNewInput && (
-        <div className="flex items-center gap-2 rounded-md border border-[var(--color-accent-primary)] bg-[var(--color-surface)] px-4 py-3">
+        <div className="flex items-center gap-2 rounded-xl border border-[var(--color-accent-primary)]/30 bg-[var(--color-accent-primary)]/5 px-4 py-3">
           <FolderPlus className="h-4 w-4 shrink-0 text-[var(--color-accent-primary)]" />
           <input
             autoFocus
@@ -201,6 +200,7 @@ export default function LibraryPage() {
             variant="ghost"
             disabled={!newName.trim() || isCreating}
             onClick={handleCreateCollection}
+            className="rounded-lg"
           >
             <Check className="h-4 w-4" />
           </Button>
@@ -211,6 +211,7 @@ export default function LibraryPage() {
               setShowNewInput(false);
               setNewName("");
             }}
+            className="rounded-lg"
           >
             <X className="h-4 w-4" />
           </Button>
@@ -219,20 +220,23 @@ export default function LibraryPage() {
 
       {/* Empty state */}
       {isEmpty ? (
-        <div className="flex min-h-[40vh] flex-col items-center justify-center border-2 rounded-lg border-dashed border-[var(--color-border-default)] bg-[var(--color-surface)] p-12 text-center">
-          <p className="font-mono text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
-            No documents loaded
-          </p>
+        <div className="flex min-h-[40vh] flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[var(--color-border-default)] bg-[var(--color-surface)] p-12 text-center">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--color-accent-primary)]/10">
+            <Plus className="h-6 w-6 text-[var(--color-accent-primary)]" />
+          </div>
+          <h2 className="font-display text-xl text-[var(--color-text-primary)]">
+            No documents yet
+          </h2>
           <p className="mt-2 max-w-md text-sm text-[var(--color-text-secondary)]">
             Upload your first study document to get started. We&apos;ll extract
             concepts and build your personal knowledge map.
           </p>
           <Button
-            className="mt-6 border rounded-md"
+            className="mt-6 rounded-xl bg-[var(--color-accent-primary)] text-white hover:opacity-90"
             onClick={() => router.push("/upload")}
           >
             <Plus className="mr-2 h-4 w-4" />
-            UPLOAD FIRST DOCUMENT
+            Upload first document
           </Button>
         </div>
       ) : (
@@ -254,13 +258,13 @@ export default function LibraryPage() {
 
           {/* Uncollected documents */}
           {uncollectedDocs.length > 0 && (
-            <div className="border rounded-md border-[var(--color-border-subtle)] bg-[var(--color-surface)]">
-              <div className="px-4 py-3">
-                <h3 className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
+            <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] shadow-soft-sm">
+              <div className="px-5 py-3">
+                <h3 className="text-xs font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">
                   Uncategorized
                 </h3>
               </div>
-              <div className="border-t border-[var(--color-border-subtle)] bg-[var(--color-surface)]">
+              <div className="border-t border-[var(--color-border-subtle)]">
                 <div className="space-y-px p-2">
                   {uncollectedDocs.map((doc) => (
                     <CollectionDocumentRow

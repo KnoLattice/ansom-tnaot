@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
+import { Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MASTERY_CALLOUT_THRESHOLD } from "@/lib/constants/mastery";
 
@@ -25,21 +26,24 @@ export function ThresholdCallout({
     <AnimatePresence>
       {justCrossed && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
           className={cn(
-            "border-l-2 border-l-green-500 bg-green-500/10 px-4 py-3",
+            "flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3",
             className,
           )}
         >
-          <p className="font-mono text-xs font-bold uppercase tracking-wider text-green-400">
-            CONCEPT MASTERED
-          </p>
-          <p className="mt-0.5 text-xs text-green-400/70">
-            You&apos;ve reached proficiency in &ldquo;{title}&rdquo;
-          </p>
+          <Trophy className="h-4 w-4 shrink-0 text-emerald-600" />
+          <div>
+            <p className="text-sm font-semibold text-emerald-800">
+              Concept mastered!
+            </p>
+            <p className="text-xs text-emerald-600">
+              You&apos;ve reached proficiency in &ldquo;{title}&rdquo;
+            </p>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

@@ -465,8 +465,8 @@ function SessionContent({ id }: { id: string }) {
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3">
         <Spinner />
         {nodeId && (
-          <p className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
-            PREPARING QUESTIONS...
+          <p className="text-sm text-[var(--color-text-muted)]">
+            Preparing your questions...
           </p>
         )}
       </div>
@@ -476,8 +476,8 @@ function SessionContent({ id }: { id: string }) {
   if (!state.currentNode) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <p className="font-mono text-xs text-[var(--color-text-muted)]">
-          NO SESSION DATA
+        <p className="text-sm text-[var(--color-text-muted)]">
+          No session data available
         </p>
       </div>
     );
@@ -492,9 +492,9 @@ function SessionContent({ id }: { id: string }) {
   return (
     <div className="mx-auto max-w-3xl space-y-4">
       {state.focusMode && (
-        <div className="border-l-2 border-l-[var(--color-accent-primary)] bg-[var(--color-surface)] px-3 py-1.5">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-accent-primary)]">
-            FOCUSED: {state.currentNode.title}
+        <div className="rounded-xl bg-[var(--color-accent-primary)]/10 px-4 py-2">
+          <p className="text-xs font-semibold text-[var(--color-accent-primary)]">
+            Focused study: {state.currentNode.title}
           </p>
         </div>
       )}
@@ -534,20 +534,23 @@ function SessionContent({ id }: { id: string }) {
           onContinue={handleContinue}
         />
       ) : (
-        <div className="border border-[var(--color-border-default)] bg-[var(--color-surface)] p-8 text-center">
-          <p className="font-mono text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
-            SESSION COMPLETE
-          </p>
+        <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-10 text-center shadow-soft-sm">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50">
+            <span className="text-2xl">&#10003;</span>
+          </div>
+          <h2 className="font-display text-2xl text-[var(--color-text-primary)]">
+            Session complete
+          </h2>
           <p className="mt-2 text-sm text-[var(--color-text-secondary)]">
-            Great work. View your session summary to see how you did.
+            Great work! View your summary to see how you did.
           </p>
           <button
             type="button"
-            className="mt-4 font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-accent-primary)]"
+            className="mt-5 rounded-xl bg-[var(--color-accent-primary)] px-6 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
             onClick={handleEndSession}
             disabled={isSubmitting}
           >
-            VIEW SUMMARY
+            View summary
           </button>
         </div>
       )}
