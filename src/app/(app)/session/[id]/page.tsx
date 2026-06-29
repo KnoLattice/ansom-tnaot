@@ -273,8 +273,10 @@ function SessionContent({ id }: { id: string }) {
           });
         }
 
-        // Buffer the backend's next question for when we need a new one
-        if (data.question && !bufferedNext.current) {
+        // Buffer the backend's next question for when we need a new one.
+        // Always update the buffer with the latest question from the backend
+        // so we don't lose it during retry sequences.
+        if (data.question) {
           bufferedNext.current = {
             node: data.nextNode,
             question: data.question,
@@ -434,12 +436,24 @@ function SessionContent({ id }: { id: string }) {
         }));
         questionStartTime.current = Date.now();
       }
-    } else {
-      // No new questions available and no retries — end session
+    } else if (resolvedSlots.current.size >= MAX_SESSION_QUESTIONS) {
+      // All slots resolved — show session complete
       setState((prev) => ({
         ...prev,
         currentQuestion: null,
         feedback: null,
+      }));
+    } else {
+      // No buffered question and no retries, but unresolved slots remain.
+      // Mark remaining unshown slots as resolved so the session can finish.
+      for (let i = 0; i < MAX_SESSION_QUESTIONS; i++) {
+        resolvedSlots.current.add(i);
+      }
+      setState((prev) => ({
+        ...prev,
+        currentQuestion: null,
+        feedback: null,
+        resolvedCount: resolvedSlots.current.size,
       }));
     }
   }, [state.currentNode, handleEndSession]);
