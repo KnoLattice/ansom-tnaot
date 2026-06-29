@@ -175,11 +175,13 @@ function SessionContent({ id }: { id: string }) {
       setSessionActive(data.sessionId, documentId ?? collectionId ?? "");
     } catch {
       toast.error("Unable to start session. Check if your document is ready.");
-      router.replace(documentId ? `/mastery/${documentId}` : "/");
+      router.replace(
+        documentId ? `/mastery/${documentId}` : collectionId ? `/collections/${collectionId}` : "/",
+      );
     } finally {
       setLoading(false);
     }
-  }, [documentId, nodeId, router, setSessionActive]);
+  }, [documentId, collectionId, nodeId, router, setSessionActive]);
 
   // Auto-start session on mount (no type-selection dialog)
   useEffect(() => {
@@ -196,10 +198,10 @@ function SessionContent({ id }: { id: string }) {
   }, [clearSession]);
 
   useEffect(() => {
-    if (!documentId) {
+    if (!documentId && !collectionId) {
       router.replace("/");
     }
-  }, [documentId, router]);
+  }, [documentId, collectionId, router]);
 
   const handleSubmit = useCallback(
     async (answer: string, matchingAnswer?: Record<string, string>) => {
@@ -456,7 +458,7 @@ function SessionContent({ id }: { id: string }) {
     pendingNext.current = null;
   }, []);
 
-  if (!documentId) {
+  if (!documentId && !collectionId) {
     return null;
   }
 

@@ -79,6 +79,8 @@ export function QuestionCard({
   shortAnswerRef.current = shortAnswer;
   const blankAnswerRef = useRef(blankAnswer);
   blankAnswerRef.current = blankAnswer;
+  const matchesRef = useRef(matches);
+  matchesRef.current = matches;
   const onSubmitRef = useRef(onSubmit);
   onSubmitRef.current = onSubmit;
 
@@ -113,7 +115,7 @@ export function QuestionCard({
             } else if (qType === "fill_blank") {
               onSubmitRef.current(blankAnswerRef.current.trim() || "");
             } else if (qType === "matching") {
-              onSubmitRef.current("", matches);
+              onSubmitRef.current("", matchesRef.current);
             } else {
               onSubmitRef.current(shortAnswerRef.current.trim() || "");
             }
