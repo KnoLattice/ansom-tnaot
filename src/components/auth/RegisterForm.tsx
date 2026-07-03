@@ -50,7 +50,7 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
         onClick={googleLogin}
       >
         <GoogleIcon className="w-5 h-5 mr-2" />
-        CONTINUE WITH GOOGLE
+        Continue with Google
       </Button>
       <div className=" flex items-center gap-3">
         <div className="h-px flex-1 bg-[var(--color-border-default)]" />
@@ -64,7 +64,7 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
         <Input
           id="fullName"
           placeholder="Enter full name"
-          className=" border rounded-md border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 "
+          className="rounded-md"
           {...form.register("fullName")}
         />
         <FieldError message={form.formState.errors.fullName?.message} />
@@ -77,7 +77,7 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
           id="email"
           type="email"
           placeholder="Enter email"
-          className=" border rounded-md border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 "
+          className="rounded-md"
           {...form.register("email")}
         />
         <FieldError message={form.formState.errors.email?.message} />
@@ -90,7 +90,7 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
           id="password"
           type="password"
           placeholder="Creat a password"
-          className="border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md"
+          className="rounded-md"
           {...form.register("password")}
         />
         <FieldError message={form.formState.errors.password?.message} />

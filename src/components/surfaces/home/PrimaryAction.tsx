@@ -27,7 +27,7 @@ export function PrimaryAction({
       </Button>
       <Button
         variant="outline"
-        className="py-6 text-sm bg-white hover:bg-gray-100 hover:text-[var(--color-text-primary)]"
+        className="py-6 text-sm hover:text-[var(--color-text-primary)]"
         onClick={onChooseStudy}
       >
         <Crosshair className="mr-2 h-4 w-4" />
