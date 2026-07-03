@@ -18,11 +18,11 @@ export const MASTERY_CALLOUT_THRESHOLD = 0.7;
 // ─── 5-tier color scale ──────────────────────────────
 // Maps a 0-1 score to one of five visual tiers for gradient display.
 export const MASTERY_TIERS = [
-  { min: 0, max: 0.2, label: "Struggling", tailwind: "red-500", hex: "#FF0000" },
-  { min: 0.2, max: 0.4, label: "Emerging", tailwind: "orange-500", hex: "#FF8531" },
-  { min: 0.4, max: 0.6, label: "Developing", tailwind: "yellow-500", hex: "#FFCE1B" },
-  { min: 0.6, max: 0.8, label: "Proficient", tailwind: "lime-500", hex: "#26E318" },
-  { min: 0.8, max: 1.01, label: "Mastered", tailwind: "green-500", hex: "#22C55E" },
+  { min: 0.1, max: 0.28, label: "Struggling", tailwind: "red-500", hex: "#FF0000" },
+  { min: 0.29, max: 0.46, label: "Emerging", tailwind: "orange-500", hex: "#FF8531" },
+  { min: 0.47, max: 0.64, label: "Developing", tailwind: "yellow-500", hex: "#FFCE1B" },
+  { min: 0.65, max: 0.82, label: "Proficient", tailwind: "lime-500", hex: "#26E318" },
+  { min: 0.83, max: 1.0, label: "Mastered", tailwind: "green-500", hex: "#22C55E" },
 ] as const;
 
 /** Get the 5-tier color hex for a 0-1 mastery score. */

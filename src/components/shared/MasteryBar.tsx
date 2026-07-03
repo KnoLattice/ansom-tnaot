@@ -43,6 +43,7 @@ export function MasteryBar({
 
   const barRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(barRef, { once: true, margin: "-40px" });
+  console.log("MasteryBar render", { score, previousScore,color, percent, delta, isInView });
 
   return (
     <div className={cn("w-full", className)}>
@@ -57,6 +58,7 @@ export function MasteryBar({
           className={cn("relative w-full overflow-hidden rounded-full bg-[#E5E7EB]", sizeClasses[size])}
         >
           <motion.div
+          key={score} // Reset animation when score changes
             className="relative h-full overflow-hidden rounded-full"
             initial={{ width: `${startPercent}%` }}
             animate={isInView ? { width: `${percent}%` } : { width: `${startPercent}%` }}
