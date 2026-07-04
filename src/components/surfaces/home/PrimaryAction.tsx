@@ -21,7 +21,7 @@ export function PrimaryAction({
       transition={{ duration: 0.15 }}
       className="flex gap-3"
     >
-      <Button className="flex-1 py-6 text-sm border rounded-md border-[var(--color-border-default)]" onClick={onStartSession}>
+      <Button className="flex-1 py-6 text-sm border rounded-md border-[var(--color-border-default)] bg-blue-600" onClick={onStartSession}>
         <PlayCircle className="mr-2 h-4 w-4" />
         START SESSION
       </Button>
