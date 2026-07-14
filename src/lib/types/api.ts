@@ -203,6 +203,22 @@ export interface EndSessionResponse {
   nodesStudied: NodeStudied[];
 }
 
+// ─── AI Analysis ──────────────────────────────────────
+export interface SessionAnalysis {
+  overallSummary: string;
+  nodeAnalysis: {
+    nodeId: string;
+    nodeTitle: string;
+    assessment: string;
+    strengths: string[];
+    weaknesses: string[];
+  }[];
+  questionTypeInsights: Record<string, string>;
+  bloomLevelAnalysis: string;
+  responseTimeInsights: string;
+  improvementPlan: string[];
+}
+
 // ─── Progress ─────────────────────────────────────────
 export interface WeakNode {
   id: string;

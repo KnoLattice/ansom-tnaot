@@ -35,6 +35,7 @@ export const API_ROUTES = {
     START: "/sessions/start",
     RESPOND: "/sessions/respond",
     END: "/sessions/end",
+    ANALYSIS: (id: string) => `/sessions/${id}/analysis`,
   },
   CONTENT: {
     EXPLANATION: "/content/explanation",
