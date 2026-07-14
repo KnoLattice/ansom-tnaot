@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/Spinner";
 import { HeadlineMoment } from "@/components/surfaces/session/HeadlineMoment";
 import { MovementMap } from "@/components/surfaces/session/MovementMap";
+import { AIAnalysisSection } from "@/components/surfaces/session/AIAnalysisSection";
 import type { EndSessionResponse } from "@/lib/types/api";
 import Cookies from 'js-cookie';
 import { MASTERY_CALLOUT_THRESHOLD, MASTERY_ANIMATION } from "@/lib/constants/mastery";
@@ -79,6 +80,9 @@ export default function SessionSummaryPage({
       {nodesStudied.length > 0 && (
         <MovementMap nodes={nodesStudied} nodeTitles={nodeTitles} />
       )}
+
+      {/* AI Analysis */}
+      <AIAnalysisSection sessionId={id} />
 
       {/* Threshold crossings */}
       {thresholdCrossings.length > 0 && (
