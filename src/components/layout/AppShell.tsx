@@ -8,6 +8,7 @@ import {
   LayoutGrid,
   LogOut,
   Map,
+  MessageSquare,
   PlayCircle,
 } from "lucide-react";
 import {
@@ -25,6 +26,7 @@ import { cn } from "@/lib/utils";
 const NAV_ITEMS = [
   { href: "/", label: "HOME", icon: LayoutGrid },
   { href: "/library", label: "LIB", icon: BookOpen },
+  { href: "/chat", label: "CHAT", icon: MessageSquare },
 ] as const;
 
 export function AppShell({ children }: PropsWithChildren) {

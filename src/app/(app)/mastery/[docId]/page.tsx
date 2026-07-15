@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useCallback, useMemo } from "react";
+import { use, useCallback, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { BookOpen, LayoutList, Network } from "lucide-react";
@@ -14,6 +14,8 @@ import { ConceptDetailPanel } from "@/components/surfaces/mastery-map/ConceptDet
 import { GraphView } from "@/components/surfaces/mastery-map/GraphView";
 import { BatchActionBar } from "@/components/surfaces/mastery-map/BatchActionBar";
 import { DocumentSummary } from "@/components/surfaces/mastery-map/DocumentSummary";
+import { ConceptChatPanel } from "@/components/surfaces/chat/ConceptChatPanel";
+import { ChatFAB } from "@/components/surfaces/chat/ChatFAB";
 import { cn } from "@/lib/utils";
 
 type PageTab = "summary" | "mastery";
@@ -80,6 +82,16 @@ function MasteryMapContent({ docId }: { docId: string }) {
     () => graphData?.nodes.find((n) => n.id === selectedNodeId) ?? null,
     [graphData, selectedNodeId],
   );
+
+  const [chatNodeId, setChatNodeId] = useState<string | null>(null);
+  const [chatNodeTitle, setChatNodeTitle] = useState<string>("");
+  const [chatOpen, setChatOpen] = useState(false);
+
+  const handleAskAI = useCallback((nodeId: string, nodeTitle: string) => {
+    setChatNodeId(nodeId);
+    setChatNodeTitle(nodeTitle);
+    setChatOpen(true);
+  }, []);
 
   const filteredCount = useMemo(() => {
     if (!graphData || filter === "all") return 0;
@@ -247,6 +259,7 @@ function MasteryMapContent({ docId }: { docId: string }) {
                     onSelectNode={setSelectedNodeId}
                     onClose={() => setSelectedNodeId(null)}
                     documentId={docId}
+                    onAskAI={handleAskAI}
                   />
                 </div>
               </div>
@@ -262,6 +275,19 @@ function MasteryMapContent({ docId }: { docId: string }) {
           )}
         </>
       )}
+
+      {/* Concept chat slide-over */}
+      {chatNodeId && (
+        <ConceptChatPanel
+          nodeId={chatNodeId}
+          nodeTitle={chatNodeTitle}
+          isOpen={chatOpen}
+          onClose={() => setChatOpen(false)}
+        />
+      )}
+
+      {/* Document-level chat FAB */}
+      {!chatOpen && <ChatFAB scope="document" scopeId={docId} />}
     </div>
   );
 }

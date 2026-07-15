@@ -40,4 +40,10 @@ export const API_ROUTES = {
   CONTENT: {
     EXPLANATION: "/content/explanation",
   },
+  CHAT: {
+    CONVERSATIONS: "/chat/conversations",
+    CONVERSATION: (id: string) => `/chat/conversations/${id}`,
+    MESSAGES: (id: string) => `/chat/conversations/${id}/messages`,
+    TOKEN_USAGE: "/chat/token-usage",
+  },
 } as const;

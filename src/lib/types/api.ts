@@ -277,6 +277,44 @@ export interface ExplanationResponse {
   graphDepth: number;
 }
 
+// ─── Chat ─────────────────────────────────────────────
+export type ChatScope = "concept" | "document" | "collection";
+
+export interface ChatConversation {
+  id: string;
+  scope: ChatScope;
+  scopeId: string;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+  messageCount?: number;
+}
+
+export interface ChatMessage {
+  id: string;
+  conversationId: string;
+  role: "user" | "assistant";
+  content: string;
+  createdAt: string;
+}
+
+export interface ChatTokenUsage {
+  used: number;
+  cap: number;
+  remaining: number;
+  percentUsed: number;
+}
+
+export interface ChatStreamChunk {
+  type: "token" | "done" | "error";
+  content?: string;
+  usage?: {
+    promptTokens: number;
+    completionTokens: number;
+    totalTokens: number;
+  };
+}
+
 // ─── Errors ───────────────────────────────────────────
 export interface APIError {
   statusCode: number;

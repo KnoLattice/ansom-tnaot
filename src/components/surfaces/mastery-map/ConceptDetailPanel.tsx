@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowUpRight, Lock, PlayCircle, X } from "lucide-react";
+import { ArrowUpRight, Lock, MessageSquare, PlayCircle, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { GraphNode, GraphEdge } from "@/lib/types/api";
 import { MasteryBar } from "@/components/shared/MasteryBar";
@@ -19,6 +19,7 @@ interface ConceptDetailPanelProps {
   onSelectNode: (nodeId: string) => void;
   onClose: () => void;
   documentId: string;
+  onAskAI?: (nodeId: string, nodeTitle: string) => void;
 }
 
 export function ConceptDetailPanel({
@@ -28,6 +29,7 @@ export function ConceptDetailPanel({
   onSelectNode,
   onClose,
   documentId,
+  onAskAI,
 }: ConceptDetailPanelProps) {
   const router = useRouter();
   const panelRef = useRef<HTMLDivElement>(null);
@@ -193,10 +195,22 @@ export function ConceptDetailPanel({
                 )}
               </div>
             ) : (
-              <Button className="w-full border rounded-lg" onClick={handleStudy}>
-                <PlayCircle className="mr-2 h-4 w-4" />
-                STUDY CONCEPT
-              </Button>
+              <div className="space-y-2">
+                <Button className="w-full border rounded-lg" onClick={handleStudy}>
+                  <PlayCircle className="mr-2 h-4 w-4" />
+                  STUDY CONCEPT
+                </Button>
+                {onAskAI && (
+                  <Button
+                    variant="outline"
+                    className="w-full border rounded-lg"
+                    onClick={() => onAskAI(node.id, node.title)}
+                  >
+                    <MessageSquare className="mr-2 h-4 w-4" />
+                    ASK AI
+                  </Button>
+                )}
+              </div>
             )}
           </div>
         </motion.div>

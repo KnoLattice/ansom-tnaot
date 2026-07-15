@@ -17,6 +17,7 @@ import { LibraryStrip } from "@/components/surfaces/home/LibraryStrip";
 import type { NodeStudied } from "@/lib/types/api";
 import { RecentDocuments } from "@/components/surfaces/home/RecentDocuments";
 import { QuickUploadZone } from "@/components/surfaces/home/QuickUploadZone";
+import { HomeChatBar } from "@/components/surfaces/chat/HomeChatBar";
 
 export default function HomePage() {
   const router = useRouter();
@@ -194,6 +195,9 @@ export default function HomePage() {
         <QuickUploadZone showFullUploadCTA={false} />
         <RecentDocuments documents={documents}/>
       </div>
+
+      {/* Quick chat bar */}
+      {hasReadyDoc && <HomeChatBar documents={documents} />}
     </div>
   );
 }
