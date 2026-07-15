@@ -92,7 +92,7 @@ export function ConceptListView({
             type="button"
             onClick={() => onFilterChange(f.key)}
             className={cn(
-              "border px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider transition",
+              "rounded-xl border px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider transition",
               filter === f.key
                 ? "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/10 text-[var(--color-accent-primary)]"
                 : "border-[var(--color-border-default)] text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
@@ -103,7 +103,7 @@ export function ConceptListView({
               <span className="ml-1.5 tabular-nums">
                 {f.key === "below-mastered"
                   ? nodes.filter((n) => !n.isLocked && n.masteryScore < 0.7)
-                      .length
+                    .length
                   : f.key === "mastered"
                     ? nodes.filter((n) => n.masteryScore >= 0.7).length
                     : nodes.filter((n) => n.isLocked).length}
@@ -129,7 +129,7 @@ export function ConceptListView({
           asc={sortAsc}
           onClick={handleSort}
         />
-        <span>Band</span>
+        <span className="pl-4">Band</span>
         {/*<SortButton label="Depth" sortKey="depth" current={sortKey} asc={sortAsc} onClick={handleSort} />*/}
       </div>
 
@@ -146,10 +146,10 @@ export function ConceptListView({
               type="button"
               onClick={() => onSelectNode(node.id)}
               className={cn(
-                "grid w-full grid-cols-[1fr_120px_100px_80px] items-center gap-2 border-b border-[var(--color-border-subtle)] px-4 py-2.5 text-left transition",
+                "grid w-full grid-cols-[1fr_120px_100px_80px] items-center gap-2 border-b border-l-2 border-[var(--color-border-subtle)] px-4 py-2.5 text-left transition",
                 node.id === selectedNodeId
-                  ? "border-l-2 border-l-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5"
-                  : "hover:bg-[var(--color-surface-elevated)]",
+                  ? "border-l-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5"
+                  : "border-l-transparent hover:bg-[var(--color-surface-elevated)]",
                 node.isLocked && "opacity-40",
               )}
             >
@@ -169,9 +169,11 @@ export function ConceptListView({
                   {formatMastery(node.masteryScore)}
                 </span>
               </div>
-              <MasteryBadge
-                band={node.masteryBand ?? getMasteryBand(node.masteryScore)}
-              />
+              <div className="pl-4">
+                <MasteryBadge
+                  band={node.masteryBand ?? getMasteryBand(node.masteryScore)}
+                />
+              </div>
               {/*<span className="font-mono text-[10px] font-bold tabular-nums text-[var(--color-text-muted)]">
                 {node.isLocked ? "LOCKED" : `L${node.graphDepth}`}
               </span>*/}

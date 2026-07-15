@@ -129,43 +129,43 @@ export function AppShell({ children }: PropsWithChildren) {
 
           {/* Theme + User */}
           <div className="flex items-center gap-3">
-          <ThemeSwitcher />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                type="button"
-                className="flex items-center gap-3 border-l border-[var(--color-border-default)] pl-4 text-left"
-              >
-                <div className="flex h-7 w-7 items-center justify-center border border-[var(--color-border-default)] bg-[var(--color-surface)] font-mono text-[10px] font-bold text-[var(--color-text-primary)]">
-                  {hydrated ? initials || "KL" : "KL"}
-                </div>
-                {hydrated && (
-                  <div className="hidden sm:block">
-                    <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
-                      {learner?.fullName ?? "Learner"}
-                    </p>
+            <ThemeSwitcher />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className="flex items-center gap-3 border-l border-[var(--color-border-default)] pl-4 text-left"
+                >
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--color-border-default)] bg-[var(--color-surface)] font-mono text-[10px] font-bold text-[var(--color-text-primary)]">
+                    {hydrated ? initials || "KL" : "KL"}
                   </div>
-                )}
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-48 border border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]">
-              <DropdownMenuItem
-                className="font-mono text-xs uppercase tracking-wider"
-                onClick={() => router.push("/library")}
-              >
-                My documents
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="font-mono text-xs uppercase tracking-wider text-red-400"
-                onClick={() => {
-                  logout();
-                  router.replace("/auth");
-                }}
-              >
-                <LogOut className="mr-2 h-3.5 w-3.5" /> Logout
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                  {hydrated && (
+                    <div className="hidden sm:block">
+                      <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+                        {learner?.fullName ?? "Learner"}
+                      </p>
+                    </div>
+                  )}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-48 border rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]">
+                <DropdownMenuItem
+                  className="font-mono text-xs uppercase tracking-wider"
+                  onClick={() => router.push("/library")}
+                >
+                  My documents
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="font-mono text-xs uppercase tracking-wider text-red-400"
+                  onClick={() => {
+                    logout();
+                    router.replace("/auth");
+                  }}
+                >
+                  <LogOut className="mr-2 h-3.5 w-3.5" /> Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </nav>
       </header>
