@@ -92,7 +92,7 @@ export function ConceptListView({
             type="button"
             onClick={() => onFilterChange(f.key)}
             className={cn(
-              "border px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider transition",
+              "rounded-xl border px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider transition",
               filter === f.key
                 ? "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/10 text-[var(--color-accent-primary)]"
                 : "border-[var(--color-border-default)] text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
@@ -103,7 +103,7 @@ export function ConceptListView({
               <span className="ml-1.5 tabular-nums">
                 {f.key === "below-mastered"
                   ? nodes.filter((n) => !n.isLocked && n.masteryScore < 0.7)
-                      .length
+                    .length
                   : f.key === "mastered"
                     ? nodes.filter((n) => n.masteryScore >= 0.7).length
                     : nodes.filter((n) => n.isLocked).length}
