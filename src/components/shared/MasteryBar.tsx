@@ -50,7 +50,7 @@ export function MasteryBar({
           aria-valuemin={0}
           aria-valuemax={100}
           aria-label={`Mastery ${percent}%`}
-          className={cn("relative w-full overflow-hidden rounded-full bg-white/10", sizeClasses[size])}
+          className={cn("relative w-full overflow-hidden rounded-full bg-[var(--color-border-default)]", sizeClasses[size])}
         >
           <motion.div
             className="h-full rounded-full"

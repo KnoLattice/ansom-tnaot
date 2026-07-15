@@ -19,7 +19,7 @@ export function MasteryBadge({ band, className }: MasteryBadgeProps) {
   const color = getMasteryColor(band);
   return (
     <Badge
-      className={cn("border text-white", className)}
+      className={cn("border w-20 justify-center rounded-md text-center text-white", className)}
       style={{ backgroundColor: `${color}20`, borderColor: color, color }}
     >
       {labels[band]}
