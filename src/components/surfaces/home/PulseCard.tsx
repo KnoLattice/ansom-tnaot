@@ -56,10 +56,10 @@ export function PulseCard({
         )}
       </div>
 
-      {/* Progress bar — raw, no radius */}
-      <div className="mt-4 h-1.5 w-full bg-[var(--color-border-subtle)]">
+      {/* Progress bar */}
+      <div className="mt-4 h-1.5 w-full rounded-full bg-[var(--color-border-subtle)]">
         <div
-          className="h-full transition-all duration-300"
+          className="h-full rounded-full transition-all duration-300"
           style={{
             width: `${overallMasteryPercent}%`,
             backgroundColor: color,
