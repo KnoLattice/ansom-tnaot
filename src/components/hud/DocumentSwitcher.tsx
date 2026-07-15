@@ -1,4 +1,4 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, FolderUp } from "lucide-react";
 import { formatDocumentName } from "@/lib/hooks/useDocuments";
 import type { Document } from "@/lib/types/api";
 import { cn } from "@/lib/utils";
@@ -24,10 +24,11 @@ export function DocumentSwitcher({
         <span>Document</span>
         <button
           type="button"
-          className="text-[var(--color-accent-secondary)]  hover:text-white"
+          className="text-[var(--color-accent-primary)] hover:text-white"
           onClick={onUpload}
+          title="Upload document"
         >
-          + Upload
+          <FolderUp className="h-3.5 w-3.5" />
         </button>
       </div>
       <button

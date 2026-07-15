@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Check, FolderPlus, Plus, X } from "lucide-react";
+import { Check, FolderClosed, Plus, X } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -160,7 +160,7 @@ export default function LibraryPage() {
             className="border rounded-md"
             onClick={() => setShowNewInput(true)}
           >
-            <FolderPlus className="mr-2 h-4 w-4" />
+            <FolderClosed className="mr-2 h-4 w-4" />
             NEW COLLECTION
           </Button>
           <Button
@@ -181,7 +181,7 @@ export default function LibraryPage() {
       {/* Inline create collection input */}
       {showNewInput && (
         <div className="flex items-center gap-2 rounded-md border border-[var(--color-accent-primary)] bg-[var(--color-surface)] px-4 py-3">
-          <FolderPlus className="h-4 w-4 shrink-0 text-[var(--color-accent-primary)]" />
+          <FolderClosed className="h-4 w-4 shrink-0 text-[var(--color-accent-primary)]" />
           <input
             autoFocus
             className="min-w-0 flex-1 bg-transparent text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] outline-none"

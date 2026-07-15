@@ -21,13 +21,13 @@ export function PrimaryAction({
       transition={{ duration: 0.15 }}
       className="flex gap-3"
     >
-      <Button className="flex-1 py-6 text-sm border rounded-md border-[var(--color-border-default)]" onClick={onStartSession}>
+      <Button className="flex-1 py-6 text-sm border rounded-md border-[var(--color-border-default)] bg-blue-600" onClick={onStartSession}>
         <PlayCircle className="mr-2 h-4 w-4" />
         START SESSION
       </Button>
       <Button
         variant="outline"
-        className="py-6 text-sm bg-white hover:bg-gray-100 hover:text-[var(--color-text-primary)]"
+        className="py-6 text-sm hover:text-[var(--color-text-primary)]"
         onClick={onChooseStudy}
       >
         <Crosshair className="mr-2 h-4 w-4" />

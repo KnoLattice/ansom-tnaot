@@ -41,7 +41,7 @@ export function ThemeSwitcher() {
       <DropdownMenuTrigger asChild>
         <button
           type="button"
-          className="flex h-7 w-7 items-center justify-center border border-[var(--color-border-default)] bg-[var(--color-surface)] transition-colors hover:bg-[var(--color-surface-elevated)]"
+          className="flex h-7 w-7 items-center justify-center border rounded-full border-[var(--color-border-default)] bg-[var(--color-surface)] transition-colors hover:bg-[var(--color-surface-elevated)]"
           title="Switch theme"
         >
           {isLight ? (
@@ -53,7 +53,7 @@ export function ThemeSwitcher() {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="w-48 border border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]"
+        className="w-48 border rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]"
       >
         <DropdownMenuLabel className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
           <Palette className="h-3 w-3" />
@@ -71,7 +71,7 @@ export function ThemeSwitcher() {
           >
             {/* Color swatch */}
             <div
-              className="h-3.5 w-3.5 shrink-0 border border-[var(--color-border-default)]"
+              className="h-3.5 w-3.5 shrink-0 border rounded-full border-[var(--color-border-default)]"
               style={{ backgroundColor: SWATCH_COLORS[theme.id] }}
             />
             <div className="flex flex-col">
