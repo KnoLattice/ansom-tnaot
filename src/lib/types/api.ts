@@ -204,6 +204,12 @@ export interface EndSessionResponse {
 }
 
 // ─── AI Analysis ──────────────────────────────────────
+export interface SourceReference {
+  excerpt: string;
+  documentName: string;
+  guidance: string;
+}
+
 export interface SessionAnalysis {
   overallSummary: string;
   nodeAnalysis: {
@@ -212,6 +218,7 @@ export interface SessionAnalysis {
     assessment: string;
     strengths: string[];
     weaknesses: string[];
+    sourceReferences: SourceReference[];
   }[];
   questionTypeInsights: Record<string, string>;
   bloomLevelAnalysis: string;

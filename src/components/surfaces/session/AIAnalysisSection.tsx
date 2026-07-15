@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { Brain, TrendingUp, Clock, Target, Lightbulb } from "lucide-react";
+import { Brain, TrendingUp, Clock, Target, Lightbulb, BookOpen } from "lucide-react";
 import { apiClient } from "@/lib/api/client";
 import { API_ROUTES } from "@/lib/api/routes";
 import { Spinner } from "@/components/ui/Spinner";
@@ -93,6 +93,31 @@ function NodeCard({
               </li>
             ))}
           </ul>
+        </div>
+      )}
+      {node.sourceReferences && node.sourceReferences.length > 0 && (
+        <div>
+          <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-blue-400 flex items-center gap-1.5">
+            <BookOpen className="h-3 w-3" />
+            Review This Section
+          </p>
+          <div className="mt-2 space-y-3">
+            {node.sourceReferences.map((ref, i) => (
+              <div key={i} className="space-y-1.5">
+                <p className="font-mono text-[9px] text-[var(--color-text-muted)]">
+                  {ref.documentName}
+                </p>
+                {ref.excerpt && (
+                  <blockquote className="border-l-2 border-l-blue-500/40 bg-blue-500/5 px-3 py-2 text-xs italic leading-relaxed text-[var(--color-text-secondary)]">
+                    &ldquo;{ref.excerpt}&rdquo;
+                  </blockquote>
+                )}
+                <p className="text-xs leading-relaxed text-[var(--color-text-secondary)]">
+                  {ref.guidance}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </motion.div>

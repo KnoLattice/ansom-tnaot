@@ -49,16 +49,16 @@ export default function AuthPage() {
                 setView(value as "login" | "register" | "onboarding")
               }
             >
-              <TabsList className="grid grid-cols-2 rounded-full bg-[var(--color-canvas)] p-[3px] text-[var(--color-text-secondary)] border border-[var(--color-border-default)] h-9">
+              <TabsList className="grid grid-cols-2 rounded-full bg-gray p-[3px] h-9">
                 <TabsTrigger
                   value="login"
-                  className="h-full rounded-full data-[state=active]:bg-[var(--color-accent-primary)] data-[state=active]:text-[var(--color-canvas)] data-[state=active]:shadow-sm"
+                  className="h-full rounded-full text-[#64748b] data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-sm font-medium"
                 >
                   Login
                 </TabsTrigger>
                 <TabsTrigger
                   value="register"
-                  className="h-full rounded-full data-[state=active]:bg-[var(--color-accent-primary)] data-[state=active]:text-[var(--color-canvas)] data-[state=active]:shadow-sm"
+                  className="h-full rounded-full text-[#64748b] data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-sm font-medium"
                 >
                   Register
                 </TabsTrigger>
