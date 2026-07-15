@@ -15,7 +15,6 @@ import { PrimaryAction } from "@/components/surfaces/home/PrimaryAction";
 import { LastSessionSummary } from "@/components/surfaces/home/LastSessionSummary";
 import { LibraryStrip } from "@/components/surfaces/home/LibraryStrip";
 import type { NodeStudied } from "@/lib/types/api";
-import Cookies from 'js-cookie';
 import { RecentDocuments } from "@/components/surfaces/home/RecentDocuments";
 import { QuickUploadZone } from "@/components/surfaces/home/QuickUploadZone";
 
@@ -40,8 +39,8 @@ export default function HomePage() {
       return { nodesStudied: [] as NodeStudied[], nodeTitles: {} as Record<string, string> };
     }
     try {
-      const summaryRaw = Cookies.get(`session_summary_${lastSession.sessionId}`);
-      const titlesRaw = Cookies.get(`session_titles_${lastSession.sessionId}`);
+      const summaryRaw = localStorage.getItem(`session_summary_${lastSession.sessionId}`);
+      const titlesRaw = localStorage.getItem(`session_titles_${lastSession.sessionId}`);
       const nodesStudied: NodeStudied[] = summaryRaw
         ? (JSON.parse(summaryRaw) as { nodesStudied?: NodeStudied[] }).nodesStudied ?? []
         : [];
@@ -126,7 +125,7 @@ export default function HomePage() {
 
   // ── Main home ──
   return (
-    <div className="mx-auto max-w-3xl space-y-4">
+    <div className="mx-auto space-y-6">
       {/* 1. Continuity banner */}
       <ContinuityBanner
         lastSession={lastSession}

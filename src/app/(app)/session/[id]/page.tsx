@@ -12,7 +12,7 @@ import { ThresholdCallout } from "@/components/shared/ThresholdCallout";
 import { apiClient } from "@/lib/api/client";
 import { API_ROUTES } from "@/lib/api/routes";
 import { useSessionStore } from "@/store/session.store";
-import Cookies from "js-cookie";
+
 import type {
   EndSessionResponse,
   FeedbackResult,
@@ -313,15 +313,15 @@ function SessionContent({ id }: { id: string }) {
         { sessionId: state.sessionId },
       );
       if (typeof window !== "undefined") {
-        Cookies.set(
+        localStorage.setItem(
           `session_summary_${state.sessionId}`,
           JSON.stringify(data),
         );
-        Cookies.set(
+        localStorage.setItem(
           `session_titles_${state.sessionId}`,
           JSON.stringify(nodeTitles.current),
         );
-        Cookies.set(
+        localStorage.setItem(
           `session_docId_${state.sessionId}`,
           state.documentId ?? "",
         );
@@ -506,7 +506,7 @@ function SessionContent({ id }: { id: string }) {
   const maxQuestions = MAX_SESSION_QUESTIONS;
 
   return (
-    <div className="mx-auto max-w-3xl space-y-4">
+    <div className="mx-auto space-y-6">
       {state.focusMode && (
         <div className="border-l-2 border-l-[var(--color-accent-primary)] bg-[var(--color-surface)] px-3 py-1.5">
           <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-accent-primary)]">
