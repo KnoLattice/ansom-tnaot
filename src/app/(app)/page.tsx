@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Upload } from "lucide-react";
+import { Upload, CloudUpload } from "lucide-react";
 import { useDocuments, useDashboard, useWeakNodes } from "@/lib/hooks";
 import { useAuthStore } from "@/store/auth.store";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -116,6 +116,7 @@ export default function HomePage() {
               Processing takes approximately 60 seconds.
             </p>
             <Button className="mt-6 border rounded-md" onClick={() => router.push("/upload")}>
+              <CloudUpload className="mr-2 h-4 w-4" />
               UPLOAD DOCUMENT
             </Button>
           </div>
@@ -193,7 +194,7 @@ export default function HomePage() {
       <div className="flex flex-col gap-4 border border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-4 py-2.5">
         <LibraryStrip activeDocumentName={activeDocument?.originalName ?? null} />
         <QuickUploadZone showFullUploadCTA={false} />
-        <RecentDocuments documents={documents}/>
+        <RecentDocuments documents={documents} />
       </div>
     </div>
   );
