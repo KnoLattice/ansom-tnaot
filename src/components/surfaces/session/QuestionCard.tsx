@@ -297,7 +297,7 @@ export function QuestionCard({
               !timedOut &&
               hasAnswered &&
               option.text.trim().toLowerCase() ===
-                (question.correctAnswer ?? "").trim().toLowerCase();
+              (question.correctAnswer ?? "").trim().toLowerCase();
             const isWrongSelected =
               !timedOut && hasAnswered && isSelected && localCorrect === false;
 
@@ -312,17 +312,17 @@ export function QuestionCard({
                 className={cn(
                   "group flex w-full items-center gap-3 border rounded-md px-4 py-3 text-left text-sm transition",
                   !hasAnswered &&
-                    !isSelected &&
-                    "border-[var(--color-border-subtle)] bg-[var(--color-canvas)] hover:border-[var(--color-border-default)] hover:bg-[var(--color-surface-elevated)]",
+                  !isSelected &&
+                  "border-[var(--color-border-subtle)] bg-[var(--color-canvas)] hover:border-[var(--color-border-default)] hover:bg-[var(--color-surface-elevated)]",
                   !hasAnswered &&
-                    isSelected &&
-                    "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5",
+                  isSelected &&
+                  "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5",
                   isCorrectOption && "border-green-500 bg-green-500/10",
                   isWrongSelected && "border-red-500 bg-red-500/10",
                   hasAnswered &&
-                    !isCorrectOption &&
-                    !isWrongSelected &&
-                    "opacity-30",
+                  !isCorrectOption &&
+                  !isWrongSelected &&
+                  "opacity-30",
                 )}
               >
                 {hasAnswered && isCorrectOption && (
@@ -354,7 +354,7 @@ export function QuestionCard({
               !timedOut &&
               hasAnswered &&
               value.toLowerCase() ===
-                (question.correctAnswer ?? "").trim().toLowerCase();
+              (question.correctAnswer ?? "").trim().toLowerCase();
             const isWrongSelected =
               !timedOut && hasAnswered && isSelected && localCorrect === false;
 
@@ -367,17 +367,17 @@ export function QuestionCard({
                 className={cn(
                   "flex flex-1 items-center justify-center gap-2 border rounded-md py-4 font-mono text-sm font-bold uppercase tracking-wider transition",
                   !hasAnswered &&
-                    !isSelected &&
-                    "border-[var(--color-border-subtle)] bg-[var(--color-canvas)] hover:border-[var(--color-border-default)] hover:bg-[var(--color-surface-elevated)]",
+                  !isSelected &&
+                  "border-[var(--color-border-subtle)] bg-[var(--color-canvas)] hover:border-[var(--color-border-default)] hover:bg-[var(--color-surface-elevated)]",
                   !hasAnswered &&
-                    isSelected &&
-                    "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5",
+                  isSelected &&
+                  "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5",
                   isCorrectOption && "border-green-500 bg-green-500/10 text-green-400",
                   isWrongSelected && "border-red-500 bg-red-500/10 text-red-400",
                   hasAnswered &&
-                    !isCorrectOption &&
-                    !isWrongSelected &&
-                    "opacity-30",
+                  !isCorrectOption &&
+                  !isWrongSelected &&
+                  "opacity-30",
                 )}
               >
                 {hasAnswered && isCorrectOption && (
@@ -423,7 +423,7 @@ export function QuestionCard({
             return (
               <div
                 key={leftItem}
-                className="flex items-center gap-3"
+                className="flex flex-col sm:flex-row sm:items-center gap-2"
               >
                 <div className="flex-1 rounded-md border border-[var(--color-border-default)] bg-[var(--color-canvas)] px-3 py-2 text-sm text-[var(--color-text-primary)]">
                   {leftItem}
@@ -575,19 +575,19 @@ export function QuestionCard({
             </Button>
           )
         ) : /* short_answer */
-        !hasFeedback ? (
-          <Button
-            disabled={!shortAnswer.trim() || isSubmitting}
-            onClick={handleShortAnswerSubmit}
-            className="rounded-md"
-          >
-            {isSubmitting ? <Spinner size="sm" /> : "SUBMIT"}
-          </Button>
-        ) : (
-          <Button onClick={onContinue} className="rounded-md">
-            CONTINUE
-          </Button>
-        )}
+          !hasFeedback ? (
+            <Button
+              disabled={!shortAnswer.trim() || isSubmitting}
+              onClick={handleShortAnswerSubmit}
+              className="rounded-md"
+            >
+              {isSubmitting ? <Spinner size="sm" /> : "SUBMIT"}
+            </Button>
+          ) : (
+            <Button onClick={onContinue} className="rounded-md">
+              CONTINUE
+            </Button>
+          )}
       </div>
     </motion.div>
   );

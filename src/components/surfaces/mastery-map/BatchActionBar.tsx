@@ -28,13 +28,14 @@ export function BatchActionBar({
           transition={{ duration: 0.2 }}
           className="fixed inset-x-0 bottom-6 z-40 flex justify-center px-4"
         >
-          <div className="flex items-center gap-4 rounded-2xl border border-white/15 bg-[rgba(10,10,18,0.9)] px-6 py-3 shadow-panel backdrop-blur-xl">
-            <p className="text-sm text-text-secondary">
-              <span className="font-medium text-white">{conceptCount}</span>{" "}
+          <div className="flex items-center gap-4 rounded-2xl border border-border bg-background/90 px-6 py-3 shadow-panel backdrop-blur-xl">
+            <p className="text-sm text-muted-foreground">
+              <span className="font-medium text-foreground">{conceptCount}</span>{" "}
               concept{conceptCount !== 1 ? "s" : ""} selected by filter
             </p>
             <Button
               size="sm"
+              className="rounded-full"
               onClick={() =>
                 router.push(`/session?documentId=${documentId}`)
               }

@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Check, FolderClosed, FolderUp, Plus, X } from "lucide-react";
+import { Check, FolderClosed, FolderUp, FileUp, X } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -231,7 +231,7 @@ export default function LibraryPage() {
             className="mt-6 border rounded-md"
             onClick={() => router.push("/upload")}
           >
-            <Plus className="mr-2 h-4 w-4" />
+            <FileUp className="mr-2 h-4 w-4" />
             UPLOAD FIRST DOCUMENT
           </Button>
         </div>
