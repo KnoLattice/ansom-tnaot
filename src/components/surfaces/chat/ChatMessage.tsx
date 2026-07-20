@@ -1,10 +1,13 @@
 "use client";
 
-import { memo, useMemo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { memo, useMemo } from "react";
+import { useRouter } from "next/navigation";
+import type { Text } from "mdast";
+import { visit } from "unist-util-visit";
+import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Bot, User, FileText, Lightbulb, ClipboardList, BookOpen, ChevronDown, ChevronUp } from "lucide-react";
+import { Bot, User, FileText, Lightbulb, ClipboardList, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { ChatMessage as ChatMessageType, MentionRef, CitationRef } from "@/lib/types/api";
 
@@ -30,121 +33,82 @@ function MentionBadge({ mention }: { mention: MentionRef }) {
 }
 
 function CitationBadge({ citation }: { citation: CitationRef }) {
-  const [expanded, setExpanded] = useState(false);
+  const router = useRouter();
+  const docId = citation.documentId ?? citation.nodeId;
 
   return (
-    <span className="relative inline-block mr-1 mb-0.5 align-middle">
-      <button
-        type="button"
-        onClick={() => setExpanded(!expanded)}
-        className={cn(
-          "inline-flex items-center gap-1 rounded border px-1.5 py-0.5 text-[10px] font-medium transition-colors",
-          expanded
-            ? "border-[var(--color-accent-primary)]/50 bg-[var(--color-accent-primary)]/10 text-[var(--color-accent-primary)]"
-            : "border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] text-[var(--color-text-muted)] hover:border-[var(--color-border-default)] hover:text-[var(--color-text-secondary)]",
-        )}
-      >
-        <BookOpen className="h-2.5 w-2.5" />
-        <span>{citation.title}</span>
-        {expanded ? (
-          <ChevronUp className="h-2.5 w-2.5" />
-        ) : (
-          <ChevronDown className="h-2.5 w-2.5" />
-        )}
-      </button>
-
-      <AnimatePresence>
-        {expanded && citation.sourceSnippets && (
-          <motion.div
-            initial={{ opacity: 0, y: -4, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -4, scale: 0.95 }}
-            transition={{ duration: 0.15 }}
-            className="absolute bottom-full left-0 z-50 mb-1 w-72 overflow-hidden rounded-md border border-[var(--color-border-default)] bg-[var(--color-surface)] shadow-lg"
-          >
-            <div className="border-b border-[var(--color-border-default)] px-3 py-1.5">
-              <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
-                Source Excerpt
-              </p>
-            </div>
-            <div className="max-h-32 overflow-y-auto px-3 py-2">
-              <p className="text-xs leading-relaxed text-[var(--color-text-secondary)]">
-                {citation.sourceSnippets}
-              </p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </span>
+    <button
+      type="button"
+      onClick={() => router.push(`/mastery/${docId}?node=${citation.nodeId}`)}
+      title={citation.sourceSnippets ?? citation.title}
+      className="inline-flex items-center gap-1 rounded border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--color-text-muted)] transition-colors hover:border-[var(--color-accent-primary)] hover:text-[var(--color-accent-primary)]"
+    >
+      <BookOpen className="h-2.5 w-2.5" />
+      <span>{citation.title}</span>
+    </button>
   );
 }
 
-interface ContentSegment {
-  type: "text" | "citation";
-  content?: string;
-  citation?: CitationRef;
-}
-
-function splitContentWithCitations(
-  content: string,
-  citations: CitationRef[] | null,
-): ContentSegment[] {
-  if (!citations || citations.length === 0) {
-    return [{ type: "text", content }];
-  }
-
+function remarkCitationPlugin(citations: CitationRef[]) {
   const citationMap = new Map(citations.map((c) => [c.nodeId, c]));
-  const segments: ContentSegment[] = [];
-  const regex = /\[NODE:([^\]]+)\]/g;
-  let lastIndex = 0;
-  let match;
 
-  while ((match = regex.exec(content)) !== null) {
-    if (match.index > lastIndex) {
-      segments.push({
-        type: "text",
-        content: content.slice(lastIndex, match.index),
+  return function attacher() {
+    return (tree: any) => {
+      visit(tree, 'text', (node: Text, index: any, parent: any) => {
+        if (parent === null || index === null) return;
+
+        const parts = node.value.split(/(\[NODE:[^\]]+\])/g);
+        if (parts.length <= 1) return;
+
+        const children = parts.map((part: string) => {
+          const match = part.match(/\[NODE:([^\]]+)\]/);
+          if (match) {
+            const citation = citationMap.get(match[1]);
+            if (citation) {
+              return {
+                type: 'link',
+                url: `citation:${match[1]}`,
+                title: citation.sourceSnippets ?? undefined,
+                children: [{ type: 'text', value: citation.title }],
+              } as any;
+            }
+            return { type: 'text', value: part } as Text;
+          }
+          return { type: 'text', value: part } as Text;
+        });
+
+        parent.children.splice(index, 1, ...children);
       });
-    }
-
-    const nodeId = match[1];
-    const citation = citationMap.get(nodeId);
-    if (citation) {
-      segments.push({ type: "citation", citation });
-    } else {
-      segments.push({ type: "text", content: `[${match[0]}]` });
-    }
-
-    lastIndex = match.index + match[0].length;
-  }
-
-  if (lastIndex < content.length) {
-    segments.push({
-      type: "text",
-      content: content.slice(lastIndex),
-    });
-  }
-
-  return segments;
-}
-
-function MarkdownContent({ content }: { content: string }) {
-  return (
-    <div className="kl-chat-prose">
-      <ReactMarkdown remarkPlugins={[remarkGfm]}>
-        {content}
-      </ReactMarkdown>
-    </div>
-  );
+    };
+  };
 }
 
 export const ChatMessage = memo(function ChatMessage({ message }: ChatMessageProps) {
   const isUser = message.role === "user";
 
-  const segments = useMemo(
-    () => splitContentWithCitations(message.content, message.citations),
-    [message.content, message.citations],
-  );
+  const citationList = message.citations ?? [];
+  const citationMap = useMemo(() => {
+    return new Map(citationList.map((c) => [c.nodeId, c]));
+  }, [citationList]);
+
+  const components = useMemo(() => ({
+    a: ({ href, children }: { href?: string; children?: React.ReactNode }) => {
+      if (href?.startsWith('citation:')) {
+        const nodeId = href.slice('citation:'.length);
+        const citation = citationMap.get(nodeId);
+        if (citation) {
+          return <CitationBadge citation={citation} />;
+        }
+        return <span className="text-[var(--color-text-muted)] text-[10px]">[NODE:{nodeId}]</span>;
+      }
+      return <a href={href}>{children}</a>;
+    },
+  } as any), [citationMap]);
+
+  const plugins = useMemo(() => {
+    if (citationList.length === 0) return [remarkGfm];
+    return [remarkGfm, remarkCitationPlugin(citationList)];
+  }, [citationList]);
 
   return (
     <motion.div
@@ -178,12 +142,17 @@ export const ChatMessage = memo(function ChatMessage({ message }: ChatMessagePro
           </div>
         )}
 
-        {segments.map((seg, i) =>
-          seg.type === "citation" && seg.citation ? (
-            <CitationBadge key={`cit-${i}`} citation={seg.citation} />
-          ) : (
-            <MarkdownContent key={`text-${i}`} content={seg.content ?? ""} />
-          ),
+        {isUser ? (
+          <p className="whitespace-pre-wrap break-words">{message.content}</p>
+        ) : (
+          <div className="kl-chat-prose">
+            <ReactMarkdown
+              remarkPlugins={plugins}
+              components={components}
+            >
+              {message.content}
+            </ReactMarkdown>
+          </div>
         )}
       </div>
 

@@ -18,8 +18,12 @@ interface ChatPanelProps {
   onCreateConversation?: () => Promise<{ id: string; scope: ChatScope; scopeId: string; title: string } | null>;
 }
 
-export function ChatPanel({ conversationId, scope, scopeId, title, onTokenUpdate, onCreateConversation }: ChatPanelProps) {
+export function ChatPanel({ conversationId, scope: propScope, scopeId: propScopeId, title: propTitle, onTokenUpdate, onCreateConversation }: ChatPanelProps) {
   const { data, isLoading } = useChatMessages(conversationId);
+
+  const scope = data?.conversation.scope ?? propScope;
+  const scopeId = data?.conversation.scopeId ?? propScopeId;
+  const title = data?.conversation.title ?? propTitle;
   const { mutate: sendMessage, abort } = useSendChatMessage();
   const { data: tokenUsage } = useChatTokenUsage();
 

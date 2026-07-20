@@ -1,31 +1,44 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { PanelLeftOpen } from "lucide-react";
-import { useDocuments, useCreateConversation } from "@/lib/hooks";
+import { useDocuments, useCreateConversation, useChatConversations } from "@/lib/hooks";
 import { ChatPanel } from "@/components/surfaces/chat/ChatPanel";
 import { ChatHistoryDrawer } from "@/components/surfaces/chat/ChatHistoryDrawer";
 import type { ChatConversation, ChatScope } from "@/lib/types/api";
 
 export default function ChatPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const conversationId = searchParams.get("conversation");
+
+  const { data: conversations } = useChatConversations();
   const { documents } = useDocuments();
   const createConversation = useCreateConversation();
 
-  const [activeConversation, setActiveConversation] =
-    useState<ChatConversation | null>(null);
+  const activeConversation = (conversations ?? []).find(
+    (c) => c.id === conversationId,
+  ) ?? null;
+
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const completedDocs = (documents ?? []).filter(
     (d) => d.processingStatus === "completed",
   );
 
-  const handleSelectConversation = useCallback((conv: ChatConversation) => {
-    setActiveConversation(conv);
-  }, []);
+  const handleSelectConversation = useCallback(
+    (conv: ChatConversation) => {
+      setDrawerOpen(false);
+      router.push(`/chat?conversation=${conv.id}`);
+    },
+    [router],
+  );
 
   const handleNewChat = useCallback(() => {
-    setActiveConversation(null);
-  }, []);
+    setDrawerOpen(false);
+    router.push("/chat");
+  }, [router]);
 
   const handleCreateConversation = useCallback(async () => {
     if (completedDocs.length === 0) return null;
@@ -35,9 +48,9 @@ export default function ChatPage() {
       scope: "document" as ChatScope,
       scopeId: doc.id,
     });
-    setActiveConversation(conv);
+    router.push(`/chat?conversation=${conv.id}`);
     return conv;
-  }, [completedDocs, createConversation]);
+  }, [completedDocs, createConversation, router]);
 
   return (
     <div className="-mx-4 -mt-16 -pb-12 flex h-[80dvh] flex-col pt-12 overflow-hidden">
@@ -71,12 +84,9 @@ export default function ChatPage() {
       {/* Main area */}
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
         <ChatPanel
-          conversationId={activeConversation?.id ?? null}
-          scope={activeConversation?.scope}
-          scopeId={activeConversation?.scopeId}
-          title={activeConversation?.title}
+          conversationId={conversationId}
           onCreateConversation={
-            !activeConversation ? handleCreateConversation : undefined
+            !conversationId ? handleCreateConversation : undefined
           }
         />
       </div>

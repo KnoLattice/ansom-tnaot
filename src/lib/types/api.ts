@@ -290,6 +290,7 @@ export interface CitationRef {
   nodeId: string;
   title: string;
   sourceSnippets: string | null;
+  documentId: string | null;
 }
 
 export interface ChatConversation {
