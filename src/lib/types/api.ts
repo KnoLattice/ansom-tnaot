@@ -280,6 +280,18 @@ export interface ExplanationResponse {
 // ─── Chat ─────────────────────────────────────────────
 export type ChatScope = "concept" | "document" | "collection";
 
+export interface MentionRef {
+  type: "document" | "concept" | "session";
+  id: string;
+  label: string;
+}
+
+export interface CitationRef {
+  nodeId: string;
+  title: string;
+  sourceSnippets: string | null;
+}
+
 export interface ChatConversation {
   id: string;
   scope: ChatScope;
@@ -295,7 +307,20 @@ export interface ChatMessage {
   conversationId: string;
   role: "user" | "assistant";
   content: string;
+  mentions: MentionRef[] | null;
+  citations: CitationRef[] | null;
   createdAt: string;
+}
+
+export interface ChatSession {
+  id: string;
+  startedAt: string;
+  endedAt: string | null;
+  totalInteractions: number;
+  accuracy: number | null;
+  durationMinutes: number | null;
+  documentName: string | null;
+  label: string;
 }
 
 export interface ChatTokenUsage {

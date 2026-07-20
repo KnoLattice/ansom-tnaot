@@ -1,67 +1,84 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { useDocuments, useCollections, useCreateConversation } from "@/lib/hooks";
-import { ChatHistorySidebar } from "@/components/surfaces/chat/ChatHistorySidebar";
+import { PanelLeftOpen } from "lucide-react";
+import { useDocuments, useCreateConversation } from "@/lib/hooks";
 import { ChatPanel } from "@/components/surfaces/chat/ChatPanel";
-import { ChatScopeSelector } from "@/components/surfaces/chat/ChatScopeSelector";
-import { TokenBar } from "@/components/surfaces/chat/TokenBar";
+import { ChatHistoryDrawer } from "@/components/surfaces/chat/ChatHistoryDrawer";
 import type { ChatConversation, ChatScope } from "@/lib/types/api";
 
 export default function ChatPage() {
   const { documents } = useDocuments();
-  const collections = useCollections();
   const createConversation = useCreateConversation();
 
-  const [activeConversation, setActiveConversation] = useState<ChatConversation | null>(null);
+  const [activeConversation, setActiveConversation] =
+    useState<ChatConversation | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const collectionList = collections.collections ?? [];
+  const completedDocs = (documents ?? []).filter(
+    (d) => d.processingStatus === "completed",
+  );
 
   const handleSelectConversation = useCallback((conv: ChatConversation) => {
     setActiveConversation(conv);
   }, []);
 
-  const handleScopeSelect = useCallback(
-    async (scope: ChatScope, scopeId: string) => {
-      const conv = await createConversation.mutateAsync({ scope, scopeId });
-      setActiveConversation(conv);
-    },
-    [createConversation],
-  );
+  const handleNewChat = useCallback(() => {
+    setActiveConversation(null);
+  }, []);
+
+  const handleCreateConversation = useCallback(async () => {
+    if (completedDocs.length === 0) return null;
+
+    const doc = completedDocs[0];
+    const conv = await createConversation.mutateAsync({
+      scope: "document" as ChatScope,
+      scopeId: doc.id,
+    });
+    setActiveConversation(conv);
+    return conv;
+  }, [completedDocs, createConversation]);
 
   return (
-    <div className="flex h-[calc(100vh-5rem)] border border-[var(--color-border-default)] bg-[var(--color-canvas)]">
-      {/* Sidebar */}
-      <ChatHistorySidebar
+    <div className="-mx-4 -mt-16 -pb-12 flex h-[80dvh] flex-col pt-12 overflow-hidden">
+      {/* Top bar */}
+      <div className="flex shrink-0 items-center gap-3 border-b border-[var(--color-border-default)] px-4 py-2.5">
+        <button
+          type="button"
+          onClick={() => setDrawerOpen(true)}
+          className="flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)] transition hover:text-[var(--color-text-secondary)]"
+        >
+          <PanelLeftOpen className="h-4 w-4" />
+          History
+        </button>
+
+        {activeConversation && (
+          <span className="truncate font-mono text-xs font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+            {activeConversation.title}
+          </span>
+        )}
+      </div>
+
+      {/* Drawer */}
+      <ChatHistoryDrawer
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
         activeConversationId={activeConversation?.id ?? null}
         onSelect={handleSelectConversation}
-        className="w-[260px] shrink-0"
+        onNewChat={handleNewChat}
       />
 
-      {/* Main content */}
-      <div className="flex min-w-0 flex-1 flex-col">
-        {activeConversation ? (
-          <>
-            <div className="border-b border-[var(--color-border-default)] px-4 py-3">
-              <p className="font-mono text-xs font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
-                {activeConversation.title}
-              </p>
-              <p className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
-                {activeConversation.scope}
-              </p>
-            </div>
-            <ChatPanel conversationId={activeConversation.id} />
-          </>
-        ) : (
-          <div className="flex flex-1 flex-col">
-            <TokenBar />
-            <ChatScopeSelector
-              onSelect={handleScopeSelect}
-              documents={documents.filter((d) => d.processingStatus === "completed")}
-              collections={collectionList}
-            />
-          </div>
-        )}
+      {/* Main area */}
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+        <ChatPanel
+          conversationId={activeConversation?.id ?? null}
+          scope={activeConversation?.scope}
+          scopeId={activeConversation?.scopeId}
+          title={activeConversation?.title}
+          onCreateConversation={
+            !activeConversation ? handleCreateConversation : undefined
+          }
+        />
       </div>
     </div>
   );

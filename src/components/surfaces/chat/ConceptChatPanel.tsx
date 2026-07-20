@@ -78,7 +78,7 @@ export function ConceptChatPanel({
               </Button>
             </div>
 
-            <ChatPanel conversationId={conversationIdRef.current} />
+            <ChatPanel conversationId={conversationIdRef.current} scope="concept" scopeId={nodeId} />
           </motion.div>
         </>
       )}

@@ -68,7 +68,7 @@ export function ChatFAB({ scope, scopeId }: ChatFABProps) {
               </Button>
             </div>
 
-            <ChatPanel conversationId={conversationId} />
+            <ChatPanel conversationId={conversationId} scope={scope} scopeId={scopeId} />
           </motion.div>
         )}
       </AnimatePresence>

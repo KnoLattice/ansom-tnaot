@@ -15,6 +15,7 @@ export {
   useChatConversations,
   useChatMessages,
   useChatTokenUsage,
+  useChatSessions,
   useCreateConversation,
   useDeleteConversation,
   useSendChatMessage,

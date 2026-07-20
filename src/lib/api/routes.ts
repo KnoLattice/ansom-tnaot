@@ -45,5 +45,6 @@ export const API_ROUTES = {
     CONVERSATION: (id: string) => `/chat/conversations/${id}`,
     MESSAGES: (id: string) => `/chat/conversations/${id}/messages`,
     TOKEN_USAGE: "/chat/token-usage",
+    SESSIONS: "/chat/sessions",
   },
 } as const;

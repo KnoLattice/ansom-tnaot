@@ -12,6 +12,8 @@ import type {
   ChatTokenUsage,
   ChatScope,
   ChatStreamChunk,
+  ChatSession,
+  MentionRef,
 } from "@/lib/types/api";
 
 export function useChatConversations(scope?: ChatScope) {
@@ -49,6 +51,17 @@ export function useChatTokenUsage() {
       return data;
     },
     staleTime: 30_000,
+  });
+}
+
+export function useChatSessions() {
+  return useQuery<ChatSession[]>({
+    queryKey: ["chat-sessions"],
+    queryFn: async () => {
+      const { data } = await apiClient.get(API_ROUTES.CHAT.SESSIONS);
+      return data;
+    },
+    staleTime: 60_000,
   });
 }
 
@@ -92,6 +105,7 @@ export function useSendChatMessage() {
       conversationId: string,
       content: string,
       onToken: (chunk: ChatStreamChunk) => void,
+      mentions?: MentionRef[],
     ) => {
       abortRef.current?.abort();
       const controller = new AbortController();
@@ -106,7 +120,7 @@ export function useSendChatMessage() {
           "Content-Type": "application/json",
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-        body: JSON.stringify({ content }),
+        body: JSON.stringify({ content, mentions: mentions?.length ? mentions : undefined }),
         signal: controller.signal,
       });
 

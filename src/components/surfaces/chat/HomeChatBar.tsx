@@ -50,6 +50,8 @@ export function HomeChatBar({ documents = [] }: HomeChatBarProps) {
         conversationId: conv.id,
         role: "user",
         content,
+        mentions: null,
+        citations: null,
         createdAt: new Date().toISOString(),
       };
 
@@ -58,6 +60,8 @@ export function HomeChatBar({ documents = [] }: HomeChatBarProps) {
         conversationId: conv.id,
         role: "assistant",
         content: "",
+        mentions: null,
+        citations: null,
         createdAt: new Date().toISOString(),
       };
 
