@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { useCreateConversation } from "@/lib/hooks";
@@ -21,31 +21,26 @@ export function ConceptChatPanel({
   onClose,
 }: ConceptChatPanelProps) {
   const createConversation = useCreateConversation();
-  const conversationIdRef = useRef<string | null>(null);
-  const prevNodeIdRef = useRef<string | null>(null);
-  const mountedRef = useRef(false);
+  const [conversationId, setConversationId] = useState<string | null>(null);
+  const [prevNodeId, setPrevNodeId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!isOpen) {
-      mountedRef.current = false;
-      return;
+    if (!isOpen) return;
+
+    if (prevNodeId !== nodeId) {
+      setConversationId(null);
+      setPrevNodeId(nodeId);
     }
 
-    if (prevNodeIdRef.current !== nodeId) {
-      conversationIdRef.current = null;
-      prevNodeIdRef.current = nodeId;
-    }
-
-    if (!mountedRef.current && isOpen) {
-      mountedRef.current = true;
+    if (conversationId === null && !createConversation.isPending) {
       createConversation
         .mutateAsync({ scope: "concept", scopeId: nodeId })
         .then((conv) => {
-          conversationIdRef.current = conv.id;
+          setConversationId(conv.id);
         })
         .catch(() => {});
     }
-  }, [isOpen, nodeId, createConversation]);
+  }, [isOpen, nodeId, prevNodeId, conversationId, createConversation]);
 
   return (
     <AnimatePresence>
@@ -78,7 +73,14 @@ export function ConceptChatPanel({
               </Button>
             </div>
 
-            <ChatPanel conversationId={conversationIdRef.current} scope="concept" scopeId={nodeId} />
+            <ChatPanel
+              conversationId={conversationId}
+              scope="concept"
+              scopeId={nodeId}
+              onCreateConversation={() =>
+                createConversation.mutateAsync({ scope: "concept", scopeId: nodeId })
+              }
+            />
           </motion.div>
         </>
       )}

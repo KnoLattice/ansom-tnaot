@@ -4,6 +4,7 @@ export {
   useDocuments,
   useDocumentStatus,
   useDocumentSummary,
+  useDocumentDownload,
   useUploadDocument,
   formatDocumentName,
 } from "./useDocuments";

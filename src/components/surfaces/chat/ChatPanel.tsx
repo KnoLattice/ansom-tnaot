@@ -34,6 +34,12 @@ export function ChatPanel({ conversationId, scope: propScope, scopeId: propScope
 
   const isBlocked = (tokenUsage?.remaining ?? 1) <= 0;
 
+  const isNearBottom = useCallback(() => {
+    if (!scrollRef.current) return true;
+    const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
+    return scrollHeight - scrollTop - clientHeight < 120;
+  }, []);
+
   const scrollToBottom = useCallback((smooth = true) => {
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: smooth ? "smooth" : "instant" });
@@ -45,8 +51,10 @@ export function ChatPanel({ conversationId, scope: propScope, scopeId: propScope
   }, [conversationId, scrollToBottom]);
 
   useEffect(() => {
-    scrollToBottom();
-  }, [data?.messages, streamingMessages, scrollToBottom]);
+    if (isNearBottom()) {
+      scrollToBottom(!isStreaming);
+    }
+  }, [data?.messages, streamingMessages, scrollToBottom, isStreaming, isNearBottom]);
 
   useEffect(() => {
     return () => abort();

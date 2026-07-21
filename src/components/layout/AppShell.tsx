@@ -21,7 +21,13 @@ import { useAuthStore } from "@/store/auth.store";
 import { useDocuments, useHydrated } from "@/lib/hooks";
 import { useSessionNavGuard } from "@/components/shared/SessionNavGuard";
 import { ThemeSwitcher } from "@/components/layout/ThemeSwitcher";
+import dynamic from "next/dynamic";
 import { cn } from "@/lib/utils";
+
+const PdfViewer = dynamic(
+  () => import("@/components/surfaces/pdf/PdfViewer").then((m) => m.PdfViewer),
+  { ssr: false },
+);
 
 const NAV_ITEMS = [
   { href: "/", label: "HOME", icon: LayoutGrid },
@@ -179,6 +185,9 @@ export function AppShell({ children }: PropsWithChildren) {
 
       {/* Session navigation guard dialog */}
       {sessionGuardDialog}
+
+      {/* PDF viewer side panel */}
+      <PdfViewer />
     </div>
   );
 }

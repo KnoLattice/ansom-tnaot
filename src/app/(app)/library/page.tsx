@@ -112,6 +112,14 @@ export default function LibraryPage() {
     [assignDocument],
   );
 
+  const handleSetActiveDocument = useCallback(
+    (documentId: string) => {
+      setActiveDocument(documentId);
+      toast.success("Active document updated");
+    },
+    [setActiveDocument],
+  );
+
   const handleViewMastery = useCallback(
     (documentId: string) => {
       setActiveDocument(documentId);
@@ -244,10 +252,12 @@ export default function LibraryPage() {
               collection={col}
               documents={collectionDocs.get(col.id) ?? []}
               allCollections={collections}
+              activeDocumentId={activeDocumentId}
               onRename={handleRenameCollection}
               onDelete={handleDeleteCollection}
               onDeleteDocument={handleDeleteDocument}
               onAssignDocument={handleAssignDocument}
+              onSetActiveDocument={handleSetActiveDocument}
               onViewMastery={handleViewMastery}
             />
           ))}
@@ -268,8 +278,10 @@ export default function LibraryPage() {
                       document={doc}
                       collections={collections}
                       currentCollectionId={null}
+                      isActive={doc.id === activeDocumentId}
                       onDelete={handleDeleteDocument}
                       onAssign={handleAssignDocument}
+                      onSetActive={handleSetActiveDocument}
                       onViewMastery={handleViewMastery}
                     />
                   ))}

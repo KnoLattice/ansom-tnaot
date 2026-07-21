@@ -1,7 +1,7 @@
 "use client";
 
-import { memo, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { memo, useMemo, useCallback } from "react";
+import Link from "next/link";
 import type { Text } from "mdast";
 import { visit } from "unist-util-visit";
 import { motion } from "framer-motion";
@@ -9,6 +9,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Bot, User, FileText, Lightbulb, ClipboardList, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { usePdfViewerStore } from "@/store/pdfViewer.store";
 import type { ChatMessage as ChatMessageType, MentionRef, CitationRef } from "@/lib/types/api";
 
 interface ChatMessageProps {
@@ -33,19 +34,32 @@ function MentionBadge({ mention }: { mention: MentionRef }) {
 }
 
 function CitationBadge({ citation }: { citation: CitationRef }) {
-  const router = useRouter();
-  const docId = citation.documentId ?? citation.nodeId;
+  const openPdf = usePdfViewerStore((s) => s.open);
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const docId = citation.documentId ?? citation.nodeId;
+    openPdf(docId, citation.sourceSnippets, citation.title);
+  };
 
   return (
-    <button
-      type="button"
-      onClick={() => router.push(`/mastery/${docId}?node=${citation.nodeId}`)}
+    <span
+      role="button"
+      tabIndex={0}
+      onClick={handleClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          handleClick(e as unknown as React.MouseEvent);
+        }
+      }}
       title={citation.sourceSnippets ?? citation.title}
-      className="inline-flex items-center gap-1 rounded border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--color-text-muted)] transition-colors hover:border-[var(--color-accent-primary)] hover:text-[var(--color-accent-primary)]"
+      className="inline-flex items-center gap-1 rounded border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--color-text-muted)] transition-colors no-underline hover:border-[var(--color-accent-primary)] hover:text-[var(--color-accent-primary)] cursor-pointer select-none"
     >
       <BookOpen className="h-2.5 w-2.5" />
       <span>{citation.title}</span>
-    </button>
+    </span>
   );
 }
 
@@ -85,6 +99,7 @@ function remarkCitationPlugin(citations: CitationRef[]) {
 
 export const ChatMessage = memo(function ChatMessage({ message }: ChatMessageProps) {
   const isUser = message.role === "user";
+  const isStreaming = message.id.startsWith("temp-");
 
   const citationList = message.citations ?? [];
   const citationMap = useMemo(() => {
@@ -110,11 +125,17 @@ export const ChatMessage = memo(function ChatMessage({ message }: ChatMessagePro
     return [remarkGfm, remarkCitationPlugin(citationList)];
   }, [citationList]);
 
+  const urlTransform = useCallback((url: string) => {
+    if (url.startsWith("citation:")) return url;
+    return url;
+  }, []);
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
+      initial={isStreaming ? false : { opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
+      layout={isStreaming ? "position" : true}
       className={cn(
         "flex gap-3 px-4 py-3",
         isUser ? "justify-end" : "justify-start",
@@ -149,6 +170,7 @@ export const ChatMessage = memo(function ChatMessage({ message }: ChatMessagePro
             <ReactMarkdown
               remarkPlugins={plugins}
               components={components}
+              urlTransform={urlTransform}
             >
               {message.content}
             </ReactMarkdown>
