@@ -13,10 +13,7 @@ import { PulseCard } from "@/components/surfaces/home/PulseCard";
 import { AttentionCard } from "@/components/surfaces/home/AttentionCard";
 import { PrimaryAction } from "@/components/surfaces/home/PrimaryAction";
 import { LastSessionSummary } from "@/components/surfaces/home/LastSessionSummary";
-import { LibraryStrip } from "@/components/surfaces/home/LibraryStrip";
-import type { NodeStudied } from "@/lib/types/api";
-import { RecentDocuments } from "@/components/surfaces/home/RecentDocuments";
-import { QuickUploadZone } from "@/components/surfaces/home/QuickUploadZone";
+import { DocumentsSection } from "@/components/surfaces/home/DocumentsSection";
 import { HomeChatBar } from "@/components/surfaces/chat/HomeChatBar";
 
 export default function HomePage() {
@@ -34,23 +31,6 @@ export default function HomePage() {
     if (!dashboard?.sessionHistory?.length) return null;
     return dashboard.sessionHistory[0];
   }, [dashboard]);
-
-  const lastSessionCache = useMemo(() => {
-    if (!lastSession || typeof window === "undefined") {
-      return { nodesStudied: [] as NodeStudied[], nodeTitles: {} as Record<string, string> };
-    }
-    try {
-      const summaryRaw = localStorage.getItem(`session_summary_${lastSession.sessionId}`);
-      const titlesRaw = localStorage.getItem(`session_titles_${lastSession.sessionId}`);
-      const nodesStudied: NodeStudied[] = summaryRaw
-        ? (JSON.parse(summaryRaw) as { nodesStudied?: NodeStudied[] }).nodesStudied ?? []
-        : [];
-      const nodeTitles: Record<string, string> = titlesRaw ? JSON.parse(titlesRaw) : {};
-      return { nodesStudied, nodeTitles };
-    } catch {
-      return { nodesStudied: [] as NodeStudied[], nodeTitles: {} as Record<string, string> };
-    }
-  }, [lastSession]);
 
   const sparklineData = useMemo(() => {
     if (!dashboard) return [];
@@ -126,7 +106,7 @@ export default function HomePage() {
 
   // ── Main home ──
   return (
-    <div className="mx-auto space-y-6">
+    <div className="mx-auto max-w-3xl space-y-8">
       {/* 1. Continuity banner */}
       <ContinuityBanner
         lastSession={lastSession}
@@ -182,19 +162,14 @@ export default function HomePage() {
       )}
 
 
-      {lastSession && lastSessionCache.nodesStudied.length > 0 && (
-        <LastSessionSummary
-          lastSession={lastSession}
-          nodesStudied={lastSessionCache.nodesStudied}
-          nodeTitles={lastSessionCache.nodeTitles}
-        />
+      {lastSession && (
+        <LastSessionSummary lastSession={lastSession} />
       )}
 
-      <div className="flex flex-col gap-4 border border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-4 py-2.5">
-        <LibraryStrip activeDocumentName={activeDocument?.originalName ?? null} />
-        <QuickUploadZone showFullUploadCTA={false} />
-        <RecentDocuments documents={documents}/>
-      </div>
+      <DocumentsSection
+        documents={documents}
+        activeDocumentId={activeDocumentId}
+      />
 
       {/* Quick chat bar */}
       {hasReadyDoc && <HomeChatBar documents={documents} />}

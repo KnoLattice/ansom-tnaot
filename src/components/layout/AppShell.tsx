@@ -93,12 +93,12 @@ export function AppShell({ children }: PropsWithChildren) {
               </Link>
             ))}
 
-            {hydrated && activeDocumentId && (
+            {hydrated && (
               <Link
-                href={`/mastery/${activeDocumentId}`}
+                href={activeDocumentId ? `/mastery/${activeDocumentId}` : "/library"}
                 prefetch
                 onClick={(e: MouseEvent) => {
-                  const target = `/mastery/${activeDocumentId}`;
+                  const target = activeDocumentId ? `/mastery/${activeDocumentId}` : "/library";
                   if (!guardNavigation(target)) e.preventDefault();
                 }}
                 className={cn(
@@ -113,7 +113,7 @@ export function AppShell({ children }: PropsWithChildren) {
               </Link>
             )}
 
-            {/*{hydrated && activeDocumentId && (
+            {hydrated && activeDocumentId && (
               <button
                 type="button"
                 onClick={() => {
@@ -130,9 +130,7 @@ export function AppShell({ children }: PropsWithChildren) {
                 <PlayCircle className="h-3.5 w-3.5" />
                 SESSION
               </button>
-
-              // <Button>SESSION</Button>
-            )}*/}
+            )}
           </div>
 
           {/* Theme + User */}
