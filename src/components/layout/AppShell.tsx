@@ -8,7 +8,6 @@ import {
   LayoutGrid,
   LogOut,
   Map,
-  MessageSquare,
   PlayCircle,
 } from "lucide-react";
 import {
@@ -32,7 +31,6 @@ const PdfViewer = dynamic(
 const NAV_ITEMS = [
   { href: "/", label: "HOME", icon: LayoutGrid },
   { href: "/library", label: "LIB", icon: BookOpen },
-  { href: "/chat", label: "CHAT", icon: MessageSquare },
 ] as const;
 
 export function AppShell({ children }: PropsWithChildren) {

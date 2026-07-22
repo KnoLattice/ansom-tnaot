@@ -4,7 +4,8 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquare, X, ArrowUpRight } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCreateConversation, useSendChatMessage, useChatTokenUsage } from "@/lib/hooks";
+import { useCreateConversation, useSendChatMessage, useChatTokenUsage, useChatConversations } from "@/lib/hooks";
+import { useChatStore, getScopeKey } from "@/store/chat.store";
 import { ChatMessage } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
 import { TokenBar } from "./TokenBar";
@@ -14,17 +15,35 @@ interface HomeChatBarProps {
   documents?: { id: string; originalName: string; processingStatus: string }[];
 }
 
+const SCOPE_KEY = "general";
+
 export function HomeChatBar({ documents = [] }: HomeChatBarProps) {
   const router = useRouter();
   const createConversation = useCreateConversation();
   const { mutate: sendMessage, abort } = useSendChatMessage();
   const { data: tokenUsage } = useChatTokenUsage();
+  const { data: conversations } = useChatConversations("general");
+
+  const activeConversationIds = useChatStore((s) => s.activeConversationIds);
+  const setActiveConversation = useChatStore((s) => s.setActiveConversation);
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [conversation, setConversation] = useState<ChatConversation | null>(null);
   const [messages, setMessages] = useState<ChatMessageType[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Restore persisted conversation
+  useEffect(() => {
+    if (conversation) return;
+    const persistedId = activeConversationIds[SCOPE_KEY];
+    if (persistedId && conversations) {
+      const existing = conversations.find((c) => c.id === persistedId);
+      if (existing) {
+        setConversation(existing);
+      }
+    }
+  }, [activeConversationIds, conversations, conversation]);
 
   const isBlocked = (tokenUsage?.remaining ?? 1) <= 0;
 
@@ -37,12 +56,11 @@ export function HomeChatBar({ documents = [] }: HomeChatBarProps) {
       let conv = conversation;
 
       if (!conv) {
-        if (completedDocs.length === 0) return;
         conv = await createConversation.mutateAsync({
-          scope: "document",
-          scopeId: completedDocs[0].id,
+          scope: "general",
         });
         setConversation(conv);
+        setActiveConversation(SCOPE_KEY, conv.id);
       }
 
       const userMsg: ChatMessageType = {
@@ -86,7 +104,7 @@ export function HomeChatBar({ documents = [] }: HomeChatBarProps) {
         }
       });
     },
-    [conversation, completedDocs, createConversation, sendMessage],
+    [conversation, createConversation, sendMessage],
   );
 
   useEffect(() => {
@@ -94,8 +112,6 @@ export function HomeChatBar({ documents = [] }: HomeChatBarProps) {
       scrollRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages, isExpanded]);
-
-  if (completedDocs.length === 0) return null;
 
   return (
     <div className="border border-[var(--color-border-default)] bg-[var(--color-surface)]">
@@ -117,13 +133,14 @@ export function HomeChatBar({ documents = [] }: HomeChatBarProps) {
       <AnimatePresence>
         {isExpanded && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="overflow-hidden"
+            initial={{ gridTemplateRows: "0fr" }}
+            animate={{ gridTemplateRows: "1fr" }}
+            exit={{ gridTemplateRows: "0fr" }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="grid"
           >
-            {/* Header */}
+            <div className="overflow-hidden">
+              {/* Header */}
             <div className="flex items-center justify-between border-b border-[var(--color-border-default)] px-4 py-2">
               <div className="flex items-center gap-2">
                 <MessageSquare className="h-3.5 w-3.5 text-[var(--color-accent-primary)]" />
@@ -173,8 +190,9 @@ export function HomeChatBar({ documents = [] }: HomeChatBarProps) {
               onSend={handleSend}
               disabled={isStreaming}
               blocked={isBlocked}
-              placeholder={`Ask about ${completedDocs[0]?.originalName?.replace(/\.[^.]+$/, "") ?? "your document"}...`}
+              placeholder="Ask about your study material..."
             />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

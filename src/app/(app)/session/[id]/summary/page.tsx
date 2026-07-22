@@ -9,6 +9,7 @@ import { Spinner } from "@/components/ui/Spinner";
 import { HeadlineMoment } from "@/components/surfaces/session/HeadlineMoment";
 import { MovementMap } from "@/components/surfaces/session/MovementMap";
 import { AIAnalysisSection } from "@/components/surfaces/session/AIAnalysisSection";
+import { ChatFAB } from "@/components/surfaces/chat/ChatFAB";
 import type { EndSessionResponse } from "@/lib/types/api";
 import { MASTERY_CALLOUT_THRESHOLD, MASTERY_ANIMATION } from "@/lib/constants/mastery";
 
@@ -163,6 +164,9 @@ export default function SessionSummaryPage({
           DONE
         </Button>
       </motion.div>
+
+      {/* Chat FAB */}
+      <ChatFAB />
     </div>
   );
 }

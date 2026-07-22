@@ -10,6 +10,7 @@ import { ActiveDocumentStrip } from "@/components/surfaces/library/ActiveDocumen
 import { CollectionRow } from "@/components/surfaces/library/CollectionRow";
 import { CollectionDocumentRow } from "@/components/surfaces/library/CollectionDocumentRow";
 import { StorageQuotaBar } from "@/components/library/StorageQuotaBar";
+import { ChatFAB } from "@/components/surfaces/chat/ChatFAB";
 import { useDocuments, useCollections } from "@/lib/hooks";
 import { apiClient } from "@/lib/api/client";
 import { API_ROUTES } from "@/lib/api/routes";
@@ -294,6 +295,9 @@ export default function LibraryPage() {
 
       {/* Storage quota */}
       {quota && <StorageQuotaBar quota={quota} />}
+
+      {/* Chat FAB */}
+      <ChatFAB />
     </div>
   );
 }

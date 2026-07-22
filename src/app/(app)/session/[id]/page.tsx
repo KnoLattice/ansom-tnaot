@@ -9,6 +9,7 @@ import { SessionHeader } from "@/components/surfaces/session/SessionHeader";
 import { QuestionCard } from "@/components/surfaces/session/QuestionCard";
 import { ConceptTransition } from "@/components/surfaces/session/ConceptTransition";
 import { ThresholdCallout } from "@/components/shared/ThresholdCallout";
+import { ChatFAB } from "@/components/surfaces/chat/ChatFAB";
 import { apiClient } from "@/lib/api/client";
 import { API_ROUTES } from "@/lib/api/routes";
 import { useSessionStore } from "@/store/session.store";
@@ -567,6 +568,9 @@ function SessionContent({ id }: { id: string }) {
           </button>
         </div>
       )}
+
+      {/* Chat FAB - restricted mode during session */}
+      <ChatFAB scope="general" restricted />
     </div>
   );
 }

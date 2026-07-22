@@ -116,12 +116,12 @@ export default function HomePage() {
 
       {/* 2 & 3. Pulse + Attention — data grid */}
       {hasReadyDoc && dashboard && (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-1">
           <PulseCard
             overallMasteryPercent={dashboard.overallMasteryPercent}
             sparklineData={sparklineData}
           />
-          <AttentionCard weakNodes={weakNodes} onStudy={handleStudyNodes} />
+          {/*<AttentionCard weakNodes={weakNodes} onStudy={handleStudyNodes} />*/}
         </div>
       )}
 
@@ -172,7 +172,7 @@ export default function HomePage() {
       />
 
       {/* Quick chat bar */}
-      {hasReadyDoc && <HomeChatBar documents={documents} />}
+      <HomeChatBar documents={documents} />
     </div>
   );
 }

@@ -28,7 +28,9 @@ function formatUploadDate(dateStr: string): string {
   if (diffHours < 24) return `${diffHours}H AGO`;
   const diffDays = Math.floor(diffHours / 24);
   if (diffDays < 7) return `${diffDays}D AGO`;
-  return d.toLocaleDateString("en-US", { month: "short", day: "numeric" }).toUpperCase();
+  return d
+    .toLocaleDateString("en-US", { month: "short", day: "numeric" })
+    .toUpperCase();
 }
 
 function statusLabel(status: string): { text: string; color: string } {
@@ -41,11 +43,18 @@ function statusLabel(status: string): { text: string; color: string } {
     case "failed":
       return { text: "FAILED", color: "text-red-400 border-red-500" };
     default:
-      return { text: status.toUpperCase(), color: "text-[var(--color-text-muted)] border-[var(--color-border-default)]" };
+      return {
+        text: status.toUpperCase(),
+        color:
+          "text-[var(--color-text-muted)] border-[var(--color-border-default)]",
+      };
   }
 }
 
-export function DocumentsSection({ documents, activeDocumentId }: DocumentsSectionProps) {
+export function DocumentsSection({
+  documents,
+  activeDocumentId,
+}: DocumentsSectionProps) {
   const router = useRouter();
   const uploadDocument = useUploadDocument();
   const [isDragActive, setIsDragActive] = useState(false);
@@ -102,7 +111,9 @@ export function DocumentsSection({ documents, activeDocumentId }: DocumentsSecti
           {recent.map((doc) => {
             const isActive = doc.id === activeDocumentId;
             const status = statusLabel(doc.processingStatus);
-            const sizeMB = (Number(doc.fileSizeBytes) / (1024 * 1024)).toFixed(1);
+            const sizeMB = (Number(doc.fileSizeBytes) / (1024 * 1024)).toFixed(
+              1,
+            );
 
             return (
               <button
@@ -118,18 +129,21 @@ export function DocumentsSection({ documents, activeDocumentId }: DocumentsSecti
                   doc.processingStatus === "completed"
                     ? "cursor-pointer hover:bg-[var(--color-border-subtle)]/30"
                     : "cursor-default",
-                  isActive && "border-l-2 border-l-[var(--color-accent-primary)]",
+                  isActive &&
+                    "border-l-2 border-l-[var(--color-accent-primary)]",
                 )}
               >
                 <FileText className="h-3.5 w-3.5 shrink-0 text-[var(--color-text-muted)]" />
 
                 <div className="min-w-0 flex-1">
-                  <p className={cn(
-                    "truncate text-xs",
-                    isActive
-                      ? "font-bold text-[var(--color-text-primary)]"
-                      : "font-medium text-[var(--color-text-secondary)]",
-                  )}>
+                  <p
+                    className={cn(
+                      "truncate text-xs",
+                      isActive
+                        ? "font-bold text-[var(--color-text-primary)]"
+                        : "font-medium text-[var(--color-text-secondary)]",
+                    )}
+                  >
                     {doc.originalName}
                   </p>
                   <p className="font-mono text-[9px] text-[var(--color-text-muted)]">
@@ -137,10 +151,12 @@ export function DocumentsSection({ documents, activeDocumentId }: DocumentsSecti
                   </p>
                 </div>
 
-                <span className={cn(
-                  "shrink-0 border px-1.5 py-0.5 font-mono text-[9px] font-bold",
-                  status.color,
-                )}>
+                <span
+                  className={cn(
+                    "shrink-0 border px-1.5 py-0.5 font-mono text-[9px] font-bold",
+                    status.color,
+                  )}
+                >
                   {status.text}
                 </span>
               </button>
@@ -149,11 +165,11 @@ export function DocumentsSection({ documents, activeDocumentId }: DocumentsSecti
         </div>
       ) : (
         <div className="px-4 py-3 text-center">
-          <p className="font-mono text-xs text-[var(--color-text-muted)]">No documents yet</p>
+          <p className="font-mono text-xs text-[var(--color-text-muted)]">
+            No documents yet
+          </p>
         </div>
       )}
-
-      {/* Quick upload zone */}
       <label
         htmlFor="home-quick-upload"
         onDrop={(e) => {
@@ -169,10 +185,7 @@ export function DocumentsSection({ documents, activeDocumentId }: DocumentsSecti
         }}
         onDragLeave={() => setIsDragActive(false)}
         className={cn(
-          "flex cursor-pointer items-center justify-center gap-2 border-t border-[var(--color-border-subtle)] px-4 py-2.5 transition-colors",
-          isDragActive
-            ? "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5"
-            : "hover:bg-[var(--color-border-subtle)]/30",
+          "flex cursor-pointer items-center justify-center gap-2 border-t border-[var(--color-border-subtle)] px-4 py-2.5 transition-colors bg-blue-600",
         )}
       >
         <input
@@ -189,9 +202,9 @@ export function DocumentsSection({ documents, activeDocumentId }: DocumentsSecti
         />
         <Upload className={cn(
           "h-3.5 w-3.5",
-          isDragActive ? "text-[var(--color-accent-primary)]" : "text-[var(--color-text-muted)]",
+          isDragActive ? "text-[var(--color-surface)]" : "text-[var(--color-surface)]",
         )} />
-        <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
+        <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-surface)]">
           {isDragActive ? "DROP TO UPLOAD" : "QUICK UPLOAD"}
         </span>
       </label>

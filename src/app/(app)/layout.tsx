@@ -2,8 +2,8 @@
 
 import type { PropsWithChildren } from "react";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { MotionConfig } from "framer-motion";
+import { usePathname, useRouter } from "next/navigation";
+import { motion, MotionConfig } from "framer-motion";
 import { toast } from "sonner";
 import { useAuthStore } from "@/store/auth.store";
 import { useHydrated } from "@/lib/hooks";
@@ -13,6 +13,7 @@ export default function AppLayout({ children }: PropsWithChildren) {
   const token = useAuthStore((state) => state.token);
   const hydrated = useHydrated();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (hydrated && !token) router.replace("/auth");
@@ -43,7 +44,16 @@ export default function AppLayout({ children }: PropsWithChildren) {
 
   return (
     <MotionConfig reducedMotion="user">
-      <AppShell>{children}</AppShell>
+      <AppShell>
+        <motion.div
+          key={pathname}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.15, ease: "easeOut" }}
+        >
+          {children}
+        </motion.div>
+      </AppShell>
     </MotionConfig>
   );
 }

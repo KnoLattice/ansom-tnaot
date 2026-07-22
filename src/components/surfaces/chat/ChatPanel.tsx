@@ -14,11 +14,13 @@ interface ChatPanelProps {
   scope?: ChatScope;
   scopeId?: string;
   title?: string;
+  restricted?: boolean;
   onTokenUpdate?: (chunk: ChatStreamChunk) => void;
   onCreateConversation?: () => Promise<{ id: string; scope: ChatScope; scopeId: string; title: string } | null>;
+  onSelectConversation?: (conversationId: string) => void;
 }
 
-export function ChatPanel({ conversationId, scope: propScope, scopeId: propScopeId, title: propTitle, onTokenUpdate, onCreateConversation }: ChatPanelProps) {
+export function ChatPanel({ conversationId, scope: propScope, scopeId: propScopeId, title: propTitle, restricted, onTokenUpdate, onCreateConversation, onSelectConversation }: ChatPanelProps) {
   const { data, isLoading } = useChatMessages(conversationId);
 
   const scope = data?.conversation.scope ?? propScope;
@@ -150,6 +152,7 @@ export function ChatPanel({ conversationId, scope: propScope, scopeId: propScope
           }
         },
         mentionRefs,
+        restricted,
       );
     },
     [conversationId, scope, scopeId, isStreaming, sendMessage, onTokenUpdate, onCreateConversation, creatingConversation],
@@ -174,6 +177,7 @@ export function ChatPanel({ conversationId, scope: propScope, scopeId: propScope
 
         <ChatInput
           onSend={handleSend}
+          onSelectConversation={onSelectConversation}
           disabled={isStreaming || creatingConversation}
           blocked={isBlocked}
           placeholder="Ask anything..."
@@ -235,6 +239,7 @@ export function ChatPanel({ conversationId, scope: propScope, scopeId: propScope
       {/* Input */}
       <ChatInput
         onSend={handleSend}
+        onSelectConversation={onSelectConversation}
         disabled={isStreaming}
         blocked={isBlocked}
       />

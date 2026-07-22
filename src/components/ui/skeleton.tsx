@@ -6,7 +6,7 @@ function Skeleton({
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("animate-pulse bg-[var(--color-surface)]", className)}
+      className={cn("animate-pulse bg-[var(--color-surface)] transition-opacity duration-150", className)}
       {...props}
     />
   );

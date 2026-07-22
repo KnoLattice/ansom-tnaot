@@ -239,7 +239,7 @@ export function QuestionCard({
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.1 }}
+      transition={{ duration: 0.15 }}
       className="space-y-5 border border-[var(--color-border-default)] bg-[var(--color-surface)] p-5"
       onKeyDown={handleKeyDown}
       onContextMenu={(e) => {
@@ -464,7 +464,7 @@ export function QuestionCard({
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.1 }}
+          transition={{ duration: 0.15 }}
           className={cn(
             "select-none border-l-2 p-4",
             timedOut
@@ -503,7 +503,7 @@ export function QuestionCard({
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.1 }}
+          transition={{ duration: 0.15 }}
           className={cn(
             "select-none border-l-2 p-4",
             feedback.isCorrect

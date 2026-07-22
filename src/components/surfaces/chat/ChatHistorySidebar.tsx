@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FileText, FolderOpen, Lightbulb, Trash2 } from "lucide-react";
+import { FileText, FolderOpen, Lightbulb, PlayCircle, MessageSquare, Trash2 } from "lucide-react";
 import { useChatConversations, useDeleteConversation } from "@/lib/hooks";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Spinner } from "@/components/ui/Spinner";
@@ -18,12 +18,16 @@ const SCOPE_ICONS: Record<ChatScope, typeof FileText> = {
   concept: Lightbulb,
   document: FileText,
   collection: FolderOpen,
+  session: PlayCircle,
+  general: MessageSquare,
 };
 
 const SCOPE_LABELS: Record<ChatScope, string> = {
   concept: "CONCEPTS",
   document: "DOCUMENTS",
   collection: "COLLECTIONS",
+  session: "SESSIONS",
+  general: "GENERAL",
 };
 
 export function ChatHistorySidebar({

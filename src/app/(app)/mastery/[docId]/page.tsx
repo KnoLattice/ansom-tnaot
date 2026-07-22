@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useCallback, useMemo, useState } from "react";
+import { use, useCallback, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { BookOpen, LayoutList, Network } from "lucide-react";
@@ -14,8 +14,8 @@ import { ConceptDetailPanel } from "@/components/surfaces/mastery-map/ConceptDet
 import { GraphView } from "@/components/surfaces/mastery-map/GraphView";
 import { BatchActionBar } from "@/components/surfaces/mastery-map/BatchActionBar";
 import { DocumentSummary } from "@/components/surfaces/mastery-map/DocumentSummary";
-import { ConceptChatPanel } from "@/components/surfaces/chat/ConceptChatPanel";
 import { ChatFAB } from "@/components/surfaces/chat/ChatFAB";
+import { useChatStore } from "@/store/chat.store";
 import { cn } from "@/lib/utils";
 
 type PageTab = "summary" | "mastery";
@@ -83,15 +83,11 @@ function MasteryMapContent({ docId }: { docId: string }) {
     [graphData, selectedNodeId],
   );
 
-  const [chatNodeId, setChatNodeId] = useState<string | null>(null);
-  const [chatNodeTitle, setChatNodeTitle] = useState<string>("");
-  const [chatOpen, setChatOpen] = useState(false);
+  const addPendingMention = useChatStore((s) => s.addPendingMention);
 
   const handleAskAI = useCallback((nodeId: string, nodeTitle: string) => {
-    setChatNodeId(nodeId);
-    setChatNodeTitle(nodeTitle);
-    setChatOpen(true);
-  }, []);
+    addPendingMention({ type: "concept", id: nodeId, label: nodeTitle });
+  }, [addPendingMention]);
 
   const filteredCount = useMemo(() => {
     if (!graphData || filter === "all") return 0;
@@ -228,7 +224,7 @@ function MasteryMapContent({ docId }: { docId: string }) {
           <DistributionStrip nodes={graphData.nodes} />
 
           {/* Main content: view + detail panel */}
-          <div className="flex gap-4" style={{ minHeight: "60vh" }}>
+          <div className="flex gap-4" style={{ minHeight: "60vh", height: '70vh', maxHeight: '70vh' }}>
             <div className="min-w-0 flex-1">
               {view === "graph" ? (
                 <div className="h-[60vh] overflow-hidden border border-[var(--color-border-default)] bg-[var(--color-canvas)]">
@@ -250,8 +246,8 @@ function MasteryMapContent({ docId }: { docId: string }) {
             </div>
 
             {selectedNode && (
-              <div className="hidden w-[360px] shrink-0 lg:block">
-                <div className="sticky top-16" style={{ maxHeight: "calc(100vh - 5rem)" }}>
+              <div className="min-w-[100px] w-[360px] shrink-0 block">
+                <div className="sticky top-16 mt-16" style={{ height: '70vh' }}>
                   <ConceptDetailPanel
                     node={selectedNode}
                     allNodes={graphData.nodes}
@@ -276,18 +272,8 @@ function MasteryMapContent({ docId }: { docId: string }) {
         </>
       )}
 
-      {/* Concept chat slide-over */}
-      {chatNodeId && (
-        <ConceptChatPanel
-          nodeId={chatNodeId}
-          nodeTitle={chatNodeTitle}
-          isOpen={chatOpen}
-          onClose={() => setChatOpen(false)}
-        />
-      )}
-
-      {/* Document-level chat FAB */}
-      {!chatOpen && <ChatFAB scope="document" scopeId={docId} />}
+      {/* Chat FAB */}
+      <ChatFAB scope="document" scopeId={docId} />
     </div>
   );
 }

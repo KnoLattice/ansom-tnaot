@@ -278,7 +278,7 @@ export interface ExplanationResponse {
 }
 
 // ─── Chat ─────────────────────────────────────────────
-export type ChatScope = "concept" | "document" | "collection";
+export type ChatScope = "concept" | "document" | "collection" | "session" | "general";
 
 export interface MentionRef {
   type: "document" | "concept" | "session";

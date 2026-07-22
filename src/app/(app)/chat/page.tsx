@@ -53,7 +53,7 @@ export default function ChatPage() {
   }, [completedDocs, createConversation, router]);
 
   return (
-    <div className="-mx-4 -mt-16 -pb-12 flex h-[80dvh] flex-col pt-12 overflow-hidden">
+    <div className="-mx-4 -mt-16 flex h-[calc(100dvh-3rem)] flex-col overflow-hidden">
       {/* Top bar */}
       <div className="flex shrink-0 items-center gap-3 border-b border-[var(--color-border-default)] px-4 py-2.5">
         <button

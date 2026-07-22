@@ -69,7 +69,7 @@ export function useCreateConversation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (params: { scope: ChatScope; scopeId: string }) => {
+    mutationFn: async (params: { scope: ChatScope; scopeId?: string }) => {
       const { data } = await apiClient.post<ChatConversation>(
         API_ROUTES.CHAT.CONVERSATIONS,
         params,
@@ -106,6 +106,7 @@ export function useSendChatMessage() {
       content: string,
       onToken: (chunk: ChatStreamChunk) => void,
       mentions?: MentionRef[],
+      restricted?: boolean,
     ) => {
       abortRef.current?.abort();
       const controller = new AbortController();
@@ -120,7 +121,11 @@ export function useSendChatMessage() {
           "Content-Type": "application/json",
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-        body: JSON.stringify({ content, mentions: mentions?.length ? mentions : undefined }),
+        body: JSON.stringify({
+          content,
+          mentions: mentions?.length ? mentions : undefined,
+          restricted: restricted || undefined,
+        }),
         signal: controller.signal,
       });
 

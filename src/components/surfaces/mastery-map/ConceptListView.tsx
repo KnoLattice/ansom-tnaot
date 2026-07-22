@@ -114,7 +114,7 @@ export function ConceptListView({
       </div>
 
       {/* Table header */}
-      <div className="grid grid-cols-[1fr_120px_100px_80px] items-center gap-2 border-b border-[var(--color-border-default)] px-4 pb-2 font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
+      <div className="grid grid-cols-[1fr_120px_100px] items-center gap-2 border-b border-[var(--color-border-default)] px-4 pb-2 font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
         <SortButton
           label="Concept"
           sortKey="name"
@@ -146,7 +146,7 @@ export function ConceptListView({
               type="button"
               onClick={() => onSelectNode(node.id)}
               className={cn(
-                "grid w-full grid-cols-[1fr_120px_100px_80px] items-center gap-2 border-b border-l-2 border-[var(--color-border-subtle)] px-4 py-2.5 text-left transition",
+                "grid w-full grid-cols-[1fr_120px_100px] items-center gap-2 border-b border-l-2 border-[var(--color-border-subtle)] px-4 py-2.5 text-left transition",
                 node.id === selectedNodeId
                   ? "border-l-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5"
                   : "border-l-transparent hover:bg-[var(--color-surface-elevated)]",
@@ -174,9 +174,6 @@ export function ConceptListView({
                   band={node.masteryBand ?? getMasteryBand(node.masteryScore)}
                 />
               </div>
-              {/*<span className="font-mono text-[10px] font-bold tabular-nums text-[var(--color-text-muted)]">
-                {node.isLocked ? "LOCKED" : `L${node.graphDepth}`}
-              </span>*/}
             </button>
           ))
         )}
