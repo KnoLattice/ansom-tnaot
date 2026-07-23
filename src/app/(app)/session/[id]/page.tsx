@@ -570,7 +570,7 @@ function SessionContent({ id }: { id: string }) {
       )}
 
       {/* Chat FAB - restricted mode during session */}
-      <ChatFAB scope="general" restricted />
+      <ChatFAB scope="general" restricted pageLabel="Session" />
     </div>
   );
 }

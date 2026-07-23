@@ -14,7 +14,7 @@ import { AttentionCard } from "@/components/surfaces/home/AttentionCard";
 import { PrimaryAction } from "@/components/surfaces/home/PrimaryAction";
 import { LastSessionSummary } from "@/components/surfaces/home/LastSessionSummary";
 import { DocumentsSection } from "@/components/surfaces/home/DocumentsSection";
-import { HomeChatBar } from "@/components/surfaces/chat/HomeChatBar";
+import { ChatFAB } from "@/components/surfaces/chat/ChatFAB";
 
 export default function HomePage() {
   const router = useRouter();
@@ -106,7 +106,7 @@ export default function HomePage() {
 
   // ── Main home ──
   return (
-    <div className="mx-auto max-w-3xl space-y-8">
+    <div className="mx-auto  space-y-8">
       {/* 1. Continuity banner */}
       <ContinuityBanner
         lastSession={lastSession}
@@ -171,8 +171,7 @@ export default function HomePage() {
         activeDocumentId={activeDocumentId}
       />
 
-      {/* Quick chat bar */}
-      <HomeChatBar documents={documents} />
+      <ChatFAB />
     </div>
   );
 }

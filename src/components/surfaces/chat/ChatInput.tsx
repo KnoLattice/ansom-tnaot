@@ -99,18 +99,23 @@ export function ChatInput({
 
   // Consume pending mentions from chat store (e.g., from "Ask AI" on mastery page)
   const consumePendingMentions = useChatStore((s) => s.consumePendingMentions);
+  const pendingMentions = useChatStore((s) => s.pendingMentions);
+  const prevPendingLenRef = useRef(0);
   useEffect(() => {
-    const pending = consumePendingMentions();
-    if (pending.length > 0) {
-      setMentions((prev) => {
-        const existing = new Set(prev.map((m) => `${m.type}:${m.id}`));
-        const newItems = pending.filter(
-          (item) => !existing.has(`${item.type}:${item.id}`),
-        );
-        return [...prev, ...newItems];
-      });
+    if (pendingMentions.length > prevPendingLenRef.current) {
+      const pending = consumePendingMentions();
+      if (pending.length > 0) {
+        setMentions((prev) => {
+          const existing = new Set(prev.map((m) => `${m.type}:${m.id}`));
+          const newItems = pending.filter(
+            (item) => !existing.has(`${item.type}:${item.id}`),
+          );
+          return [...prev, ...newItems];
+        });
+      }
     }
-  }, [consumePendingMentions]);
+    prevPendingLenRef.current = pendingMentions.length;
+  }, [consumePendingMentions, pendingMentions]);
 
   const removeMention = useCallback((mentionId: string) => {
     setMentions((prev) => prev.filter((m) => m.id !== mentionId));

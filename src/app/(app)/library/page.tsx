@@ -297,7 +297,7 @@ export default function LibraryPage() {
       {quota && <StorageQuotaBar quota={quota} />}
 
       {/* Chat FAB */}
-      <ChatFAB />
+      <ChatFAB pageLabel="Library" />
     </div>
   );
 }

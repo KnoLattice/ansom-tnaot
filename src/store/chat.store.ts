@@ -1,6 +1,14 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { MentionRef } from "@/lib/types/api";
+import type { ChatScope, MentionRef } from "@/lib/types/api";
+
+interface ChatDrawerState {
+  isOpen: boolean;
+  scope: ChatScope;
+  scopeId: string | null;
+  width: "normal" | "expanded";
+  pageLabel: string;
+}
 
 interface ChatStore {
   pendingMentions: MentionRef[];
@@ -10,17 +18,32 @@ interface ChatStore {
   setActiveConversation: (scopeKey: string, conversationId: string) => void;
   getActiveConversation: (scopeKey: string) => string | null;
   clearActiveConversations: () => void;
+
+  chatDrawer: ChatDrawerState;
+  openChatDrawer: (scope: ChatScope, scopeId?: string | null, pageLabel?: string) => void;
+  closeChatDrawer: () => void;
+  toggleChatDrawer: () => void;
+  setChatDrawerWidth: (width: "normal" | "expanded") => void;
 }
 
 function getScopeKey(scope: string, scopeId?: string | null): string {
   return scopeId ? `${scope}:${scopeId}` : scope;
 }
 
+const initialDrawerState: ChatDrawerState = {
+  isOpen: false,
+  scope: "general",
+  scopeId: null,
+  width: "normal",
+  pageLabel: "",
+};
+
 export const useChatStore = create<ChatStore>()(
   persist(
     (set, get) => ({
       pendingMentions: [],
       activeConversationIds: {},
+      chatDrawer: initialDrawerState,
 
       addPendingMention: (mention) =>
         set((state) => {
@@ -52,6 +75,35 @@ export const useChatStore = create<ChatStore>()(
 
       clearActiveConversations: () =>
         set({ activeConversationIds: {} }),
+
+      openChatDrawer: (scope, scopeId = null, pageLabel = "") =>
+        set((state) => ({
+          chatDrawer: {
+            ...state.chatDrawer,
+            isOpen: true,
+            scope,
+            scopeId,
+            pageLabel,
+          },
+        })),
+
+      closeChatDrawer: () =>
+        set((state) => ({
+          chatDrawer: { ...state.chatDrawer, isOpen: false },
+        })),
+
+      toggleChatDrawer: () =>
+        set((state) => ({
+          chatDrawer: {
+            ...state.chatDrawer,
+            isOpen: !state.chatDrawer.isOpen,
+          },
+        })),
+
+      setChatDrawerWidth: (width) =>
+        set((state) => ({
+          chatDrawer: { ...state.chatDrawer, width },
+        })),
     }),
     {
       name: "kl_chat_active",

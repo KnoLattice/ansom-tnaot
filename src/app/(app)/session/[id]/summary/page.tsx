@@ -166,7 +166,7 @@ export default function SessionSummaryPage({
       </motion.div>
 
       {/* Chat FAB */}
-      <ChatFAB />
+      <ChatFAB pageLabel="Session Summary" />
     </div>
   );
 }

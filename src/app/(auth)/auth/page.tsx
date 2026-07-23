@@ -1,16 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AuthCard } from "@/components/auth/AuthCard";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { RegisterForm } from "@/components/auth/RegisterForm";
-import { OnboardingFlow } from "@/components/auth/onboarding/OnboardingFlow";
+import { LearningPreferencesOnboarding } from "@/components/auth/onboarding/LearningPreferencesOnboarding";
 import { toast } from "sonner";
+import { Suspense } from "react";
 
-export default function AuthPage() {
-  const [view, setView] = useState<"login" | "register" | "onboarding">("login");
+function AuthPageContent() {
+  const searchParams = useSearchParams();
+  const initialView = searchParams.get("view") === "onboarding" ? "onboarding" : "login";
+  const [view, setView] = useState<"login" | "register" | "onboarding">(initialView as any);
   const [workspaceName, setWorkspaceName] = useState("My Workspace");
   const router = useRouter();
 
@@ -24,18 +27,18 @@ export default function AuthPage() {
         <AuthCard
           title={
             view === "onboarding"
-              ? "Let's personalize your orbit"
+              ? "Let's personalize your learning"
               : "Welcome to Adaptify"
           }
           description={
             view === "onboarding"
-              ? "A few quick notes before we generate your universe."
+              ? "Answer a few quick questions so we can tailor the tutor to you."
               : "Navigate your documents as constellations of mastery."
           }
           accent="Adaptify"
         >
           {view === "onboarding" ? (
-            <OnboardingFlow
+            <LearningPreferencesOnboarding
               defaultWorkspaceName={workspaceName}
               onComplete={() => {
                 router.replace("/");
@@ -83,5 +86,19 @@ export default function AuthPage() {
         </AuthCard>
       </div>
     </div>
+  );
+}
+
+export default function AuthPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-canvas">
+          <div className="text-xs uppercase tracking-[0.4em] text-text-muted">Loading...</div>
+        </div>
+      }
+    >
+      <AuthPageContent />
+    </Suspense>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import type { PropsWithChildren, MouseEvent } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -9,6 +10,7 @@ import {
   LogOut,
   Map,
   PlayCircle,
+  Settings,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -17,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuthStore } from "@/store/auth.store";
+import { useChatStore } from "@/store/chat.store";
 import { useDocuments, useHydrated } from "@/lib/hooks";
 import { useSessionNavGuard } from "@/components/shared/SessionNavGuard";
 import { ThemeSwitcher } from "@/components/layout/ThemeSwitcher";
@@ -25,6 +28,11 @@ import { cn } from "@/lib/utils";
 
 const PdfViewer = dynamic(
   () => import("@/components/surfaces/pdf/PdfViewer").then((m) => m.PdfViewer),
+  { ssr: false },
+);
+
+const ChatDrawer = dynamic(
+  () => import("@/components/surfaces/chat/ChatDrawer").then((m) => m.ChatDrawer),
   { ssr: false },
 );
 
@@ -41,6 +49,18 @@ export function AppShell({ children }: PropsWithChildren) {
   const logout = useAuthStore((s) => s.logout);
   const { activeDocumentId } = useDocuments();
   const { guardNavigation, dialog: sessionGuardDialog } = useSessionNavGuard();
+  const toggleChatDrawer = useChatStore((s) => s.toggleChatDrawer);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        toggleChatDrawer();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [toggleChatDrawer]);
 
   const initials = learner?.fullName
     ?.split(" ")
@@ -160,6 +180,12 @@ export function AppShell({ children }: PropsWithChildren) {
                   My documents
                 </DropdownMenuItem>
                 <DropdownMenuItem
+                  className="font-mono text-xs uppercase tracking-wider"
+                  onClick={() => router.push("/settings")}
+                >
+                  <Settings className="mr-2 h-3.5 w-3.5" /> Settings
+                </DropdownMenuItem>
+                <DropdownMenuItem
                   className="font-mono text-xs uppercase tracking-wider text-red-400"
                   onClick={() => {
                     logout();
@@ -184,6 +210,9 @@ export function AppShell({ children }: PropsWithChildren) {
 
       {/* PDF viewer side panel */}
       <PdfViewer />
+
+      {/* Chat side drawer */}
+      <ChatDrawer />
     </div>
   );
 }

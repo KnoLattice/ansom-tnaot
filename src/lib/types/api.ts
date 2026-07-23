@@ -1,9 +1,18 @@
 // ─── Auth ─────────────────────────────────────────────
+export interface LearningPreferences {
+  teachingStyle: "concept_first" | "example_first" | "guided_discovery";
+  errorResponse: "direct" | "hints" | "gentle";
+  examProximity: "more_than_month" | "one_to_four_weeks" | "less_than_week";
+  sessionLength: "under_20" | "20_to_45" | "hour_or_more";
+  stuckBehavior: "full_explanation" | "hint" | "socratic";
+}
+
 export interface Learner {
   id: string;
   fullName: string;
   email: string;
   avatarUrl?: string | null;
+  learningPreferences?: LearningPreferences | null;
 }
 
 export interface AuthResponse {

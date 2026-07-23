@@ -84,10 +84,12 @@ function MasteryMapContent({ docId }: { docId: string }) {
   );
 
   const addPendingMention = useChatStore((s) => s.addPendingMention);
+  const openChatDrawer = useChatStore((s) => s.openChatDrawer);
 
   const handleAskAI = useCallback((nodeId: string, nodeTitle: string) => {
     addPendingMention({ type: "concept", id: nodeId, label: nodeTitle });
-  }, [addPendingMention]);
+    openChatDrawer("general");
+  }, [addPendingMention, openChatDrawer]);
 
   const filteredCount = useMemo(() => {
     if (!graphData || filter === "all") return 0;
@@ -273,7 +275,9 @@ function MasteryMapContent({ docId }: { docId: string }) {
       )}
 
       {/* Chat FAB */}
-      <ChatFAB scope="document" scopeId={docId} />
+      <ChatFAB
+        scope="general"
+      />
     </div>
   );
 }
