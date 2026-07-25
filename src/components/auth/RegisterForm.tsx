@@ -33,10 +33,11 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
     async (values: RegisterValues) => {
       const success = await registerLearner(values, { redirectTo: false });
       if (success) {
-        onRegistered(values.fullName);
+        sessionStorage.setItem("onboarding_workspace_name", values.fullName);
+        window.location.href = "/auth?view=onboarding";
       }
     },
-    [onRegistered, registerLearner],
+    [registerLearner],
   );
 
   const disabled = isSubmitting || form.formState.isSubmitting;

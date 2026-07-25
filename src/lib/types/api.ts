@@ -356,3 +356,53 @@ export interface APIError {
   message: string;
   error: string;
 }
+
+// ─── Exploration ──────────────────────────────────────
+export type ExplorationStatus =
+  | "searching"
+  | "review"
+  | "processing"
+  | "completed"
+  | "failed";
+
+export type ExplorationResourceStatus =
+  | "pending"
+  | "accepted"
+  | "rejected"
+  | "fetching"
+  | "processing"
+  | "completed"
+  | "failed";
+
+export interface Exploration {
+  id: string;
+  query: string;
+  collectionId: string | null;
+  autoAccept: boolean;
+  status: ExplorationStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ExplorationResource {
+  id: string;
+  explorationId: string;
+  url: string;
+  title: string;
+  description: string;
+  status: ExplorationResourceStatus;
+  documentId: string | null;
+  errorMessage: string | null;
+  createdAt: string;
+}
+
+export interface ExplorationDetail {
+  exploration: Exploration;
+  resources: ExplorationResource[];
+}
+
+export interface ExplorationCreateResponse {
+  exploration: Exploration;
+  resources: ExplorationResource[];
+  message: string;
+}

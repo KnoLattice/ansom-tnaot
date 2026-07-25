@@ -14,7 +14,12 @@ function AuthPageContent() {
   const searchParams = useSearchParams();
   const initialView = searchParams.get("view") === "onboarding" ? "onboarding" : "login";
   const [view, setView] = useState<"login" | "register" | "onboarding">(initialView as any);
-  const [workspaceName, setWorkspaceName] = useState("My Workspace");
+  const [workspaceName, setWorkspaceName] = useState(() => {
+    if (typeof window !== "undefined") {
+      return sessionStorage.getItem("onboarding_workspace_name") || "My Workspace";
+    }
+    return "My Workspace";
+  });
   const router = useRouter();
 
   return (
@@ -41,6 +46,7 @@ function AuthPageContent() {
             <LearningPreferencesOnboarding
               defaultWorkspaceName={workspaceName}
               onComplete={() => {
+                sessionStorage.removeItem("onboarding_workspace_name");
                 router.replace("/");
               }}
             />

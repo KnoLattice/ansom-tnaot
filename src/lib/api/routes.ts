@@ -47,4 +47,13 @@ export const API_ROUTES = {
     TOKEN_USAGE: "/chat/token-usage",
     SESSIONS: "/chat/sessions",
   },
+  EXPLORATION: {
+    ROOT: "/explorations",
+    ONE: (id: string) => `/explorations/${id}`,
+    ACCEPT: (id: string, resourceId: string) =>
+      `/explorations/${id}/resources/${resourceId}/accept`,
+    REJECT: (id: string, resourceId: string) =>
+      `/explorations/${id}/resources/${resourceId}/reject`,
+    ACCEPT_ALL: (id: string) => `/explorations/${id}/accept-all`,
+  },
 } as const;

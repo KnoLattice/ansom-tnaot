@@ -11,6 +11,7 @@ import {
   Map,
   PlayCircle,
   Settings,
+  Sparkles,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -39,6 +40,7 @@ const ChatDrawer = dynamic(
 const NAV_ITEMS = [
   { href: "/", label: "HOME", icon: LayoutGrid },
   { href: "/library", label: "LIB", icon: BookOpen },
+  { href: "/exploration", label: "EXPLORE", icon: Sparkles },
 ] as const;
 
 export function AppShell({ children }: PropsWithChildren) {
