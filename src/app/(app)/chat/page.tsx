@@ -3,10 +3,10 @@
 import { useState, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { PanelLeftOpen } from "lucide-react";
-import { useDocuments, useCreateConversation, useChatConversations } from "@/lib/hooks";
+import { useCreateConversation, useChatConversations } from "@/lib/hooks";
 import { ChatPanel } from "@/components/surfaces/chat/ChatPanel";
 import { ChatHistoryDrawer } from "@/components/surfaces/chat/ChatHistoryDrawer";
-import type { ChatConversation, ChatScope } from "@/lib/types/api";
+import type { ChatConversation } from "@/lib/types/api";
 
 export default function ChatPage() {
   const searchParams = useSearchParams();
@@ -14,7 +14,6 @@ export default function ChatPage() {
   const conversationId = searchParams.get("conversation");
 
   const { data: conversations } = useChatConversations();
-  const { documents } = useDocuments();
   const createConversation = useCreateConversation();
 
   const activeConversation = (conversations ?? []).find(
@@ -22,10 +21,6 @@ export default function ChatPage() {
   ) ?? null;
 
   const [drawerOpen, setDrawerOpen] = useState(false);
-
-  const completedDocs = (documents ?? []).filter(
-    (d) => d.processingStatus === "completed",
-  );
 
   const handleSelectConversation = useCallback(
     (conv: ChatConversation) => {
@@ -40,17 +35,17 @@ export default function ChatPage() {
     router.push("/chat");
   }, [router]);
 
-  const handleCreateConversation = useCallback(async () => {
-    if (completedDocs.length === 0) return null;
+  const handleConversationNotFound = useCallback(() => {
+    router.replace("/chat");
+  }, [router]);
 
-    const doc = completedDocs[0];
+  const handleCreateConversation = useCallback(async () => {
     const conv = await createConversation.mutateAsync({
-      scope: "document" as ChatScope,
-      scopeId: doc.id,
+      scope: "general",
     });
     router.push(`/chat?conversation=${conv.id}`);
     return conv;
-  }, [completedDocs, createConversation, router]);
+  }, [createConversation, router]);
 
   return (
     <div className="-mx-4 -mt-16 flex h-[calc(100dvh-3rem)] flex-col overflow-hidden">
@@ -88,6 +83,7 @@ export default function ChatPage() {
           onCreateConversation={
             !conversationId ? handleCreateConversation : undefined
           }
+          onConversationNotFound={conversationId ? handleConversationNotFound : undefined}
         />
       </div>
     </div>

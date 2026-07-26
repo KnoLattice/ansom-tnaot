@@ -20,7 +20,7 @@ export function ChatDrawer() {
   const createConversation = useCreateConversation();
 
   const isSessionPage = pathname?.startsWith("/session") ?? false;
-  const drawerWidth = width === "expanded" ? 600 : 420;
+  const drawerWidth = width === "expanded" ? 800 : 600;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -42,6 +42,10 @@ export function ChatDrawer() {
 
   const handleSelectConversation = useCallback((convId: string) => {
     setActiveConversation(scopeKey, convId);
+  }, [scopeKey, setActiveConversation]);
+
+  const handleConversationNotFound = useCallback(() => {
+    setActiveConversation(scopeKey, "");
   }, [scopeKey, setActiveConversation]);
 
   const toggleWidth = useCallback(() => {
@@ -115,6 +119,7 @@ export function ChatDrawer() {
               scopeId={scopeId ?? undefined}
               onSelectConversation={handleSelectConversation}
               onCreateConversation={handleCreateConversation}
+              onConversationNotFound={handleConversationNotFound}
               restricted={isSessionPage}
             />
           </motion.div>

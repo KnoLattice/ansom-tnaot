@@ -34,12 +34,20 @@ export function useChatMessages(conversationId: string | null) {
     queryKey: ["chat-messages", conversationId],
     queryFn: async () => {
       if (!conversationId) throw new Error("Missing conversation id");
-      const { data } = await apiClient.get(
-        API_ROUTES.CHAT.CONVERSATION(conversationId),
-      );
-      return data;
+      try {
+        const { data } = await apiClient.get(
+          API_ROUTES.CHAT.CONVERSATION(conversationId),
+        );
+        return data;
+      } catch (err: any) {
+        if (err?.response?.status === 404) {
+          return null;
+        }
+        throw err;
+      }
     },
     enabled: Boolean(conversationId),
+    retry: false,
   });
 }
 

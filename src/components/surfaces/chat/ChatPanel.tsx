@@ -18,10 +18,19 @@ interface ChatPanelProps {
   onTokenUpdate?: (chunk: ChatStreamChunk) => void;
   onCreateConversation?: () => Promise<{ id: string; scope: ChatScope; scopeId: string; title: string } | null>;
   onSelectConversation?: (conversationId: string) => void;
+  onConversationNotFound?: () => void;
 }
 
-export function ChatPanel({ conversationId, scope: propScope, scopeId: propScopeId, title: propTitle, restricted, onTokenUpdate, onCreateConversation, onSelectConversation }: ChatPanelProps) {
-  const { data, isLoading } = useChatMessages(conversationId);
+export function ChatPanel({ conversationId, scope: propScope, scopeId: propScopeId, title: propTitle, restricted, onTokenUpdate, onCreateConversation, onSelectConversation, onConversationNotFound }: ChatPanelProps) {
+  const { data, isLoading, isError } = useChatMessages(conversationId);
+
+  const notFound = conversationId && !isLoading && (isError || data === null);
+
+  useEffect(() => {
+    if (notFound) {
+      onConversationNotFound?.();
+    }
+  }, [notFound, onConversationNotFound]);
 
   const scope = data?.conversation.scope ?? propScope;
   const scopeId = data?.conversation.scopeId ?? propScopeId;
@@ -158,8 +167,8 @@ export function ChatPanel({ conversationId, scope: propScope, scopeId: propScope
     [conversationId, scope, scopeId, isStreaming, sendMessage, onTokenUpdate, onCreateConversation, creatingConversation],
   );
 
-  // No conversation — welcome state
-  if (!conversationId) {
+  // No conversation or stale conversation — welcome state
+  if (!conversationId || notFound) {
     return (
       <div className="flex flex-1 flex-col">
         <TokenBar className="shrink-0" />
