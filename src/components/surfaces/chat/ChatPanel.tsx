@@ -109,10 +109,6 @@ export function ChatPanel({
     return () => abort();
   }, [abort]);
 
-  useEffect(() => {
-    console.log("ChatPanel conversationId:", conversationId);
-  }, [conversationId]);
-
   const [creatingConversation, setCreatingConversation] = useState(false);
 
   const handleSend = useCallback(
@@ -170,6 +166,8 @@ export function ChatPanel({
       setStreamingMessages([userMsg, assistantMsg]);
       setIsStreaming(true);
 
+      console.log("optimistic update");
+
       sendMessage(
         convId,
         content,
@@ -187,6 +185,7 @@ export function ChatPanel({
               return updated;
             });
           } else if (chunk.type === "done") {
+            setStreamingMessages([]);
             setIsStreaming(false);
             onTokenUpdate?.(chunk);
           } else if (chunk.type === "error") {
@@ -251,12 +250,11 @@ export function ChatPanel({
     );
   }
 
-  const messages = data?.messages?.length
-    ? [
-        ...data.messages,
-        ...(isStreaming ? streamingMessages.slice(data.messages.length) : []),
-      ]
-    : streamingMessages;
+  const persistedMessages = data?.messages ?? [];
+
+  const messages = isStreaming
+    ? [...persistedMessages, ...streamingMessages]
+    : persistedMessages;
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
