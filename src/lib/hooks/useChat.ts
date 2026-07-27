@@ -171,7 +171,14 @@ export function useSendChatMessage() {
         }
       }
 
-      queryClient.invalidateQueries({ queryKey: ["chat-messages", conversationId] });
+      try {
+        const { data: freshData } = await apiClient.get(
+          API_ROUTES.CHAT.CONVERSATION(conversationId),
+        );
+        queryClient.setQueryData(["chat-messages", conversationId], freshData);
+      } catch {
+        queryClient.invalidateQueries({ queryKey: ["chat-messages", conversationId] });
+      }
       queryClient.invalidateQueries({ queryKey: ["chat-conversations"] });
       queryClient.invalidateQueries({ queryKey: ["chat-token-usage"] });
     },
