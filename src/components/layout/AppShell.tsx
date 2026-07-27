@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import type { PropsWithChildren, MouseEvent } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -9,6 +10,8 @@ import {
   LogOut,
   Map,
   PlayCircle,
+  Settings,
+  Sparkles,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -17,14 +20,27 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuthStore } from "@/store/auth.store";
+import { useChatStore } from "@/store/chat.store";
 import { useDocuments, useHydrated } from "@/lib/hooks";
 import { useSessionNavGuard } from "@/components/shared/SessionNavGuard";
 import { ThemeSwitcher } from "@/components/layout/ThemeSwitcher";
+import dynamic from "next/dynamic";
 import { cn } from "@/lib/utils";
+
+const PdfViewer = dynamic(
+  () => import("@/components/surfaces/pdf/PdfViewer").then((m) => m.PdfViewer),
+  { ssr: false },
+);
+
+const ChatDrawer = dynamic(
+  () => import("@/components/surfaces/chat/ChatDrawer").then((m) => m.ChatDrawer),
+  { ssr: false },
+);
 
 const NAV_ITEMS = [
   { href: "/", label: "HOME", icon: LayoutGrid },
   { href: "/library", label: "LIB", icon: BookOpen },
+  { href: "/exploration", label: "EXPLORE", icon: Sparkles },
 ] as const;
 
 export function AppShell({ children }: PropsWithChildren) {
@@ -35,6 +51,18 @@ export function AppShell({ children }: PropsWithChildren) {
   const logout = useAuthStore((s) => s.logout);
   const { activeDocumentId } = useDocuments();
   const { guardNavigation, dialog: sessionGuardDialog } = useSessionNavGuard();
+  const toggleChatDrawer = useChatStore((s) => s.toggleChatDrawer);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        toggleChatDrawer();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [toggleChatDrawer]);
 
   const initials = learner?.fullName
     ?.split(" ")
@@ -85,12 +113,12 @@ export function AppShell({ children }: PropsWithChildren) {
               </Link>
             ))}
 
-            {hydrated && activeDocumentId && (
+            {hydrated && (
               <Link
-                href={`/mastery/${activeDocumentId}`}
+                href={activeDocumentId ? `/mastery/${activeDocumentId}` : "/library"}
                 prefetch
                 onClick={(e: MouseEvent) => {
-                  const target = `/mastery/${activeDocumentId}`;
+                  const target = activeDocumentId ? `/mastery/${activeDocumentId}` : "/library";
                   if (!guardNavigation(target)) e.preventDefault();
                 }}
                 className={cn(
@@ -105,7 +133,7 @@ export function AppShell({ children }: PropsWithChildren) {
               </Link>
             )}
 
-            {/*{hydrated && activeDocumentId && (
+            {hydrated && activeDocumentId && (
               <button
                 type="button"
                 onClick={() => {
@@ -122,9 +150,7 @@ export function AppShell({ children }: PropsWithChildren) {
                 <PlayCircle className="h-3.5 w-3.5" />
                 SESSION
               </button>
-
-              // <Button>SESSION</Button>
-            )}*/}
+            )}
           </div>
 
           {/* Theme + User */}
@@ -156,6 +182,12 @@ export function AppShell({ children }: PropsWithChildren) {
                   My documents
                 </DropdownMenuItem>
                 <DropdownMenuItem
+                  className="font-mono text-xs uppercase tracking-wider"
+                  onClick={() => router.push("/settings")}
+                >
+                  <Settings className="mr-2 h-3.5 w-3.5" /> Settings
+                </DropdownMenuItem>
+                <DropdownMenuItem
                   className="font-mono text-xs uppercase tracking-wider text-red-400"
                   onClick={() => {
                     logout();
@@ -177,6 +209,12 @@ export function AppShell({ children }: PropsWithChildren) {
 
       {/* Session navigation guard dialog */}
       {sessionGuardDialog}
+
+      {/* PDF viewer side panel */}
+      <PdfViewer />
+
+      {/* Chat side drawer */}
+      <ChatDrawer />
     </div>
   );
 }

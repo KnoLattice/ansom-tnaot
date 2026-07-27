@@ -1,9 +1,18 @@
 // ─── Auth ─────────────────────────────────────────────
+export interface LearningPreferences {
+  teachingStyle: "concept_first" | "example_first" | "guided_discovery";
+  errorResponse: "direct" | "hints" | "gentle";
+  examProximity: "more_than_month" | "one_to_four_weeks" | "less_than_week";
+  sessionLength: "under_20" | "20_to_45" | "hour_or_more";
+  stuckBehavior: "full_explanation" | "hint" | "socratic";
+}
+
 export interface Learner {
   id: string;
   fullName: string;
   email: string;
   avatarUrl?: string | null;
+  learningPreferences?: LearningPreferences | null;
 }
 
 export interface AuthResponse {
@@ -277,9 +286,123 @@ export interface ExplanationResponse {
   graphDepth: number;
 }
 
+// ─── Chat ─────────────────────────────────────────────
+export type ChatScope = "concept" | "document" | "collection" | "session" | "general";
+
+export interface MentionRef {
+  type: "document" | "concept" | "session";
+  id: string;
+  label: string;
+}
+
+export interface CitationRef {
+  nodeId: string;
+  title: string;
+  sourceSnippets: string | null;
+  documentId: string | null;
+}
+
+export interface ChatConversation {
+  id: string;
+  scope: ChatScope;
+  scopeId: string;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+  messageCount?: number;
+}
+
+export interface ChatMessage {
+  id: string;
+  conversationId: string;
+  role: "user" | "assistant";
+  content: string;
+  mentions: MentionRef[] | null;
+  citations: CitationRef[] | null;
+  createdAt: string;
+}
+
+export interface ChatSession {
+  id: string;
+  startedAt: string;
+  endedAt: string | null;
+  totalInteractions: number;
+  accuracy: number | null;
+  durationMinutes: number | null;
+  documentName: string | null;
+  label: string;
+}
+
+export interface ChatTokenUsage {
+  used: number;
+  cap: number;
+  remaining: number;
+  percentUsed: number;
+}
+
+export interface ChatStreamChunk {
+  type: "token" | "done" | "error";
+  content?: string;
+  usage?: {
+    promptTokens: number;
+    completionTokens: number;
+    totalTokens: number;
+  };
+}
+
 // ─── Errors ───────────────────────────────────────────
 export interface APIError {
   statusCode: number;
   message: string;
   error: string;
+}
+
+// ─── Exploration ──────────────────────────────────────
+export type ExplorationStatus =
+  | "searching"
+  | "review"
+  | "processing"
+  | "completed"
+  | "failed";
+
+export type ExplorationResourceStatus =
+  | "pending"
+  | "accepted"
+  | "rejected"
+  | "fetching"
+  | "processing"
+  | "completed"
+  | "failed";
+
+export interface Exploration {
+  id: string;
+  query: string;
+  collectionId: string | null;
+  autoAccept: boolean;
+  status: ExplorationStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ExplorationResource {
+  id: string;
+  explorationId: string;
+  url: string;
+  title: string;
+  description: string;
+  status: ExplorationResourceStatus;
+  documentId: string | null;
+  errorMessage: string | null;
+  createdAt: string;
+}
+
+export interface ExplorationDetail {
+  exploration: Exploration;
+  resources: ExplorationResource[];
+}
+
+export interface ExplorationCreateResponse {
+  exploration: Exploration;
+  resources: ExplorationResource[];
+  message: string;
 }

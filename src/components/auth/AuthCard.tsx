@@ -20,7 +20,7 @@ export function AuthCard({
   return (
     <div
       className={cn(
-        "relative w-full max-w-md border border-[var(--color-border-default)] bg-[var(--color-surface)] p-8 text-[var(--color-text-primary)]",
+        "relative w-full max-w-md rounded-none border border-[var(--color-border-default)] bg-[var(--color-surface)] p-8 text-[var(--color-text-primary)]",
         className,
       )}
     >
@@ -31,15 +31,15 @@ export function AuthCard({
         <p className="kl-data-label">
           {accent ?? "Adaptify"}
         </p>
-        <h1 className="font-mono text-2xl font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+        <h1 className="font-mono text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
           {title}
         </h1>
         {description && (
-          <p className="text-sm text-[var(--color-text-secondary)]">{description}</p>
+          <p className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-secondary)]">{description}</p>
         )}
       </div>
       <div className="mt-8 space-y-6">{children}</div>
-      {footer && <div className="mt-8 text-center text-sm text-[var(--color-text-secondary)]">{footer}</div>}
+      {footer && <div className="mt-8 text-center font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-secondary)]">{footer}</div>}
     </div>
   );
 }

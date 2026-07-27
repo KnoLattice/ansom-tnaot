@@ -14,6 +14,8 @@ import { ConceptDetailPanel } from "@/components/surfaces/mastery-map/ConceptDet
 import { GraphView } from "@/components/surfaces/mastery-map/GraphView";
 import { BatchActionBar } from "@/components/surfaces/mastery-map/BatchActionBar";
 import { DocumentSummary } from "@/components/surfaces/mastery-map/DocumentSummary";
+import { ChatFAB } from "@/components/surfaces/chat/ChatFAB";
+import { useChatStore } from "@/store/chat.store";
 import { cn } from "@/lib/utils";
 
 type PageTab = "summary" | "mastery";
@@ -80,6 +82,14 @@ function MasteryMapContent({ docId }: { docId: string }) {
     () => graphData?.nodes.find((n) => n.id === selectedNodeId) ?? null,
     [graphData, selectedNodeId],
   );
+
+  const addPendingMention = useChatStore((s) => s.addPendingMention);
+  const openChatDrawer = useChatStore((s) => s.openChatDrawer);
+
+  const handleAskAI = useCallback((nodeId: string, nodeTitle: string) => {
+    addPendingMention({ type: "concept", id: nodeId, label: nodeTitle });
+    openChatDrawer("general");
+  }, [addPendingMention, openChatDrawer]);
 
   const filteredCount = useMemo(() => {
     if (!graphData || filter === "all") return 0;
@@ -216,7 +226,7 @@ function MasteryMapContent({ docId }: { docId: string }) {
           <DistributionStrip nodes={graphData.nodes} />
 
           {/* Main content: view + detail panel */}
-          <div className="flex gap-4" style={{ minHeight: "60vh" }}>
+          <div className="flex gap-4" style={{ minHeight: "60vh", height: '70vh', maxHeight: '70vh' }}>
             <div className="min-w-0 flex-1">
               {view === "graph" ? (
                 <div className="h-[60vh] overflow-hidden border border-[var(--color-border-default)] bg-[var(--color-canvas)]">
@@ -238,8 +248,8 @@ function MasteryMapContent({ docId }: { docId: string }) {
             </div>
 
             {selectedNode && (
-              <div className="hidden w-[360px] shrink-0 lg:block">
-                <div className="sticky top-16" style={{ maxHeight: "calc(100vh - 5rem)" }}>
+              <div className="min-w-[100px] w-[360px] shrink-0 block">
+                <div className="sticky top-16 mt-16" style={{ height: '70vh' }}>
                   <ConceptDetailPanel
                     node={selectedNode}
                     allNodes={graphData.nodes}
@@ -247,6 +257,7 @@ function MasteryMapContent({ docId }: { docId: string }) {
                     onSelectNode={setSelectedNodeId}
                     onClose={() => setSelectedNodeId(null)}
                     documentId={docId}
+                    onAskAI={handleAskAI}
                   />
                 </div>
               </div>
@@ -262,6 +273,11 @@ function MasteryMapContent({ docId }: { docId: string }) {
           )}
         </>
       )}
+
+      {/* Chat FAB */}
+      <ChatFAB
+        scope="general"
+      />
     </div>
   );
 }
