@@ -86,6 +86,7 @@ export function ChatPanel({ conversationId, scope: propScope, scopeId: propScope
         setCreatingConversation(true);
         try {
           const conv = await onCreateConversation();
+          console.log("CONV", conv)
           if (!conv) {
             setCreatingConversation(false);
             return;
@@ -164,11 +165,11 @@ export function ChatPanel({ conversationId, scope: propScope, scopeId: propScope
         restricted,
       );
     },
-    [conversationId, scope, scopeId, isStreaming, sendMessage, onTokenUpdate, onCreateConversation, creatingConversation],
+    [isStreaming, conversationId, scope, scopeId, sendMessage, restricted, onCreateConversation, creatingConversation, onTokenUpdate],
   );
 
   // No conversation or stale conversation — welcome state
-  if (!conversationId || notFound) {
+  if ((!conversationId || notFound) && !isStreaming) {
     return (
       <div className="flex flex-1 flex-col">
         <TokenBar className="shrink-0" />
@@ -195,7 +196,7 @@ export function ChatPanel({ conversationId, scope: propScope, scopeId: propScope
     );
   }
 
-  if (isLoading) {
+  if (isLoading && !isStreaming) {
     return (
       <div className="flex flex-1 flex-col">
         <TokenBar className="shrink-0" />
