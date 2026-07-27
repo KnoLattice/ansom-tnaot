@@ -11,11 +11,23 @@ import { Button } from "@/components/ui/button";
 
 export function ChatDrawer() {
   const pathname = usePathname();
-  const { chatDrawer, closeChatDrawer, setChatDrawerWidth, getActiveConversation, setActiveConversation } = useChatStore();
+
+  // Subscribe only to the pieces of state we need
+  const chatDrawer = useChatStore((state) => state.chatDrawer);
+  const closeChatDrawer = useChatStore((state) => state.closeChatDrawer);
+  const setChatDrawerWidth = useChatStore((state) => state.setChatDrawerWidth);
+  const setActiveConversation = useChatStore(
+    (state) => state.setActiveConversation,
+  );
+
   const { isOpen, width, scope, scopeId, pageLabel } = chatDrawer;
 
   const scopeKey = getScopeKey(scope, scopeId);
-  const conversationId = getActiveConversation(scopeKey);
+
+  // Reactive subscription to the active conversation
+  const conversationId = useChatStore(
+    (state) => state.activeConversationIds[scopeKey] ?? null,
+  );
 
   const createConversation = useCreateConversation();
 
@@ -24,10 +36,15 @@ export function ChatDrawer() {
 
   useEffect(() => {
     if (!isOpen) return;
+
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeChatDrawer();
+      if (e.key === "Escape") {
+        closeChatDrawer();
+      }
     };
+
     window.addEventListener("keydown", handleKey);
+
     return () => window.removeEventListener("keydown", handleKey);
   }, [isOpen, closeChatDrawer]);
 
@@ -36,13 +53,18 @@ export function ChatDrawer() {
       scope,
       scopeId: scopeId ?? undefined,
     });
+
     setActiveConversation(scopeKey, conv.id);
+
     return conv;
   }, [createConversation, scope, scopeId, scopeKey, setActiveConversation]);
 
-  const handleSelectConversation = useCallback((convId: string) => {
-    setActiveConversation(scopeKey, convId);
-  }, [scopeKey, setActiveConversation]);
+  const handleSelectConversation = useCallback(
+    (convId: string) => {
+      setActiveConversation(scopeKey, convId);
+    },
+    [scopeKey, setActiveConversation],
+  );
 
   const handleConversationNotFound = useCallback(() => {
     setActiveConversation(scopeKey, "");
@@ -52,11 +74,12 @@ export function ChatDrawer() {
     setChatDrawerWidth(width === "expanded" ? "normal" : "expanded");
   }, [width, setChatDrawerWidth]);
 
+  console.log("ChatDrawer conversationId:", conversationId);
+
   return (
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -66,7 +89,6 @@ export function ChatDrawer() {
             onClick={closeChatDrawer}
           />
 
-          {/* Drawer */}
           <motion.div
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
@@ -75,7 +97,6 @@ export function ChatDrawer() {
             className="fixed inset-y-0 right-0 z-50 flex flex-col border-l border-[var(--color-border-default)] bg-[var(--color-canvas)]"
             style={{ width: drawerWidth }}
           >
-            {/* Header */}
             <div className="flex shrink-0 items-center justify-between border-b border-[var(--color-border-default)] px-4 py-3">
               <div className="flex flex-col">
                 <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
@@ -87,6 +108,7 @@ export function ChatDrawer() {
                   </p>
                 )}
               </div>
+
               <div className="flex items-center gap-1">
                 <Button
                   variant="ghost"
@@ -101,6 +123,7 @@ export function ChatDrawer() {
                     <Minimize2 className="h-3 w-3" />
                   )}
                 </Button>
+
                 <Button
                   variant="ghost"
                   size="icon"
@@ -112,13 +135,12 @@ export function ChatDrawer() {
               </div>
             </div>
 
-            {/* Chat content */}
             <ChatPanel
               conversationId={conversationId}
               scope={scope}
               scopeId={scopeId ?? undefined}
-              onSelectConversation={handleSelectConversation}
               onCreateConversation={handleCreateConversation}
+              onSelectConversation={handleSelectConversation}
               onConversationNotFound={handleConversationNotFound}
               restricted={isSessionPage}
             />

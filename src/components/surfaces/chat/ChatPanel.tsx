@@ -2,12 +2,22 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { MessageSquare, Sparkles } from "lucide-react";
-import { useChatMessages, useSendChatMessage, useChatTokenUsage } from "@/lib/hooks";
+import {
+  useChatMessages,
+  useSendChatMessage,
+  useChatTokenUsage,
+} from "@/lib/hooks";
 import { ChatMessage } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
 import { TokenBar } from "./TokenBar";
 import { Spinner } from "@/components/ui/Spinner";
-import type { ChatMessage as ChatMessageType, ChatStreamChunk, ChatScope, MentionRef } from "@/lib/types/api";
+import type {
+  ChatMessage as ChatMessageType,
+  ChatStreamChunk,
+  ChatScope,
+  MentionRef,
+} from "@/lib/types/api";
+import { getScopeKey, useChatStore } from "@/store/chat.store";
 
 interface ChatPanelProps {
   conversationId: string | null;
@@ -16,15 +26,32 @@ interface ChatPanelProps {
   title?: string;
   restricted?: boolean;
   onTokenUpdate?: (chunk: ChatStreamChunk) => void;
-  onCreateConversation?: () => Promise<{ id: string; scope: ChatScope; scopeId: string; title: string } | null>;
+  onCreateConversation?: () => Promise<{
+    id: string;
+    scope: ChatScope;
+    scopeId: string;
+    title: string;
+  } | null>;
   onSelectConversation?: (conversationId: string) => void;
   onConversationNotFound?: () => void;
 }
 
-export function ChatPanel({ conversationId, scope: propScope, scopeId: propScopeId, title: propTitle, restricted, onTokenUpdate, onCreateConversation, onSelectConversation, onConversationNotFound }: ChatPanelProps) {
+export function ChatPanel({
+  conversationId,
+  scope: propScope,
+  scopeId: propScopeId,
+  title: propTitle,
+  restricted,
+  onTokenUpdate,
+  onCreateConversation,
+  onSelectConversation,
+  onConversationNotFound,
+}: ChatPanelProps) {
   const { data, isLoading, isError } = useChatMessages(conversationId);
 
   const notFound = conversationId && !isLoading && (isError || data === null);
+
+
 
   useEffect(() => {
     if (notFound) {
@@ -37,8 +64,11 @@ export function ChatPanel({ conversationId, scope: propScope, scopeId: propScope
   const title = data?.conversation.title ?? propTitle;
   const { mutate: sendMessage, abort } = useSendChatMessage();
   const { data: tokenUsage } = useChatTokenUsage();
+  const { setActiveConversation } = useChatStore();
 
-  const [streamingMessages, setStreamingMessages] = useState<ChatMessageType[]>([]);
+  const [streamingMessages, setStreamingMessages] = useState<ChatMessageType[]>(
+    [],
+  );
   const [isStreaming, setIsStreaming] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -53,7 +83,9 @@ export function ChatPanel({ conversationId, scope: propScope, scopeId: propScope
 
   const scrollToBottom = useCallback((smooth = true) => {
     if (bottomRef.current) {
-      bottomRef.current.scrollIntoView({ behavior: smooth ? "smooth" : "instant" });
+      bottomRef.current.scrollIntoView({
+        behavior: smooth ? "smooth" : "instant",
+      });
     }
   }, []);
 
@@ -65,11 +97,21 @@ export function ChatPanel({ conversationId, scope: propScope, scopeId: propScope
     if (isNearBottom()) {
       scrollToBottom(!isStreaming);
     }
-  }, [data?.messages, streamingMessages, scrollToBottom, isStreaming, isNearBottom]);
+  }, [
+    data?.messages,
+    streamingMessages,
+    scrollToBottom,
+    isStreaming,
+    isNearBottom,
+  ]);
 
   useEffect(() => {
     return () => abort();
   }, [abort]);
+
+  useEffect(() => {
+    console.log("ChatPanel conversationId:", conversationId);
+  }, [conversationId]);
 
   const [creatingConversation, setCreatingConversation] = useState(false);
 
@@ -86,7 +128,7 @@ export function ChatPanel({ conversationId, scope: propScope, scopeId: propScope
         setCreatingConversation(true);
         try {
           const conv = await onCreateConversation();
-          console.log("CONV", conv)
+          console.log("CONV", conv);
           if (!conv) {
             setCreatingConversation(false);
             return;
@@ -94,6 +136,8 @@ export function ChatPanel({ conversationId, scope: propScope, scopeId: propScope
           convId = conv.id;
           convScope = conv.scope;
           convScopeId = conv.scopeId;
+          const scopeKey = getScopeKey(convScope, convScopeId);
+          setActiveConversation(scopeKey, conv.id);
         } catch {
           setCreatingConversation(false);
           return;
@@ -144,7 +188,6 @@ export function ChatPanel({ conversationId, scope: propScope, scopeId: propScope
             });
           } else if (chunk.type === "done") {
             setIsStreaming(false);
-            setStreamingMessages([]);
             onTokenUpdate?.(chunk);
           } else if (chunk.type === "error") {
             setIsStreaming(false);
@@ -165,7 +208,7 @@ export function ChatPanel({ conversationId, scope: propScope, scopeId: propScope
         restricted,
       );
     },
-    [isStreaming, conversationId, scope, scopeId, sendMessage, restricted, onCreateConversation, creatingConversation, onTokenUpdate],
+    [isStreaming, conversationId, scope, scopeId, sendMessage, restricted, onCreateConversation, creatingConversation, setActiveConversation, onTokenUpdate],
   );
 
   // No conversation or stale conversation — welcome state
@@ -181,7 +224,8 @@ export function ChatPanel({ conversationId, scope: propScope, scopeId: propScope
             What would you like to know?
           </h1>
           <p className="max-w-md font-mono text-[11px] text-[var(--color-text-muted)]">
-            Chat about your study material, attach documents or quiz sessions for context
+            Chat about your study material, attach documents or quiz sessions
+            for context
           </p>
         </div>
 
@@ -207,7 +251,12 @@ export function ChatPanel({ conversationId, scope: propScope, scopeId: propScope
     );
   }
 
-  const messages = [...(data?.messages ?? []), ...streamingMessages];
+  const messages = data?.messages?.length
+    ? [
+        ...data.messages,
+        ...(isStreaming ? streamingMessages.slice(data.messages.length) : []),
+      ]
+    : streamingMessages;
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
