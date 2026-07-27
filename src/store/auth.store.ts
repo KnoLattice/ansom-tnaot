@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import type { Learner } from "@/lib/types/api";
+import { useChatStore } from "./chat.store";
 
 const STORAGE_KEY = "kl_access_token";
 
@@ -38,6 +39,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   hydrateLearner: (learner) => set({ learner }),
   logout: () => {
     set({ token: null, learner: null });
+    useChatStore.getState().clearActiveConversations();
     if (typeof window !== "undefined") {
       window.localStorage.removeItem(STORAGE_KEY);
     }
