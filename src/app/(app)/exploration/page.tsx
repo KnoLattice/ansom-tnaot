@@ -1,18 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Spinner } from "@/components/ui/Spinner";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   useExplorations,
   useExploration,
@@ -23,13 +13,11 @@ import {
   useDeleteExploration,
 } from "@/lib/hooks";
 import type {
-  Exploration,
   ExplorationResource,
   ExplorationResourceStatus,
 } from "@/lib/types/api";
 import { cn } from "@/lib/utils";
 import {
-  Search,
   ExternalLink,
   Check,
   X,
@@ -64,14 +52,14 @@ function SearchForm({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="e.g. Introduction to Machine Learning, Data Structures in Python..."
-          className="h-11 border-border-default bg-white/5 text-text-primary placeholder:text-text-muted"
+          className="h-11 rounded-none"
           disabled={createExploration.isPending}
         />
       </div>
       <Button
         type="submit"
         disabled={!query.trim() || createExploration.isPending}
-        className="h-11 px-6 bg-accent-primary text-white shadow-glow hover:opacity-90"
+        className="h-11 px-6 rounded-none bg-[var(--color-accent-primary)] text-white shadow-glow hover:brightness-110"
       >
         {createExploration.isPending ? (
           <Loader2 className="h-4 w-4 animate-spin" />
@@ -90,7 +78,7 @@ function SearchForm({
 
 const STATUS_STYLES: Record<ExplorationResourceStatus, string> = {
   pending:
-    "border-border-default bg-white/5",
+    "border-[var(--color-border-default)] bg-[var(--color-surface)]",
   accepted:
     "border-blue-500/40 bg-blue-500/5",
   rejected:
@@ -106,13 +94,13 @@ const STATUS_STYLES: Record<ExplorationResourceStatus, string> = {
 };
 
 const STATUS_BADGE: Record<ExplorationResourceStatus, { label: string; className: string }> = {
-  pending: { label: "Pending", className: "bg-white/10 text-text-muted" },
-  accepted: { label: "Accepted", className: "bg-blue-500/20 text-blue-400" },
-  rejected: { label: "Rejected", className: "bg-red-500/20 text-red-400" },
-  fetching: { label: "Fetching", className: "bg-amber-500/20 text-amber-400" },
-  processing: { label: "Processing", className: "bg-amber-500/20 text-amber-400" },
-  completed: { label: "Completed", className: "bg-emerald-500/20 text-emerald-400" },
-  failed: { label: "Failed", className: "bg-red-500/20 text-red-400" },
+  pending: { label: "Pending", className: "text-[var(--color-text-muted)] border-[var(--color-border-default)]" },
+  accepted: { label: "Accepted", className: "text-blue-400 border-blue-500" },
+  rejected: { label: "Rejected", className: "text-red-400 border-red-500" },
+  fetching: { label: "Fetching", className: "text-amber-400 border-amber-500" },
+  processing: { label: "Processing", className: "text-amber-400 border-amber-500" },
+  completed: { label: "Completed", className: "text-emerald-400 border-emerald-500" },
+  failed: { label: "Failed", className: "text-red-400 border-red-500" },
 };
 
 function ResourceCard({
@@ -130,19 +118,19 @@ function ResourceCard({
   return (
     <div
       className={cn(
-        "rounded-xl border p-4 transition-all",
+        "rounded-none border p-4 transition-all",
         STATUS_STYLES[resource.status],
       )}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 mb-1">
-            <h4 className="text-sm font-medium text-text-primary truncate">
+            <h4 className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-primary)] truncate">
               {resource.title}
             </h4>
             <span
               className={cn(
-                "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium",
+                "inline-flex items-center shrink-0 border px-1.5 py-0.5 font-mono text-[9px] font-bold",
                 badge.className,
               )}
             >
@@ -153,16 +141,16 @@ function ResourceCard({
             href={resource.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs text-accent-primary hover:underline"
+            className="inline-flex items-center gap-1 font-mono text-[10px] text-[var(--color-accent-primary)] hover:underline"
           >
             <ExternalLink className="h-3 w-3" />
             {new URL(resource.url).hostname}
           </a>
-          <p className="mt-2 text-xs text-text-secondary line-clamp-2">
+          <p className="mt-2 font-mono text-[10px] text-[var(--color-text-secondary)] line-clamp-2">
             {resource.description}
           </p>
           {resource.errorMessage && (
-            <p className="mt-2 text-xs text-red-400">
+            <p className="mt-2 font-mono text-[10px] text-red-400">
               Error: {resource.errorMessage}
             </p>
           )}
@@ -227,14 +215,14 @@ function ExplorationDetail({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-6 w-6 animate-spin text-text-muted" />
+        <Loader2 className="h-6 w-6 animate-spin text-[var(--color-text-muted)]" />
       </div>
     );
   }
 
   if (!data) {
     return (
-      <div className="py-20 text-center text-text-muted">
+      <div className="py-20 text-center font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
         Exploration not found.
       </div>
     );
@@ -253,15 +241,15 @@ function ExplorationDetail({
           variant="ghost"
           size="sm"
           onClick={onBack}
-          className="text-text-muted hover:text-text-primary"
+          className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
         >
           ← Back
         </Button>
         <div className="flex-1">
-          <h2 className="text-lg font-medium text-text-primary">
+          <h2 className="font-mono text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
             {exploration.query}
           </h2>
-          <p className="text-xs text-text-muted">
+          <p className="font-mono text-[9px] uppercase tracking-wider text-[var(--color-text-muted)]">
             {resources.length} resources found
             {completedCount > 0 && ` · ${completedCount} processed`}
           </p>
@@ -280,7 +268,7 @@ function ExplorationDetail({
       </div>
 
       {(isSearching || isProcessing) && (
-        <div className="flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/5 p-3 text-xs text-amber-400">
+        <div className="flex items-center gap-2 rounded-none border border-amber-500/30 bg-amber-500/5 p-3 font-mono text-[10px] uppercase tracking-wider text-amber-400">
           <Loader2 className="h-4 w-4 animate-spin" />
           {isSearching
             ? "AI is searching the web for resources..."
@@ -292,7 +280,7 @@ function ExplorationDetail({
         <Button
           onClick={() => acceptAll.mutate(explorationId)}
           disabled={acceptAll.isPending}
-          className="w-full bg-accent-primary text-white shadow-glow hover:opacity-90"
+          className="w-full rounded-none bg-[var(--color-accent-primary)] text-white shadow-glow hover:brightness-110"
         >
           <Check className="mr-2 h-4 w-4" />
           Accept All ({pendingCount} pending)
@@ -310,7 +298,7 @@ function ExplorationDetail({
       </div>
 
       {resources.length === 0 && !isSearching && (
-        <div className="py-16 text-center text-text-muted text-sm">
+        <div className="py-16 text-center font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
           No resources found for this query.
         </div>
       )}
@@ -330,7 +318,7 @@ function ExplorationList({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-6 w-6 animate-spin text-text-muted" />
+        <Loader2 className="h-6 w-6 animate-spin text-[var(--color-text-muted)]" />
       </div>
     );
   }
@@ -338,8 +326,8 @@ function ExplorationList({
   if (!explorations || explorations.length === 0) {
     return (
       <div className="py-20 text-center">
-        <Sparkles className="mx-auto h-8 w-8 text-text-muted mb-3" />
-        <p className="text-sm text-text-muted">
+        <Sparkles className="mx-auto h-8 w-8 text-[var(--color-text-muted)] mb-3" />
+        <p className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
           No explorations yet. Search for a topic above to get started.
         </p>
       </div>
@@ -347,11 +335,11 @@ function ExplorationList({
   }
 
   const statusColor: Record<string, string> = {
-    searching: "bg-amber-500/20 text-amber-400",
-    review: "bg-blue-500/20 text-blue-400",
-    processing: "bg-blue-500/20 text-blue-400",
-    completed: "bg-emerald-500/20 text-emerald-400",
-    failed: "bg-red-500/20 text-red-400",
+    searching: "text-amber-400 border-amber-500",
+    review: "text-blue-400 border-blue-500",
+    processing: "text-blue-400 border-blue-500",
+    completed: "text-emerald-400 border-emerald-500",
+    failed: "text-red-400 border-red-500",
   };
 
   return (
@@ -360,27 +348,27 @@ function ExplorationList({
         <button
           key={exp.id}
           onClick={() => onSelect(exp.id)}
-          className="w-full rounded-xl border border-border-default bg-white/5 p-4 text-left transition-all hover:border-white/20 hover:bg-white/10"
+          className="w-full rounded-none border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4 text-left transition-all hover:border-[var(--color-accent-primary)]/50"
         >
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
-              <p className="text-sm font-medium text-text-primary truncate">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-primary)] truncate">
                 {exp.query}
               </p>
-              <p className="text-xs text-text-muted">
+              <p className="font-mono text-[9px] uppercase tracking-wider text-[var(--color-text-muted)]">
                 {new Date(exp.createdAt).toLocaleDateString()}
               </p>
             </div>
             <div className="flex items-center gap-2 shrink-0">
               <span
                 className={cn(
-                  "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium",
-                  statusColor[exp.status] ?? "bg-white/10 text-text-muted",
+                  "inline-flex items-center shrink-0 border px-1.5 py-0.5 font-mono text-[9px] font-bold",
+                  statusColor[exp.status] ?? "text-[var(--color-text-muted)] border-[var(--color-border-default)]",
                 )}
               >
                 {exp.status}
               </span>
-              <ArrowRight className="h-4 w-4 text-text-muted" />
+              <ArrowRight className="h-4 w-4 text-[var(--color-text-muted)]" />
             </div>
           </div>
         </button>
@@ -397,8 +385,11 @@ export default function ExplorationPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold text-text-primary">Explore</h1>
-        <p className="text-sm text-text-muted mt-1">
+        <p className="kl-data-label">Discover</p>
+        <h1 className="font-mono text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+          Explore
+        </h1>
+        <p className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mt-1">
           AI-powered web search to discover learning resources on any topic.
         </p>
       </div>

@@ -156,17 +156,17 @@ export function LearningPreferencesOnboarding({
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-2 text-xs uppercase tracking-[0.4em] text-text-muted">
+      <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.4em] text-[var(--color-text-muted)]">
         <span>Onboarding</span>
-        <span className="h-px flex-1 bg-border-default" />
+        <span className="h-px flex-1 bg-[var(--color-border-default)]" />
         <span>
           {stepIndex + 1} / {totalSteps}
         </span>
       </div>
 
-      <div className="h-1 w-full overflow-hidden rounded-full bg-white/10">
+      <div className="h-1 w-full overflow-hidden rounded-none bg-[var(--color-border-subtle)]">
         <motion.div
-          className="h-full rounded-full bg-accent-primary"
+          className="h-full rounded-none bg-[var(--color-accent-primary)]"
           initial={false}
           animate={{ width: `${progress}%` }}
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
@@ -186,19 +186,19 @@ export function LearningPreferencesOnboarding({
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               className="space-y-4"
             >
-              <p className="text-lg text-text-primary">Name your workspace</p>
-              <p className="text-sm text-text-muted">
+              <p className="font-mono text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)]">Name your workspace</p>
+              <p className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
                 This label personalizes your experience.
               </p>
               <div className="space-y-2">
-                <Label htmlFor="workspace" className="text-text-secondary">
+                <Label htmlFor="workspace" className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-secondary)]">
                   Workspace name
                 </Label>
                 <Input
                   id="workspace"
                   value={workspaceName}
                   onChange={(e) => setWorkspaceName(e.target.value)}
-                  className="border-border-default bg-white/5 text-text-primary placeholder:text-text-muted"
+                  className="rounded-none"
                 />
               </div>
             </motion.div>
@@ -213,7 +213,7 @@ export function LearningPreferencesOnboarding({
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               className="space-y-4"
             >
-              <p className="text-lg text-text-primary">{question!.question}</p>
+              <p className="font-mono text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)]">{question!.question}</p>
               <div className="space-y-2">
                 {question!.options.map((opt) => (
                   <button
@@ -222,14 +222,14 @@ export function LearningPreferencesOnboarding({
                       setPreferences((p) => ({ ...p, [question!.key]: opt.value }))
                     }
                     className={cn(
-                      "w-full rounded-2xl border p-4 text-left transition-all",
+                      "w-full rounded-none border p-4 text-left transition-all",
                       preferences[question!.key] === opt.value
-                        ? "border-accent-primary bg-accent-primary/10"
-                        : "border-border-default bg-white/5 hover:border-white/20",
+                        ? "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/10"
+                        : "border-[var(--color-border-default)] bg-[var(--color-surface)] hover:border-[var(--color-accent-primary)]/50",
                     )}
                   >
-                    <p className="text-sm font-medium text-text-primary">{opt.label}</p>
-                    <p className="text-xs text-text-secondary">{opt.description}</p>
+                    <p className="font-mono text-xs font-bold uppercase tracking-wider text-[var(--color-text-primary)]">{opt.label}</p>
+                    <p className="font-mono text-[10px] text-[var(--color-text-secondary)]">{opt.description}</p>
                   </button>
                 ))}
               </div>
@@ -242,7 +242,7 @@ export function LearningPreferencesOnboarding({
         <Button
           onClick={goNext}
           disabled={saving}
-          className="w-full bg-accent-primary text-white shadow-glow hover:opacity-90"
+          className="w-full rounded-none bg-[var(--color-accent-primary)] text-white shadow-glow hover:brightness-110"
         >
           {saving
             ? "Saving..."
@@ -255,14 +255,14 @@ export function LearningPreferencesOnboarding({
             <Button
               onClick={goBack}
               variant="ghost"
-              className="flex-1 text-text-muted hover:text-text-primary"
+              className="flex-1 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
             >
               Back
             </Button>
             <Button
               onClick={skip}
               variant="ghost"
-              className="flex-1 text-text-muted hover:text-text-primary"
+              className="flex-1 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
             >
               Skip
             </Button>
@@ -272,7 +272,7 @@ export function LearningPreferencesOnboarding({
           <Button
             onClick={skip}
             variant="ghost"
-            className="w-full text-text-muted hover:text-text-primary"
+            className="w-full text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
           >
             Skip
           </Button>
