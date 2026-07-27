@@ -110,7 +110,7 @@ export function ProcessingPipeline({
         <div className="h-2 overflow-hidden rounded-full bg-[var(--color-border-subtle)]">
           <div
             className={cn(
-              "h-full rounded-full transition-all duration-500",
+              "h-full rounded-full transition-all duration-300",
               isComplete ? "bg-green-500" : "bg-accent-primary",
             )}
             style={{

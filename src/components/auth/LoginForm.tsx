@@ -42,7 +42,7 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
       <Button
         type="button"
         variant="outline"
-        className="w-full bg-white hover:bg-gray-100 border-gray-300 text-black hover:text-black font-medium"
+        className="w-full rounded-none bg-[var(--color-surface)] hover:bg-[var(--color-surface-elevated)] border-[var(--color-border-default)] text-[var(--color-text-primary)] hover:text-[var(--color-text-primary)] font-medium"
         onClick={googleLogin}
       >
         <GoogleIcon className="w-5 h-5 mr-2" />
@@ -54,27 +54,27 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
         <div className="h-px flex-1 bg-[var(--color-border-default)]" />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="email" className="text-text-secondary">
+        <Label htmlFor="email" className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-secondary)]">
           Email
         </Label>
         <Input
           id="email"
           type="email"
           placeholder="Enter email"
-          className="rounded-md"
+          className="rounded-none"
           {...form.register("email")}
         />
         <FieldError message={form.formState.errors.email?.message} />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="password" className="text-text-secondary">
+        <Label htmlFor="password" className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-secondary)]">
           Password
         </Label>
         <Input
           id="password"
           type="password"
           placeholder="Enter password"
-          className="rounded-md"
+          className="rounded-none"
           {...form.register("password")}
         />
         <div className="flex items-center justify-between text-xs text-[var(--color-accent-primary)]">
@@ -93,7 +93,7 @@ export function LoginForm({ onForgotPassword }: LoginFormProps) {
       <Button
         type="submit"
         disabled={disabled}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white border rounded-md font-medium shadow-sm"
+        className="w-full rounded-none bg-[var(--color-accent-primary)] text-white hover:brightness-110 border border-[var(--color-accent-primary)] font-medium shadow-sm"
       >
         LOG IN
       </Button>

@@ -3,6 +3,7 @@
 import dayjs from "dayjs";
 import {
   ArrowRightLeft,
+  Check,
   FolderPlus,
   Map,
   MoreVertical,
@@ -38,8 +39,10 @@ interface CollectionDocumentRowProps {
   document: Document;
   collections: Collection[];
   currentCollectionId: string | null;
+  isActive: boolean;
   onDelete: (id: string) => void;
   onAssign: (documentId: string, collectionId: string | null) => void;
+  onSetActive: (id: string) => void;
   onViewMastery: (documentId: string) => void;
 }
 
@@ -54,8 +57,10 @@ export function CollectionDocumentRow({
   document,
   collections,
   currentCollectionId,
+  isActive,
   onDelete,
   onAssign,
+  onSetActive,
   onViewMastery,
 }: CollectionDocumentRowProps) {
   const isReady = document.processingStatus === "completed";
@@ -104,6 +109,15 @@ export function CollectionDocumentRow({
             align="end"
             className="w-52 border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]"
           >
+            {!isActive && (
+              <DropdownMenuItem
+                className="font-mono text-xs uppercase tracking-wider"
+                onClick={() => onSetActive(document.id)}
+              >
+                <Check className="mr-2 h-4 w-4" />
+                Set active
+              </DropdownMenuItem>
+            )}
             {isReady && (
               <DropdownMenuItem
                 className="font-mono text-xs uppercase tracking-wider"

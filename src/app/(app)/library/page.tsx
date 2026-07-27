@@ -10,6 +10,7 @@ import { ActiveDocumentStrip } from "@/components/surfaces/library/ActiveDocumen
 import { CollectionRow } from "@/components/surfaces/library/CollectionRow";
 import { CollectionDocumentRow } from "@/components/surfaces/library/CollectionDocumentRow";
 import { StorageQuotaBar } from "@/components/library/StorageQuotaBar";
+import { ChatFAB } from "@/components/surfaces/chat/ChatFAB";
 import { useDocuments, useCollections } from "@/lib/hooks";
 import { apiClient } from "@/lib/api/client";
 import { API_ROUTES } from "@/lib/api/routes";
@@ -110,6 +111,14 @@ export default function LibraryPage() {
       );
     },
     [assignDocument],
+  );
+
+  const handleSetActiveDocument = useCallback(
+    (documentId: string) => {
+      setActiveDocument(documentId);
+      toast.success("Active document updated");
+    },
+    [setActiveDocument],
   );
 
   const handleViewMastery = useCallback(
@@ -244,10 +253,12 @@ export default function LibraryPage() {
               collection={col}
               documents={collectionDocs.get(col.id) ?? []}
               allCollections={collections}
+              activeDocumentId={activeDocumentId}
               onRename={handleRenameCollection}
               onDelete={handleDeleteCollection}
               onDeleteDocument={handleDeleteDocument}
               onAssignDocument={handleAssignDocument}
+              onSetActiveDocument={handleSetActiveDocument}
               onViewMastery={handleViewMastery}
             />
           ))}
@@ -268,8 +279,10 @@ export default function LibraryPage() {
                       document={doc}
                       collections={collections}
                       currentCollectionId={null}
+                      isActive={doc.id === activeDocumentId}
                       onDelete={handleDeleteDocument}
                       onAssign={handleAssignDocument}
+                      onSetActive={handleSetActiveDocument}
                       onViewMastery={handleViewMastery}
                     />
                   ))}
@@ -282,6 +295,9 @@ export default function LibraryPage() {
 
       {/* Storage quota */}
       {quota && <StorageQuotaBar quota={quota} />}
+
+      {/* Chat FAB */}
+      <ChatFAB pageLabel="Library" />
     </div>
   );
 }

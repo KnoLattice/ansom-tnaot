@@ -1,43 +1,52 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AuthCard } from "@/components/auth/AuthCard";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { RegisterForm } from "@/components/auth/RegisterForm";
-import { OnboardingFlow } from "@/components/auth/onboarding/OnboardingFlow";
+import { LearningPreferencesOnboarding } from "@/components/auth/onboarding/LearningPreferencesOnboarding";
 import { toast } from "sonner";
+import { Suspense } from "react";
 
-export default function AuthPage() {
-  const [view, setView] = useState<"login" | "register" | "onboarding">("login");
-  const [workspaceName, setWorkspaceName] = useState("My Workspace");
+function AuthPageContent() {
+  const searchParams = useSearchParams();
+  const initialView = searchParams.get("view") === "onboarding" ? "onboarding" : "login";
+  const [view, setView] = useState<"login" | "register" | "onboarding">(initialView as any);
+  const [workspaceName, setWorkspaceName] = useState(() => {
+    if (typeof window !== "undefined") {
+      return sessionStorage.getItem("onboarding_workspace_name") || "My Workspace";
+    }
+    return "My Workspace";
+  });
   const router = useRouter();
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-canvas">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--glow-accent),_transparent_55%)]" />
       <div className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col items-center justify-center px-4 py-12">
-        <p className="mb-6 text-xs uppercase tracking-[0.4em] text-text-muted">
+        <p className="mb-6 font-mono text-[10px] uppercase tracking-[0.4em] text-[var(--color-text-muted)]">
           Knowledge as a living universe
         </p>
         <AuthCard
           title={
             view === "onboarding"
-              ? "Let's personalize your orbit"
+              ? "Let's personalize your learning"
               : "Welcome to Adaptify"
           }
           description={
             view === "onboarding"
-              ? "A few quick notes before we generate your universe."
+              ? "Answer a few quick questions so we can tailor the tutor to you."
               : "Navigate your documents as constellations of mastery."
           }
           accent="Adaptify"
         >
           {view === "onboarding" ? (
-            <OnboardingFlow
+            <LearningPreferencesOnboarding
               defaultWorkspaceName={workspaceName}
               onComplete={() => {
+                sessionStorage.removeItem("onboarding_workspace_name");
                 router.replace("/");
               }}
             />
@@ -49,16 +58,16 @@ export default function AuthPage() {
                 setView(value as "login" | "register" | "onboarding")
               }
             >
-              <TabsList className="grid grid-cols-2 rounded-full bg-gray p-[3px] h-9">
+              <TabsList className="grid grid-cols-2 rounded-none bg-[var(--color-surface)] border border-[var(--color-border-default)] p-0 h-10">
                 <TabsTrigger
                   value="login"
-                  className="h-full rounded-full text-[#64748b] data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-sm font-medium"
+                  className="h-full rounded-none font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)] data-[state=active]:bg-[var(--color-accent-primary)] data-[state=active]:text-white data-[state=active]:shadow-sm"
                 >
                   Login
                 </TabsTrigger>
                 <TabsTrigger
                   value="register"
-                  className="h-full rounded-full text-[#64748b] data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-sm font-medium"
+                  className="h-full rounded-none font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)] data-[state=active]:bg-[var(--color-accent-primary)] data-[state=active]:text-white data-[state=active]:shadow-sm"
                 >
                   Register
                 </TabsTrigger>
@@ -83,5 +92,19 @@ export default function AuthPage() {
         </AuthCard>
       </div>
     </div>
+  );
+}
+
+export default function AuthPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-canvas">
+          <div className="text-xs uppercase tracking-[0.4em] text-text-muted">Loading...</div>
+        </div>
+      }
+    >
+      <AuthPageContent />
+    </Suspense>
   );
 }

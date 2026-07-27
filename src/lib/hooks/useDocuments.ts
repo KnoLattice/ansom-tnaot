@@ -42,6 +42,7 @@ export function useDocuments() {
 
   useEffect(() => {
     if (!hasHydrated) return;
+    if (query.isLoading) return;
 
     if (!documents.length) {
       setActiveDocument(null);
@@ -60,6 +61,7 @@ export function useDocuments() {
     }
   }, [
     hasHydrated,
+    query.isLoading,
     activeDocumentId,
     documents,
     setActiveDocument,
@@ -138,6 +140,21 @@ export function useDocumentSummary(documentId: string | null) {
     },
     enabled: Boolean(documentId),
     staleTime: 5 * 60 * 1000,
+  });
+}
+
+export function useDocumentDownload(documentId: string | null) {
+  return useQuery<{ url: string; filename: string }>({
+    queryKey: ["document-download", documentId],
+    queryFn: async () => {
+      if (!documentId) throw new Error("Missing document id");
+      const { data } = await apiClient.get<{ url: string; filename: string }>(
+        API_ROUTES.DOCUMENTS.DOWNLOAD(documentId),
+      );
+      return data;
+    },
+    enabled: Boolean(documentId),
+    staleTime: 55 * 60 * 1000,
   });
 }
 

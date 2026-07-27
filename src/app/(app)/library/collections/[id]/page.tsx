@@ -15,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { useCollectionMastery } from "@/lib/hooks";
+import { useCollectionMastery, useCollections } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 
 dayjs.extend(relativeTime);
@@ -44,8 +44,10 @@ export default function CollectionDetailPage({
   const { id: collectionId } = use(params);
   const router = useRouter();
   const { data: mastery, isLoading } = useCollectionMastery(collectionId);
+  const { collections } = useCollections();
   const [sortBy, setSortBy] = useState<SortKey>("mastery-asc");
-  const [isEditingName, setIsEditingName] = useState(false);
+
+  const collectionName = collections.find((c) => c.id === collectionId)?.name ?? "Collection";
 
   const hasCompleteDocuments = useMemo(
     () =>
@@ -132,10 +134,7 @@ export default function CollectionDetailPage({
       {/* Collection name */}
       <div>
         <h1 className="font-mono text-lg font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
-          {/* We show the collection name from the first document's context; the
-              mastery endpoint doesn't return the name directly, but we can get
-              it from the URL and local state. For now, show a generic heading. */}
-          Collection
+          {collectionName}
         </h1>
       </div>
 

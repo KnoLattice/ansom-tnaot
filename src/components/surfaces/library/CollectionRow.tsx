@@ -36,10 +36,12 @@ interface CollectionRowProps {
   collection: Collection;
   documents: Document[];
   allCollections: Collection[];
+  activeDocumentId: string | null;
   onRename: (id: string, name: string) => void;
   onDelete: (id: string) => void;
   onDeleteDocument: (id: string) => void;
   onAssignDocument: (documentId: string, collectionId: string | null) => void;
+  onSetActiveDocument: (id: string) => void;
   onViewMastery: (documentId: string) => void;
 }
 
@@ -47,10 +49,12 @@ export function CollectionRow({
   collection,
   documents,
   allCollections,
+  activeDocumentId,
   onRename,
   onDelete,
   onDeleteDocument,
   onAssignDocument,
+  onSetActiveDocument,
   onViewMastery,
 }: CollectionRowProps) {
   const router = useRouter();
@@ -214,8 +218,10 @@ export function CollectionRow({
                   document={doc}
                   collections={allCollections}
                   currentCollectionId={collection.id}
+                  isActive={doc.id === activeDocumentId}
                   onDelete={onDeleteDocument}
                   onAssign={onAssignDocument}
+                  onSetActive={onSetActiveDocument}
                   onViewMastery={onViewMastery}
                 />
               ))}
