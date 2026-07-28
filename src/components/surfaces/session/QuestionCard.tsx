@@ -200,7 +200,7 @@ export function QuestionCard({
             value={blankAnswer}
             onChange={(e) => setBlankAnswer(e.target.value)}
             disabled={hasFeedback}
-            className="border-[var(--color-border-default)] bg-[var(--color-canvas)] font-mono text-sm"
+            className="border-[var(--color-border-subtle)] bg-[var(--color-canvas)] text-sm"
             onKeyDown={(e) => {
               if (e.key === "Enter" && !hasFeedback) handleBlankSubmit();
             }}
@@ -222,7 +222,7 @@ export function QuestionCard({
             if (e.key === "Enter" && !hasFeedback) handleBlankSubmit();
           }}
           className={cn(
-            "mx-1 inline-block w-40 border-b-2 bg-transparent px-1 py-0.5 text-center font-mono text-sm outline-none transition",
+            "mx-1 inline-block w-40 border-b-2 bg-transparent px-1 py-0.5 text-center text-sm outline-none transition",
             hasFeedback && feedback?.isCorrect
               ? "border-green-500 text-green-400"
               : hasFeedback && !feedback?.isCorrect
@@ -257,10 +257,10 @@ export function QuestionCard({
         {!hasAnswered && (
           <div
             className={cn(
-              "ml-auto flex items-center gap-1.5 border px-2 py-1 font-mono text-[10px] font-bold tabular-nums",
+              "ml-auto flex items-center gap-1.5 border px-2 py-1 text-xs font-semibold tabular-nums",
               timeLeft <= 10
                 ? "border-red-500 bg-red-500/10 text-red-400"
-                : "border-[var(--color-border-default)] text-[var(--color-text-secondary)]",
+                : "border-[var(--color-border-subtle)] text-[var(--color-text-secondary)]",
             )}
           >
             <Clock className="h-3 w-3" />
@@ -332,7 +332,7 @@ export function QuestionCard({
                   <XIcon className="h-4 w-4 shrink-0 text-red-400" />
                 )}
                 <span>
-                  <span className="font-mono text-xs font-bold text-[var(--color-text-muted)]">
+                  <span className="text-xs font-semibold text-[var(--color-text-muted)]">
                     {option.label}.
                   </span>{" "}
                   <span className="text-[var(--color-text-primary)]">
@@ -365,7 +365,7 @@ export function QuestionCard({
                 onClick={() => handleTFClick(value)}
                 disabled={hasAnswered}
                 className={cn(
-                  "flex flex-1 items-center justify-center gap-2 border rounded-md py-4 font-mono text-sm font-bold uppercase tracking-wider transition",
+                  "flex flex-1 items-center justify-center gap-2 border rounded-md py-4 text-sm font-semibold transition",
                   !hasAnswered &&
                     !isSelected &&
                     "border-[var(--color-border-subtle)] bg-[var(--color-canvas)] hover:border-[var(--color-border-default)] hover:bg-[var(--color-surface-elevated)]",
@@ -400,7 +400,7 @@ export function QuestionCard({
           value={shortAnswer}
           onChange={(e) => setShortAnswer(e.target.value)}
           disabled={hasFeedback}
-          className="min-h-[100px] border-[var(--color-border-default)] bg-[var(--color-canvas)] font-mono text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]"
+          className="min-h-[100px] border-[var(--color-border-subtle)] bg-[var(--color-canvas)] text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]"
         />
       )}
 
@@ -476,7 +476,7 @@ export function QuestionCard({
         >
           <p
             className={cn(
-              "font-mono text-xs font-bold uppercase tracking-wider",
+              "text-xs font-semibold",
               timedOut
                 ? "text-yellow-400"
                 : localCorrect
@@ -484,7 +484,7 @@ export function QuestionCard({
                   : "text-red-400",
             )}
           >
-            {timedOut ? "TIME EXPIRED" : localCorrect ? "CORRECT" : "INCORRECT"}
+              {timedOut ? "Time Expired" : localCorrect ? "Correct" : "Incorrect"}
           </p>
 
           {(timedOut || !localCorrect) && (
@@ -513,11 +513,11 @@ export function QuestionCard({
         >
           <p
             className={cn(
-              "font-mono text-xs font-bold uppercase tracking-wider",
+              "text-xs font-semibold",
               feedback.isCorrect ? "text-green-400" : "text-red-400",
             )}
           >
-            {feedback.isCorrect ? "CORRECT" : "INCORRECT"}
+            {feedback.isCorrect ? "Correct" : "Incorrect"}
           </p>
           <p className="mt-2 text-sm leading-relaxed text-[var(--color-text-secondary)]">
             {feedback.evaluatorFeedback}
@@ -543,7 +543,7 @@ export function QuestionCard({
               disabled={isSubmitting}
               className="rounded-md"
             >
-              {isSubmitting ? <Spinner size="sm" /> : "CONTINUE"}
+              {isSubmitting ? <Spinner size="sm" /> : "Continue"}
             </Button>
           )
         ) : qType === "fill_blank" ? (
@@ -553,11 +553,11 @@ export function QuestionCard({
               onClick={handleBlankSubmit}
               className="rounded-md"
             >
-              {isSubmitting ? <Spinner size="sm" /> : "SUBMIT"}
+              {isSubmitting ? <Spinner size="sm" /> : "Submit"}
             </Button>
           ) : (
             <Button onClick={onContinue} className="rounded-md">
-              CONTINUE
+              Continue
             </Button>
           )
         ) : qType === "matching" ? (
@@ -567,11 +567,11 @@ export function QuestionCard({
               onClick={handleMatchSubmit}
               className="rounded-md"
             >
-              {isSubmitting ? <Spinner size="sm" /> : "SUBMIT"}
+              {isSubmitting ? <Spinner size="sm" /> : "Submit"}
             </Button>
           ) : (
             <Button onClick={onContinue} className="rounded-md">
-              CONTINUE
+              Continue
             </Button>
           )
         ) : /* short_answer */
@@ -581,11 +581,11 @@ export function QuestionCard({
             onClick={handleShortAnswerSubmit}
             className="rounded-md"
           >
-            {isSubmitting ? <Spinner size="sm" /> : "SUBMIT"}
+            {isSubmitting ? <Spinner size="sm" /> : "Submit"}
           </Button>
         ) : (
-          <Button onClick={onContinue} className="rounded-md">
-            CONTINUE
+            <Button onClick={onContinue} className="rounded-md">
+              Continue
           </Button>
         )}
       </div>

@@ -59,12 +59,12 @@ export function ConceptChatPanel({
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed bottom-0 right-0 top-0 z-50 flex w-[480px] flex-col border-l border-[var(--color-border-default)] bg-[var(--color-canvas)]"
+            className="fixed bottom-0 right-0 top-0 z-50 flex w-[480px] flex-col border-l border-[var(--color-border-subtle)] bg-[var(--color-canvas)]"
           >
-            <div className="flex items-center justify-between border-b border-[var(--color-border-default)] px-4 py-3">
+            <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] px-4 py-3">
               <div className="min-w-0 flex-1">
-                <p className="kl-data-label">ASK AI</p>
-                <p className="mt-0.5 truncate font-mono text-[10px] text-[var(--color-text-secondary)]">
+                <p className="kl-data-label">Ask AI</p>
+                <p className="mt-0.5 truncate text-xs text-[var(--color-text-secondary)]">
                   {nodeTitle}
                 </p>
               </div>

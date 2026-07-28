@@ -24,7 +24,7 @@ export function Spinner({ size = "md", label, className }: SpinnerProps) {
       />
       {showLabel && (
         <span className="kl-data-label animate-pulse">
-          {label || "LOADING"}
+          {label || "Loading"}
         </span>
       )}
     </div>

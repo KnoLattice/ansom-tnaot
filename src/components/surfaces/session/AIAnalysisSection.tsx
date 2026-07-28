@@ -63,7 +63,7 @@ function NodeCard({
       </p>
       {node.strengths.length > 0 && (
         <div>
-          <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-green-400">
+          <p className="text-xs font-semibold text-green-400">
             Strengths
           </p>
           <ul className="mt-1 space-y-0.5">
@@ -80,7 +80,7 @@ function NodeCard({
       )}
       {node.weaknesses.length > 0 && (
         <div>
-          <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-amber-400">
+          <p className="text-xs font-semibold text-amber-400">
             Needs Work
           </p>
           <ul className="mt-1 space-y-0.5">
@@ -97,14 +97,14 @@ function NodeCard({
       )}
       {node.sourceReferences && node.sourceReferences.length > 0 && (
         <div>
-          <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-blue-400 flex items-center gap-1.5">
+          <p className="text-xs font-semibold text-blue-400 flex items-center gap-1.5">
             <BookOpen className="h-3 w-3" />
             Review This Section
           </p>
           <div className="mt-2 space-y-3">
             {node.sourceReferences.map((ref, i) => (
               <div key={i} className="space-y-1.5">
-                <p className="font-mono text-[9px] text-[var(--color-text-muted)]">
+                <p className="text-xs text-[var(--color-text-muted)]">
                   {ref.documentName}
                 </p>
                 {ref.excerpt && (
@@ -130,7 +130,7 @@ function LoadingSkeleton() {
       <div className="flex items-center gap-2">
         <Spinner size="sm" label={false} />
         <p className="kl-data-label animate-pulse">
-          GENERATING AI ANALYSIS...
+          Generating AI analysis...
         </p>
       </div>
       <div className="space-y-2">
@@ -164,7 +164,7 @@ export function AIAnalysisSection({ sessionId }: AIAnalysisSectionProps) {
   if (error || !analysis) {
     return (
       <div className="rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-4">
-        <p className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
+        <p className="text-xs text-[var(--color-text-muted)]">
           AI analysis unavailable
         </p>
       </div>
@@ -229,7 +229,7 @@ export function AIAnalysisSection({ sessionId }: AIAnalysisSectionProps) {
                   key={type}
                   className="rounded border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] px-3 py-2"
                 >
-                  <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-[var(--color-accent-primary)]">
+                  <p className="text-xs font-semibold text-[var(--color-accent-primary)]">
                     {type.replace("_", " ")}
                   </p>
                   <p className="mt-1 text-xs leading-relaxed text-[var(--color-text-secondary)]">
@@ -278,7 +278,7 @@ export function AIAnalysisSection({ sessionId }: AIAnalysisSectionProps) {
           <ol className="space-y-2">
             {analysis.improvementPlan.map((item, i) => (
               <li key={i} className="flex gap-3 text-xs leading-relaxed text-[var(--color-text-secondary)]">
-                <span className="font-mono font-bold text-[var(--color-accent-primary)]">
+                <span className="font-semibold text-[var(--color-accent-primary)]">
                   {i + 1}.
                 </span>
                 <span>{item}</span>

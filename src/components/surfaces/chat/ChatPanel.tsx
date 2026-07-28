@@ -216,13 +216,13 @@ export function ChatPanel({
       <div className="flex flex-1 flex-col">
         <TokenBar className="shrink-0" />
         <div className="flex flex-1 flex-col items-center justify-center px-6 pb-32 text-center">
-          <div className="mb-6 flex h-12 w-12 items-center justify-center border border-[var(--color-border-default)] bg-[var(--color-surface)]">
+          <div className="mb-6 flex h-12 w-12 items-center justify-center border border-[var(--color-border-subtle)] bg-[var(--color-surface)]">
             <Sparkles className="h-6 w-6 text-[var(--color-accent-primary)]" />
           </div>
-          <h1 className="mb-2 font-mono text-lg font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+          <h1 className="mb-2 text-lg font-bold text-[var(--color-text-primary)]">
             What would you like to know?
           </h1>
-          <p className="max-w-md font-mono text-[11px] text-[var(--color-text-muted)]">
+          <p className="max-w-md text-xs text-[var(--color-text-muted)]">
             Chat about your study material, attach documents or quiz sessions
             for context
           </p>
@@ -260,12 +260,12 @@ export function ChatPanel({
     <div className="flex flex-1 flex-col overflow-hidden">
       {/* Header */}
       {title && (
-        <div className="shrink-0 border-b border-[var(--color-border-default)] px-4 py-3">
-          <p className="font-mono text-xs font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+        <div className="shrink-0 border-b border-[var(--color-border-subtle)] px-4 py-3">
+          <p className="text-xs font-bold text-[var(--color-text-primary)]">
             {title}
           </p>
           {scope && (
-            <p className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
+            <p className="text-xs text-[var(--color-text-muted)]">
               {scope}
             </p>
           )}
@@ -279,7 +279,7 @@ export function ChatPanel({
         {messages.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center text-center">
             <MessageSquare className="h-8 w-8 text-[var(--color-text-muted)]" />
-            <p className="mt-3 font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
+            <p className="mt-3 text-xs text-[var(--color-text-muted)]">
               Start a conversation
             </p>
           </div>

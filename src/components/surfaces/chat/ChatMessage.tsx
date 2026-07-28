@@ -25,7 +25,7 @@ const MENTION_ICONS = {
 function MentionBadge({ mention }: { mention: MentionRef }) {
   const Icon = MENTION_ICONS[mention.type];
   return (
-    <span className="inline-flex items-center gap-1 rounded border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] px-1.5 py-0.5 text-[10px] text-[var(--color-text-muted)] mr-1 mb-0.5">
+    <span className="inline-flex items-center gap-1 rounded border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] px-1.5 py-0.5 text-xs text-[var(--color-text-muted)] mr-1 mb-0.5">
       <Icon className="h-2.5 w-2.5" />
       <span className="text-[var(--color-text-muted)]">@{mention.type}</span>
       <span className="font-medium text-[var(--color-text-secondary)]">{mention.label}</span>
@@ -55,7 +55,7 @@ function CitationBadge({ citation }: { citation: CitationRef }) {
         }
       }}
       title={citation.sourceSnippets ?? citation.title}
-      className="inline-flex items-center gap-1 rounded border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--color-text-muted)] transition-colors no-underline hover:border-[var(--color-accent-primary)] hover:text-[var(--color-accent-primary)] cursor-pointer select-none"
+      className="inline-flex items-center gap-1 rounded border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] px-1.5 py-0.5 text-xs font-medium text-[var(--color-text-muted)] transition-colors no-underline hover:border-[var(--color-accent-primary)] hover:text-[var(--color-accent-primary)] cursor-pointer select-none"
     >
       <BookOpen className="h-2.5 w-2.5" />
       <span>{citation.title}</span>
@@ -114,7 +114,7 @@ export const ChatMessage = memo(function ChatMessage({ message }: ChatMessagePro
         if (citation) {
           return <CitationBadge citation={citation} />;
         }
-        return <span className="text-[var(--color-text-muted)] text-[10px]">[NODE:{nodeId}]</span>;
+        return <span className="text-[var(--color-text-muted)] text-xs">[NODE:{nodeId}]</span>;
       }
       return <a href={href}>{children}</a>;
     },
@@ -142,7 +142,7 @@ export const ChatMessage = memo(function ChatMessage({ message }: ChatMessagePro
       )}
     >
       {!isUser && (
-        <div className="flex h-6 w-6 shrink-0 items-center justify-center border border-[var(--color-border-default)] bg-[var(--color-surface)]">
+        <div className="flex h-6 w-6 shrink-0 items-center justify-center border border-[var(--color-border-subtle)] bg-[var(--color-surface)]">
           <Bot className="h-3.5 w-3.5 text-[var(--color-accent-primary)]" />
         </div>
       )}
@@ -152,7 +152,7 @@ export const ChatMessage = memo(function ChatMessage({ message }: ChatMessagePro
           "max-w-[80%] rounded-md border px-3 py-2 text-sm leading-relaxed",
           isUser
             ? "border-[var(--color-accent-primary)]/30 bg-[var(--color-accent-primary)]/10 text-[var(--color-text-primary)]"
-            : "border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-secondary)]",
+            : "border-[var(--color-border-subtle)] bg-[var(--color-surface)] text-[var(--color-text-secondary)]",
         )}
       >
         {isUser && message.mentions && message.mentions.length > 0 && (
@@ -179,7 +179,7 @@ export const ChatMessage = memo(function ChatMessage({ message }: ChatMessagePro
       </div>
 
       {isUser && (
-        <div className="flex h-6 w-6 shrink-0 items-center justify-center border border-[var(--color-border-default)] bg-[var(--color-surface)]">
+        <div className="flex h-6 w-6 shrink-0 items-center justify-center border border-[var(--color-border-subtle)] bg-[var(--color-surface)]">
           <User className="h-3.5 w-3.5 text-[var(--color-text-muted)]" />
         </div>
       )}

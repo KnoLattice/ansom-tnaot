@@ -6,20 +6,20 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--color-accent-primary)] disabled:pointer-events-none disabled:opacity-40 font-mono uppercase tracking-wider",
+  "inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-primary)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-40 kl-press-scale",
   {
     variants: {
       variant: {
         default:
-          "bg-[var(--color-accent-primary)] text-white hover:brightness-110 border border-[var(--color-accent-primary)]",
+          "bg-[var(--color-accent-primary)] text-white hover:brightness-110 border border-[var(--color-accent-primary)] rounded-[var(--radius-button)] kl-elevation-1 hover:kl-elevation-2",
         destructive:
-          "bg-[var(--color-destructive)] text-white hover:brightness-90 border border-[var(--color-destructive)]",
+          "bg-red-600 text-white hover:brightness-90 border border-red-600 rounded-[var(--radius-button)]",
         outline:
-          "border rounded-md border-[var(--color-accent-primary)] bg-transparent text-[var(--color-accent-primary)] hover:bg-[var(--color-accent-primary)]/10 hover:border-[var(--color-accent-primary)]",
+          "border border-[var(--color-accent-primary)] bg-transparent text-[var(--color-accent-primary)] hover:bg-[var(--color-accent-primary)]/10 rounded-[var(--radius-button)]",
         secondary:
-          "bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)] border border-[var(--color-border-default)] hover:bg-[var(--color-border-default)]",
+          "bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)] border border-[var(--color-border-subtle)] hover:bg-[var(--color-border-default)] rounded-[var(--radius-button)]",
         ghost:
-          "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-elevated)]",
+          "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-elevated)] rounded-[var(--radius-button)]",
         link: "text-[var(--color-accent-primary)] underline-offset-4 hover:underline",
       },
       size: {

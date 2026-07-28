@@ -97,13 +97,13 @@ export function ChatDrawer() {
             className="fixed inset-y-0 right-0 z-50 flex flex-col border-l border-[var(--color-border-default)] bg-[var(--color-canvas)]"
             style={{ width: drawerWidth }}
           >
-            <div className="flex shrink-0 items-center justify-between border-b border-[var(--color-border-default)] px-4 py-3">
+            <div className="flex shrink-0 items-center justify-between border-b border-[var(--color-border-subtle)] px-5 py-3">
               <div className="flex flex-col">
-                <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
-                  CHAT
+                <p className="font-display text-base font-semibold text-[var(--color-text-primary)]">
+                  Chat
                 </p>
                 {pageLabel && (
-                  <p className="font-mono text-[9px] uppercase tracking-wider text-[var(--color-text-muted)]">
+                  <p className="text-xs text-[var(--color-text-muted)]">
                     {pageLabel}
                   </p>
                 )}

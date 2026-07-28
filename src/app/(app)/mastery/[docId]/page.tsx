@@ -117,8 +117,8 @@ function MasteryMapContent({ docId }: { docId: string }) {
   if (error || !graphData) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
-        <p className="font-mono text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
-          UNABLE TO LOAD GRAPH
+        <p className="font-bold text-sm text-[var(--color-text-primary)]">
+          Unable to Load Graph
         </p>
         <p className="mt-2 text-sm text-[var(--color-text-secondary)]">
           {error instanceof Error ? error.message : "This document may not be processed yet."}
@@ -128,7 +128,7 @@ function MasteryMapContent({ docId }: { docId: string }) {
           className="mt-4"
           onClick={() => router.push("/library")}
         >
-          BACK TO LIBRARY
+          Back to Library
         </Button>
       </div>
     );
@@ -141,10 +141,10 @@ function MasteryMapContent({ docId }: { docId: string }) {
       {/* Header */}
       <div className="flex flex-col gap-4 border-b border-[var(--color-border-default)] pb-4 md:flex-row md:items-start md:justify-between">
         <div>
-          <h1 className="font-mono text-lg font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+          <h1 className="font-bold text-lg text-[var(--color-text-primary)]">
             {tab === "summary" ? "Lesson Summary" : "Mastery Map"}
           </h1>
-          <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
+          <p className="mt-0.5 text-xs text-[var(--color-text-muted)]">
             {docName.replace(/\.[^.]+$/, "")} {tab === "mastery" ? `/ ${graphData.nodes.length} concepts` : ""}
           </p>
         </div>
@@ -156,27 +156,27 @@ function MasteryMapContent({ docId }: { docId: string }) {
               type="button"
               onClick={() => setTab("summary")}
               className={cn(
-                "flex items-center gap-2 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition border-r rounded-l-lg border-[var(--color-border-default)]",
+                "flex items-center gap-2 px-4 py-2 text-xs font-bold transition border-r rounded-l-lg border-[var(--color-border-default)]",
                 tab === "summary"
                   ? "bg-[var(--color-accent-primary)] text-white"
                   : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
               )}
             >
               <BookOpen className="h-3.5 w-3.5" />
-              SUMMARY
+              Summary
             </button>
             <button
               type="button"
               onClick={() => setTab("mastery")}
               className={cn(
-                "flex items-center gap-2 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition rounded-r-lg border-[var(--color-border-default)]",
+                "flex items-center gap-2 px-4 py-2 text-xs font-bold transition rounded-r-lg border-[var(--color-border-default)]",
                 tab === "mastery"
                   ? "bg-[var(--color-accent-primary)] text-white"
                   : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
               )}
             >
               <Network className="h-3.5 w-3.5" />
-              MASTERY MAP
+              Mastery Map
             </button>
           </div>
 
@@ -187,27 +187,27 @@ function MasteryMapContent({ docId }: { docId: string }) {
                 type="button"
                 onClick={() => setView("list")}
                 className={cn(
-                  "flex items-center gap-2 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition border-r rounded-l-lg border-[var(--color-border-default)]",
+                  "flex items-center gap-2 px-4 py-2 text-xs font-bold transition border-r rounded-l-lg border-[var(--color-border-default)]",
                   view === "list"
                     ? "bg-[var(--color-accent-primary)] text-white"
                     : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
                 )}
               >
                 <Network className="h-3.5 w-3.5" />
-                LIST
+                List
               </button>
               <button
                 type="button"
                 onClick={() => setView("graph")}
                 className={cn(
-                  "flex items-center gap-2 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider transition rounded-r-lg border-[var(--color-border-default)]",
+                  "flex items-center gap-2 px-4 py-2 text-xs font-bold transition rounded-r-lg border-[var(--color-border-default)]",
                   view === "graph"
                     ? "bg-[var(--color-accent-primary)] text-white"
                     : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
                 )}
               >
                 <LayoutList className="h-3.5 w-3.5" />
-                GRAPH
+                Graph
               </button>
             </div>
           )}

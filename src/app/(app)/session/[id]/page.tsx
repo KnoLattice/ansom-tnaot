@@ -482,8 +482,8 @@ function SessionContent({ id }: { id: string }) {
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3">
         <Spinner />
         {nodeId && (
-          <p className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
-            PREPARING QUESTIONS...
+          <p className="text-xs text-[var(--color-text-muted)]">
+            Preparing Questions...
           </p>
         )}
       </div>
@@ -493,8 +493,8 @@ function SessionContent({ id }: { id: string }) {
   if (!state.currentNode) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <p className="font-mono text-xs text-[var(--color-text-muted)]">
-          NO SESSION DATA
+        <p className="text-xs text-[var(--color-text-muted)]">
+          No Session Data
         </p>
       </div>
     );
@@ -510,8 +510,8 @@ function SessionContent({ id }: { id: string }) {
     <div className="mx-auto space-y-6">
       {state.focusMode && (
         <div className="border-l-2 border-l-[var(--color-accent-primary)] bg-[var(--color-surface)] px-3 py-1.5">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-accent-primary)]">
-            FOCUSED: {state.currentNode.title}
+          <p className="text-xs font-bold text-[var(--color-accent-primary)]">
+            Focused: {state.currentNode.title}
           </p>
         </div>
       )}
@@ -552,19 +552,19 @@ function SessionContent({ id }: { id: string }) {
         />
       ) : (
         <div className="border border-[var(--color-border-default)] bg-[var(--color-surface)] p-8 text-center">
-          <p className="font-mono text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
-            SESSION COMPLETE
+          <p className="font-bold text-sm text-[var(--color-text-primary)]">
+            Session Complete
           </p>
           <p className="mt-2 text-sm text-[var(--color-text-secondary)]">
             Great work. View your session summary to see how you did.
           </p>
           <button
             type="button"
-            className="mt-4 font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-accent-primary)]"
+            className="mt-4 text-xs font-bold text-[var(--color-accent-primary)]"
             onClick={handleEndSession}
             disabled={isSubmitting}
           >
-            VIEW SUMMARY
+            View Summary
           </button>
         </div>
       )}

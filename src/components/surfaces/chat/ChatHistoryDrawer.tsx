@@ -50,10 +50,10 @@ export function ChatHistoryDrawer({
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed inset-y-0 left-0 z-50 flex w-[300px] flex-col border-r border-[var(--color-border-default)] bg-[var(--color-canvas)]"
+            className="fixed inset-y-0 left-0 z-50 flex w-[300px] flex-col border-r border-[var(--color-border-subtle)] bg-[var(--color-canvas)]"
           >
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-[var(--color-border-default)] px-3 py-3">
+            <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] px-3 py-3">
               <p className="kl-data-label">History</p>
               <div className="flex items-center gap-1">
                 <button
@@ -62,7 +62,7 @@ export function ChatHistoryDrawer({
                     onNewChat();
                     onClose();
                   }}
-                  className="flex items-center gap-1 rounded-md px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-accent-primary)] transition hover:brightness-110"
+                  className="flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-[var(--color-accent-primary)] transition hover:brightness-110"
                 >
                   <Plus className="h-3 w-3" />
                   New Chat

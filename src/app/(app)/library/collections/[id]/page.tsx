@@ -125,7 +125,7 @@ export default function CollectionDetailPage({
       {/* Back link */}
       <button
         onClick={() => router.push("/library")}
-        className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] transition hover:text-[var(--color-text-primary)]"
+        className="flex items-center gap-1.5 text-xs text-[var(--color-text-muted)] transition hover:text-[var(--color-text-primary)]"
       >
         <ArrowLeft className="h-3.5 w-3.5" />
         Back to Library
@@ -133,7 +133,7 @@ export default function CollectionDetailPage({
 
       {/* Collection name */}
       <div>
-        <h1 className="font-mono text-lg font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+        <h1 className="font-bold text-lg text-[var(--color-text-primary)]">
           {collectionName}
         </h1>
       </div>
@@ -176,7 +176,7 @@ export default function CollectionDetailPage({
               </ResponsiveContainer>
             ) : (
               <div className="flex h-full items-center justify-center">
-                <span className="font-mono text-xs text-[var(--color-text-muted)]">
+                <span className="text-xs text-[var(--color-text-muted)]">
                   No data yet
                 </span>
               </div>
@@ -184,7 +184,7 @@ export default function CollectionDetailPage({
             {/* Center label */}
             {overallPercent !== null && (
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="font-mono text-2xl font-bold text-[var(--color-text-primary)]">
+                <span className="text-2xl font-bold text-[var(--color-text-primary)]">
                   {overallPercent}%
                 </span>
               </div>
@@ -194,7 +194,7 @@ export default function CollectionDetailPage({
           {/* Stats */}
           <div className="flex-1 space-y-4">
             <div>
-              <h2 className="font-mono text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+              <h2 className="font-bold text-sm text-[var(--color-text-primary)]">
                 Overall Mastery
               </h2>
               <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
@@ -218,7 +218,7 @@ export default function CollectionDetailPage({
                     className="h-2.5 w-2.5 rounded-sm"
                     style={{ backgroundColor: BAND_COLORS[band] }}
                   />
-                  <span className="font-mono text-[10px] text-[var(--color-text-secondary)]">
+                  <span className="text-xs text-[var(--color-text-secondary)]">
                     {BAND_LABELS[band]} ({count})
                   </span>
                 </div>
@@ -227,7 +227,7 @@ export default function CollectionDetailPage({
 
             {/* Last reviewed */}
             {mastery.lastReviewed && (
-              <p className="font-mono text-[10px] text-[var(--color-text-muted)]">
+              <p className="text-xs text-[var(--color-text-muted)]">
                 Last reviewed {dayjs(mastery.lastReviewed).fromNow()}
               </p>
             )}
@@ -244,7 +244,7 @@ export default function CollectionDetailPage({
               }
             >
               <Play className="mr-2 h-4 w-4" />
-              START COLLECTION SESSION
+              Start Collection Session
             </Button>
           </div>
         </div>
@@ -253,22 +253,22 @@ export default function CollectionDetailPage({
       {/* Per-document table */}
       <div className="rounded-md border border-[var(--color-border-default)] bg-[var(--color-surface)]">
         <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] px-4 py-3">
-          <h3 className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
+          <h3 className="font-bold text-xs text-[var(--color-text-muted)]">
             Documents in this collection
           </h3>
           <Button
             variant="ghost"
             size="sm"
-            className="font-mono text-[10px]"
+            className="text-xs"
             onClick={cycleSortKey}
           >
             <ArrowUpDown className="mr-1.5 h-3 w-3" />
-            SORT:{" "}
+            Sort:{" "}
             {sortBy === "mastery-asc"
-              ? "MASTERY ASC"
+              ? "Mastery Asc"
               : sortBy === "mastery-desc"
-                ? "MASTERY DESC"
-                : "NAME"}
+                ? "Mastery Desc"
+                : "Name"}
           </Button>
         </div>
 
@@ -295,7 +295,7 @@ export default function CollectionDetailPage({
                 {/* Mastery */}
                 <span
                   className={cn(
-                    "shrink-0 font-mono text-sm font-bold",
+                    "shrink-0 text-sm font-bold",
                     doc.mastery !== null
                       ? "text-[var(--color-text-primary)]"
                       : "text-[var(--color-text-muted)]",
@@ -315,13 +315,13 @@ export default function CollectionDetailPage({
                     className="shrink-0 rounded-sm border border-[var(--color-border-subtle)] text-[10px] text-yellow-400"
                   >
                     {doc.processingStatus === "processing"
-                      ? "PROCESSING..."
+                      ? "Processing..."
                       : doc.processingStatus === "failed"
-                        ? "FAILED"
-                        : "PENDING"}
+                        ? "Failed"
+                        : "Pending"}
                   </Badge>
                 ) : (
-                  <span className="shrink-0 font-mono text-[10px] text-[var(--color-text-muted)]">
+                  <span className="shrink-0 text-xs text-[var(--color-text-muted)]">
                     {doc.nodeCount} node{doc.nodeCount !== 1 ? "s" : ""}
                   </span>
                 )}

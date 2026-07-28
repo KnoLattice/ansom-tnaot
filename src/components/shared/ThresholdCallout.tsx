@@ -34,8 +34,8 @@ export function ThresholdCallout({
             className,
           )}
         >
-          <p className="font-mono text-xs font-bold uppercase tracking-wider text-green-400">
-            CONCEPT MASTERED
+          <p className="text-xs font-medium text-green-400">
+            Concept Mastered
           </p>
           <p className="mt-0.5 text-xs text-green-400/70">
             You&apos;ve reached proficiency in &ldquo;{title}&rdquo;
