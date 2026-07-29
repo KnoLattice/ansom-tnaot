@@ -1,15 +1,18 @@
 "use client";
 
-import { use, useCallback, useMemo } from "react";
+import { use, useCallback, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { BookOpen, LayoutList, Network } from "lucide-react";
+import { ChevronDown, LayoutList, Network } from "lucide-react";
 import { useGraph, useDocuments } from "@/lib/hooks";
 import { Spinner } from "@/components/ui/Spinner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { DistributionStrip } from "@/components/surfaces/mastery-map/DistributionStrip";
-import { ConceptListView, type FilterKey } from "@/components/surfaces/mastery-map/ConceptListView";
+import {
+  ConceptListView,
+  type FilterKey,
+} from "@/components/surfaces/mastery-map/ConceptListView";
 import { ConceptDetailPanel } from "@/components/surfaces/mastery-map/ConceptDetailPanel";
 import { GraphView } from "@/components/surfaces/mastery-map/GraphView";
 import { BatchActionBar } from "@/components/surfaces/mastery-map/BatchActionBar";
@@ -18,34 +21,22 @@ import { ChatFAB } from "@/components/surfaces/chat/ChatFAB";
 import { useChatStore } from "@/store/chat.store";
 import { cn } from "@/lib/utils";
 
-type PageTab = "summary" | "mastery";
-
 function MasteryMapContent({ docId }: { docId: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { activeDocument } = useDocuments();
   const { data: graphData, isLoading, error } = useGraph(docId);
 
-  const tab = (searchParams.get("tab") as PageTab) || "mastery";
-  const setTab = useCallback(
-    (t: PageTab) => {
-      const params = new URLSearchParams(searchParams.toString());
-      if (t === "mastery") {
-        params.delete("tab");
-      } else {
-        params.set("tab", t);
-      }
-      router.replace(`/mastery/${docId}?${params.toString()}`, { scroll: false });
-    },
-    [docId, router, searchParams],
-  );
+  const [showSummary, setShowSummary] = useState(false);
 
   const view = (searchParams.get("view") as "graph" | "list") || "list";
   const setView = useCallback(
     (v: "graph" | "list") => {
       const params = new URLSearchParams(searchParams.toString());
       params.set("view", v);
-      router.replace(`/mastery/${docId}?${params.toString()}`, { scroll: false });
+      router.replace(`/mastery/${docId}?${params.toString()}`, {
+        scroll: false,
+      });
     },
     [docId, router, searchParams],
   );
@@ -59,7 +50,9 @@ function MasteryMapContent({ docId }: { docId: string }) {
       } else {
         params.delete("node");
       }
-      router.replace(`/mastery/${docId}?${params.toString()}`, { scroll: false });
+      router.replace(`/mastery/${docId}?${params.toString()}`, {
+        scroll: false,
+      });
     },
     [docId, router, searchParams],
   );
@@ -73,7 +66,9 @@ function MasteryMapContent({ docId }: { docId: string }) {
       } else {
         params.set("filter", f);
       }
-      router.replace(`/mastery/${docId}?${params.toString()}`, { scroll: false });
+      router.replace(`/mastery/${docId}?${params.toString()}`, {
+        scroll: false,
+      });
     },
     [docId, router, searchParams],
   );
@@ -86,16 +81,21 @@ function MasteryMapContent({ docId }: { docId: string }) {
   const addPendingMention = useChatStore((s) => s.addPendingMention);
   const openChatDrawer = useChatStore((s) => s.openChatDrawer);
 
-  const handleAskAI = useCallback((nodeId: string, nodeTitle: string) => {
-    addPendingMention({ type: "concept", id: nodeId, label: nodeTitle });
-    openChatDrawer("general");
-  }, [addPendingMention, openChatDrawer]);
+  const handleAskAI = useCallback(
+    (nodeId: string, nodeTitle: string) => {
+      addPendingMention({ type: "concept", id: nodeId, label: nodeTitle });
+      openChatDrawer("general");
+    },
+    [addPendingMention, openChatDrawer],
+  );
 
   const filteredCount = useMemo(() => {
     if (!graphData || filter === "all") return 0;
     switch (filter) {
       case "below-mastered":
-        return graphData.nodes.filter((n) => !n.isLocked && n.masteryScore < 0.7).length;
+        return graphData.nodes.filter(
+          (n) => !n.isLocked && n.masteryScore < 0.7,
+        ).length;
       case "mastered":
         return graphData.nodes.filter((n) => n.masteryScore >= 0.7).length;
       case "locked":
@@ -121,7 +121,9 @@ function MasteryMapContent({ docId }: { docId: string }) {
           Unable to Load Graph
         </p>
         <p className="mt-2 text-sm text-[var(--color-text-secondary)]">
-          {error instanceof Error ? error.message : "This document may not be processed yet."}
+          {error instanceof Error
+            ? error.message
+            : "This document may not be processed yet."}
         </p>
         <Button
           variant="outline"
@@ -139,145 +141,120 @@ function MasteryMapContent({ docId }: { docId: string }) {
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="flex flex-col gap-4 border-b border-[var(--color-border-default)] pb-4 md:flex-row md:items-start md:justify-between">
-        <div>
-          <h1 className="font-display text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
-            {tab === "summary" ? "Lesson Summary" : "Mastery Map"}
-          </h1>
-          <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
-            {docName.replace(/\.[^.]+$/, "")} {tab === "mastery" ? `/ ${graphData.nodes.length} concepts` : ""}
-          </p>
-        </div>
-
-        <div className="flex items-center gap-3">
-          {/* Page tab switcher */}
-          <div className="flex border rounded-lg border-[var(--color-border-default)]">
-            <button
-              type="button"
-              onClick={() => setTab("summary")}
-              className={cn(
-                "flex items-center gap-2 px-4 py-2 text-xs font-bold transition border-r rounded-l-lg border-[var(--color-border-default)]",
-                tab === "summary"
-                  ? "bg-[var(--color-accent-primary)] text-white"
-                  : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
-              )}
-            >
-              <BookOpen className="h-3.5 w-3.5" />
-              Summary
-            </button>
-            <button
-              type="button"
-              onClick={() => setTab("mastery")}
-              className={cn(
-                "flex items-center gap-2 px-4 py-2 text-xs font-bold transition rounded-r-lg border-[var(--color-border-default)]",
-                tab === "mastery"
-                  ? "bg-[var(--color-accent-primary)] text-white"
-                  : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
-              )}
-            >
-              <Network className="h-3.5 w-3.5" />
-              Mastery Map
-            </button>
-          </div>
-
-          {/* View switcher (only show on mastery tab) */}
-          {tab === "mastery" && (
-            <div className="flex border rounded-lg border-[var(--color-border-default)]">
-              <button
-                type="button"
-                onClick={() => setView("list")}
-                className={cn(
-                  "flex items-center gap-2 px-4 py-2 text-xs font-bold transition border-r rounded-l-lg border-[var(--color-border-default)]",
-                  view === "list"
-                    ? "bg-[var(--color-accent-primary)] text-white"
-                    : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
-                )}
-              >
-                <Network className="h-3.5 w-3.5" />
-                List
-              </button>
-              <button
-                type="button"
-                onClick={() => setView("graph")}
-                className={cn(
-                  "flex items-center gap-2 px-4 py-2 text-xs font-bold transition rounded-r-lg border-[var(--color-border-default)]",
-                  view === "graph"
-                    ? "bg-[var(--color-accent-primary)] text-white"
-                    : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
-                )}
-              >
-                <LayoutList className="h-3.5 w-3.5" />
-                Graph
-              </button>
-            </div>
-          )}
-        </div>
+      <div className="border-b border-[var(--color-border-default)] pb-4">
+        <h1 className="font-display text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
+          Mastery Map
+        </h1>
+        <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+          {docName.replace(/\.[^.]+$/, "")} / {graphData.nodes.length} concepts
+        </p>
       </div>
 
-      {tab === "summary" ? (
-        /* Summary tab content */
-        <div className="border rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)]">
+      {/* Toggle bar: summary toggle + view switcher, full width centered */}
+      <div className="flex flex-col items-center justify-center gap-8 border-b border-[var(--color-border-default)] pb-3">
+        <div className="flex w-full border rounded-lg border-[var(--color-border-default)]">
+          <button
+            onClick={() => setView("list")}
+            className={cn(
+              "flex flex-1 justify-center items-center gap-2 px-4 py-3 text-xs font-bold transition border-r rounded-l-lg border-[var(--color-border-default)]",
+              view === "list"
+                ? "bg-[var(--color-accent-primary)] text-white"
+                : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
+            )}
+          >
+            <Network className="h-3.5 w-3.5" />
+            List
+          </button>
+          <button
+            onClick={() => setView("graph")}
+            className={cn(
+              "flex flex-1 items-center justify-center gap-2 px-4 py-3 text-xs font-bold transition rounded-r-lg",
+              view === "graph"
+                ? "bg-[var(--color-accent-primary)] text-white"
+                : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
+            )}
+          >
+            <LayoutList className="h-3.5 w-3.5" />
+            Graph
+          </button>
+        </div>
+
+        <button
+          onClick={() => setShowSummary(!showSummary)}
+          className="flex w-full justify-center items-center gap-2 text-xs font-bold text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
+        >
+          <ChevronDown
+            className={cn(
+              "h-3.5 w-3.5 transition-transform duration-200",
+              showSummary && "rotate-180",
+            )}
+          />
+          Summary
+        </button>
+      </div>
+
+      {/* Summary section (collapsible) */}
+      {showSummary && (
+        <div className="border rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)] overflow-hidden">
           <DocumentSummary documentId={docId} />
         </div>
-      ) : (
-        /* Mastery Map tab content */
-        <>
-          {/* Distribution strip */}
-          <DistributionStrip nodes={graphData.nodes} />
+      )}
 
-          {/* Main content: view + detail panel */}
-          <div className="flex gap-4" style={{ minHeight: "60vh", height: '70vh', maxHeight: '70vh' }}>
-            <div className="min-w-0 flex-1">
-              {view === "graph" ? (
-                <div className="h-[60vh] overflow-hidden border border-[var(--color-border-default)] bg-[var(--color-canvas)]">
-                  <GraphView
-                    data={graphData}
-                    selectedNodeId={selectedNodeId}
-                    onSelectNode={setSelectedNodeId}
-                  />
-                </div>
-              ) : (
-                <ConceptListView
-                  nodes={graphData.nodes}
-                  selectedNodeId={selectedNodeId}
-                  onSelectNode={setSelectedNodeId}
-                  filter={filter}
-                  onFilterChange={setFilter}
-                />
-              )}
+      {/* Distribution strip */}
+      <DistributionStrip nodes={graphData.nodes} />
+
+      {/* Main content: view + detail panel */}
+      <div
+        className="flex gap-4"
+        style={{ minHeight: "60vh", height: "70vh", maxHeight: "70vh" }}
+      >
+        <div className="min-w-0 flex-1">
+          {view === "graph" ? (
+            <div className="h-[60vh] overflow-hidden border border-[var(--color-border-default)] bg-[var(--color-canvas)]">
+              <GraphView
+                data={graphData}
+                selectedNodeId={selectedNodeId}
+                onSelectNode={setSelectedNodeId}
+              />
             </div>
-
-            {selectedNode && (
-              <div className="min-w-[100px] w-[360px] shrink-0 block">
-                <div className="sticky top-16 mt-16" style={{ height: '65vh' }}>
-                  <ConceptDetailPanel
-                    node={selectedNode}
-                    allNodes={graphData.nodes}
-                    edges={graphData.edges}
-                    onSelectNode={setSelectedNodeId}
-                    onClose={() => setSelectedNodeId(null)}
-                    documentId={docId}
-                    onAskAI={handleAskAI}
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-
-          {view === "list" && (
-            <BatchActionBar
-              conceptCount={filteredCount}
-              documentId={docId}
-              visible={filter !== "all" && filteredCount > 0}
+          ) : (
+            <ConceptListView
+              nodes={graphData.nodes}
+              selectedNodeId={selectedNodeId}
+              onSelectNode={setSelectedNodeId}
+              filter={filter}
+              onFilterChange={setFilter}
             />
           )}
-        </>
+        </div>
+
+        {selectedNode && (
+          <div className="min-w-[100px] w-[360px] shrink-0 block">
+            <div className="sticky top-16 mt-16" style={{ height: "65vh" }}>
+              <ConceptDetailPanel
+                node={selectedNode}
+                allNodes={graphData.nodes}
+                edges={graphData.edges}
+                onSelectNode={setSelectedNodeId}
+                onClose={() => setSelectedNodeId(null)}
+                documentId={docId}
+                onAskAI={handleAskAI}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {view === "list" && (
+        <BatchActionBar
+          conceptCount={filteredCount}
+          documentId={docId}
+          visible={filter !== "all" && filteredCount > 0}
+        />
       )}
 
       {/* Chat FAB */}
-      <ChatFAB
-        scope="general"
-      />
+      <ChatFAB scope="general" />
     </div>
   );
 }

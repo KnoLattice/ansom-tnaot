@@ -106,12 +106,18 @@ export function DocumentSummary({ documentId }: DocumentSummaryProps) {
     );
   }
 
+  const docTitle = data.originalName.replace(/\.[^.]+$/, "");
+  const cleanedSummary = data.summary.trimStart().replace(/^#{1,3}\s+.*\n?/, "");
+
   return (
-    <ScrollArea className="h-[70vh] overflow-hidden">
+    <ScrollArea className="h-[50vh] overflow-hidden">
       <ScrollViewport className="h-full w-full">
         <div className="kl-summary-prose max-w-none overflow-hidden break-words p-6 pb-12">
+          <h2 className="font-display text-xl font-bold tracking-tight text-[var(--color-text-primary)] mb-4">
+            {docTitle}
+          </h2>
           <ReactMarkdown remarkPlugins={[remarkGfm]}>
-            {data.summary}
+            {cleanedSummary}
           </ReactMarkdown>
         </div>
       </ScrollViewport>
