@@ -130,7 +130,7 @@ export default function HomePage() {
       variants={stagger}
       initial="hidden"
       animate="show"
-      className="mx-auto max-w-3xl space-y-6"
+      className="mx-auto space-y-6"
     >
       {/* 1. Continuity banner */}
       <motion.div variants={fadeUp}>

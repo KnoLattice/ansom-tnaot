@@ -105,7 +105,7 @@ export function DocumentsSection({
 
       {/* Document list */}
       {recent.length > 0 ? (
-        <div className="px-5">
+        <div className="px-5 py-3">
           {recent.map((doc) => {
             const isActive = doc.id === activeDocumentId;
             const status = statusLabel(doc.processingStatus);
@@ -182,7 +182,7 @@ export function DocumentsSection({
         }}
         onDragLeave={() => setIsDragActive(false)}
         className={cn(
-          "flex cursor-pointer items-center justify-center gap-2 border-t border-[var(--color-border-subtle)] px-5 py-3 text-sm font-medium text-white transition-colors",
+          "flex rounded-lg cursor-pointer items-center justify-center gap-2 border-t border-[var(--color-border-subtle)] px-5 py-3 text-sm font-medium text-white transition-colors",
           isDragActive
             ? "bg-[var(--color-accent-primary)]"
             : "bg-[var(--color-accent-primary)] hover:brightness-110",
