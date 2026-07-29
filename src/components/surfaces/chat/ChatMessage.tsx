@@ -1,7 +1,7 @@
 "use client";
 
 import { memo, useMemo, useCallback } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { Text } from "mdast";
 import { visit } from "unist-util-visit";
 import { motion } from "framer-motion";
@@ -10,6 +10,7 @@ import remarkGfm from "remark-gfm";
 import { Bot, User, FileText, Lightbulb, ClipboardList, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { usePdfViewerStore } from "@/store/pdfViewer.store";
+import { useDocuments } from "@/lib/hooks";
 import type { ChatMessage as ChatMessageType, MentionRef, CitationRef } from "@/lib/types/api";
 
 interface ChatMessageProps {
@@ -29,6 +30,40 @@ function MentionBadge({ mention }: { mention: MentionRef }) {
       <Icon className="h-2.5 w-2.5" />
       <span className="text-[var(--color-text-muted)]">@{mention.type}</span>
       <span className="font-medium text-[var(--color-text-secondary)]">{mention.label}</span>
+    </span>
+  );
+}
+
+function ConceptBadge({ nodeId, label }: { nodeId: string; label: string }) {
+  const router = useRouter();
+  const { activeDocumentId } = useDocuments();
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (activeDocumentId) {
+      router.push(`/mastery/${activeDocumentId}?node=${nodeId}`);
+    } else {
+      router.push("/library");
+    }
+  };
+
+  return (
+    <span
+      role="button"
+      tabIndex={0}
+      onClick={handleClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          handleClick(e as unknown as React.MouseEvent);
+        }
+      }}
+      title={`View concept in mastery map`}
+      className="inline-flex items-center gap-1 rounded border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] px-1.5 py-0.5 text-xs text-[var(--color-text-muted)] transition-colors hover:border-[var(--color-accent-primary)] hover:text-[var(--color-accent-primary)] cursor-pointer select-none"
+    >
+      <Lightbulb className="h-2.5 w-2.5" />
+      {label}
     </span>
   );
 }
@@ -77,16 +112,15 @@ function remarkCitationPlugin(citations: CitationRef[]) {
         const children = parts.map((part: string) => {
           const match = part.match(/\[NODE:([^\]]+)\]/);
           if (match) {
-            const citation = citationMap.get(match[1]);
-            if (citation) {
-              return {
-                type: 'link',
-                url: `citation:${match[1]}`,
-                title: citation.sourceSnippets ?? undefined,
-                children: [{ type: 'text', value: citation.title }],
-              } as any;
-            }
-            return { type: 'text', value: part } as Text;
+            const nodeId = match[1];
+            const citation = citationMap.get(nodeId);
+            const label = citation?.title ?? `concept:${nodeId.slice(0, 12)}`;
+            return {
+              type: 'link',
+              url: `citation:${nodeId}`,
+              title: citation?.sourceSnippets ?? undefined,
+              children: [{ type: 'text', value: label }],
+            } as any;
           }
           return { type: 'text', value: part } as Text;
         });
@@ -114,16 +148,14 @@ export const ChatMessage = memo(function ChatMessage({ message }: ChatMessagePro
         if (citation) {
           return <CitationBadge citation={citation} />;
         }
-        return <span className="text-[var(--color-text-muted)] text-xs">[NODE:{nodeId}]</span>;
+        return <ConceptBadge nodeId={nodeId} label={String(children ?? "")} />;
       }
-      return <a href={href}>{children}</a>;
+      return <a href={href} className="underline underline-offset-2">{children}</a>;
     },
   } as any), [citationMap]);
 
-  const plugins = useMemo(() => {
-    if (citationList.length === 0) return [remarkGfm];
-    return [remarkGfm, remarkCitationPlugin(citationList)];
-  }, [citationList]);
+  const plugin = useMemo(() => remarkCitationPlugin(citationList), [citationList]);
+  const plugins = useMemo(() => [remarkGfm, plugin], [plugin]);
 
   const urlTransform = useCallback((url: string) => {
     if (url.startsWith("citation:")) return url;

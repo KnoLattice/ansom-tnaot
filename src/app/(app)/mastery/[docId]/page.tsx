@@ -249,7 +249,7 @@ function MasteryMapContent({ docId }: { docId: string }) {
 
             {selectedNode && (
               <div className="min-w-[100px] w-[360px] shrink-0 block">
-                <div className="sticky top-16 mt-16" style={{ height: '70vh' }}>
+                <div className="sticky top-16 mt-16" style={{ height: '65vh' }}>
                   <ConceptDetailPanel
                     node={selectedNode}
                     allNodes={graphData.nodes}
