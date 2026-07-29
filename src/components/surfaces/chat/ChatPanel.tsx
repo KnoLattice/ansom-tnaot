@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { MessageSquare, Sparkles } from "lucide-react";
 import {
   useChatMessages,
@@ -70,6 +70,7 @@ export function ChatPanel({
     [],
   );
   const [isStreaming, setIsStreaming] = useState(false);
+  const [preStreamPersistedLen, setPreStreamPersistedLen] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -108,6 +109,12 @@ export function ChatPanel({
   useEffect(() => {
     return () => abort();
   }, [abort]);
+
+  useEffect(() => {
+    setStreamingMessages([]);
+    setIsStreaming(false);
+    setPreStreamPersistedLen(0);
+  }, [conversationId]);
 
   const [creatingConversation, setCreatingConversation] = useState(false);
 
@@ -163,6 +170,7 @@ export function ChatPanel({
         createdAt: new Date().toISOString(),
       };
 
+      setPreStreamPersistedLen(data?.messages?.length ?? 0);
       setStreamingMessages([userMsg, assistantMsg]);
       setIsStreaming(true);
 
@@ -185,7 +193,6 @@ export function ChatPanel({
               return updated;
             });
           } else if (chunk.type === "done") {
-            setStreamingMessages([]);
             setIsStreaming(false);
             onTokenUpdate?.(chunk);
           } else if (chunk.type === "error") {
@@ -209,6 +216,25 @@ export function ChatPanel({
     },
     [isStreaming, conversationId, scope, scopeId, sendMessage, restricted, onCreateConversation, creatingConversation, setActiveConversation, onTokenUpdate],
   );
+
+  const persistedMessages = data?.messages ?? [];
+
+  const messages = useMemo(() => {
+    if (streamingMessages.length === 0) return persistedMessages;
+    if (persistedMessages.length > preStreamPersistedLen) {
+      return persistedMessages;
+    }
+    return [...persistedMessages, ...streamingMessages];
+  }, [persistedMessages, streamingMessages, preStreamPersistedLen]);
+
+  useEffect(() => {
+    if (
+      streamingMessages.length > 0 &&
+      persistedMessages.length > preStreamPersistedLen
+    ) {
+      setStreamingMessages([]);
+    }
+  }, [persistedMessages, preStreamPersistedLen, streamingMessages]);
 
   // No conversation or stale conversation — welcome state
   if ((!conversationId || notFound) && !isStreaming) {
@@ -243,18 +269,12 @@ export function ChatPanel({
     return (
       <div className="flex flex-1 flex-col">
         <TokenBar className="shrink-0" />
-        <div className="flex flex-1 items-center justify-center">
+        {/*<div className="flex flex-1 items-center justify-center">
           <Spinner />
-        </div>
+        </div>*/}
       </div>
     );
   }
-
-  const persistedMessages = data?.messages ?? [];
-
-  const messages = isStreaming
-    ? [...persistedMessages, ...streamingMessages]
-    : persistedMessages;
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
@@ -285,8 +305,8 @@ export function ChatPanel({
           </div>
         ) : (
           <div className="py-4">
-            {messages.map((msg) => (
-              <ChatMessage key={msg.id} message={msg} />
+            {messages.map((msg, idx) => (
+              <ChatMessage key={conversationId ? conversationId + '-' + idx : msg.id} message={msg} />
             ))}
             <div ref={bottomRef} />
           </div>
