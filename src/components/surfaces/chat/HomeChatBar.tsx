@@ -114,7 +114,7 @@ export function HomeChatBar({ documents = [] }: HomeChatBarProps) {
   }, [messages, isExpanded]);
 
   return (
-    <div className="border border-[var(--color-border-default)] bg-[var(--color-surface)]">
+    <div className="border border-[var(--color-border-subtle)] bg-[var(--color-surface)]">
       {/* Compact bar */}
       {!isExpanded && (
         <button
@@ -123,7 +123,7 @@ export function HomeChatBar({ documents = [] }: HomeChatBarProps) {
           className="flex w-full items-center gap-3 p-4 text-left transition hover:bg-[var(--color-surface-elevated)]"
         >
           <MessageSquare className="h-4 w-4 shrink-0 text-[var(--color-accent-primary)]" />
-          <span className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
+          <span className="text-xs text-[var(--color-text-muted)]">
             Ask about a document or concept...
           </span>
         </button>
@@ -141,10 +141,10 @@ export function HomeChatBar({ documents = [] }: HomeChatBarProps) {
           >
             <div className="overflow-hidden">
               {/* Header */}
-            <div className="flex items-center justify-between border-b border-[var(--color-border-default)] px-4 py-2">
+            <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] px-4 py-2">
               <div className="flex items-center gap-2">
                 <MessageSquare className="h-3.5 w-3.5 text-[var(--color-accent-primary)]" />
-                <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+                <p className="text-xs font-medium text-[var(--color-text-primary)]">
                   Quick Chat
                 </p>
               </div>
@@ -152,9 +152,9 @@ export function HomeChatBar({ documents = [] }: HomeChatBarProps) {
                 <button
                   type="button"
                   onClick={() => router.push("/chat")}
-                  className="flex items-center gap-1 font-mono text-[10px] uppercase tracking-wider text-[var(--color-accent-primary)] transition hover:brightness-110"
+                  className="flex items-center gap-1 text-xs text-[var(--color-accent-primary)] transition hover:brightness-110"
                 >
-                  FULL VIEW
+                  Full view
                   <ArrowUpRight className="h-3 w-3" />
                 </button>
                 <button
@@ -178,7 +178,7 @@ export function HomeChatBar({ documents = [] }: HomeChatBarProps) {
               className="max-h-[40vh] overflow-y-auto"
             >
               {messages.length === 0 ? (
-                <p className="py-6 text-center font-mono text-[10px] text-[var(--color-text-muted)]">
+                <p className="py-6 text-center text-xs text-[var(--color-text-muted)]">
                   Ask anything about your study material
                 </p>
               ) : (

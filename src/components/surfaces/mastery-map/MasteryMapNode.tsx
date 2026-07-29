@@ -67,7 +67,7 @@ export function MasteryMapNode({ data, selected }: NodeProps) {
         </span>
         {!locked && (
           <span
-            className="font-mono text-[9px] font-bold tabular-nums leading-tight"
+            className="text-xs font-bold tabular-nums leading-tight"
             style={{ color }}
           >
             {percent}%

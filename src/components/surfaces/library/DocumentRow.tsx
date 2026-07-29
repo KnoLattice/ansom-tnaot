@@ -73,7 +73,7 @@ export function DocumentRow({
         <p className="truncate text-sm font-medium text-[var(--color-text-primary)]">
           {document.originalName}
         </p>
-        <p className="font-mono text-[10px] text-[var(--color-text-muted)]">
+        <p className="text-xs text-[var(--color-text-muted)]">
           {dayjs(document.uploadedAt).format("YYYY-MM-DD")} / {fileSizeMB.toFixed(1)}MB
         </p>
       </div>
@@ -95,18 +95,18 @@ export function DocumentRow({
           <DropdownMenuTrigger asChild>
             <button
               type="button"
-              className="border border-[var(--color-border-default)] bg-[var(--color-canvas)] p-1.5 text-[var(--color-text-muted)] opacity-0 transition hover:text-[var(--color-text-primary)] group-hover:opacity-100"
+              className="border border-[var(--color-border-subtle)] bg-[var(--color-canvas)] p-1.5 text-[var(--color-text-muted)] opacity-0 transition hover:text-[var(--color-text-primary)] group-hover:opacity-100"
             >
               <MoreVertical className="h-4 w-4" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
-            className="w-44 border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]"
+            className="w-44 border-[var(--color-border-subtle)] bg-[var(--color-surface)] text-[var(--color-text-primary)]"
           >
             {/*{!isActive && (
               <DropdownMenuItem
-                className="font-mono text-xs uppercase tracking-wider"
+                className="text-sm"
                 onClick={() => onSetActive(document.id)}
               >
                 <Check className="mr-2 h-4 w-4" />
@@ -115,16 +115,16 @@ export function DocumentRow({
             )}*/}
             {isReady && (
               <DropdownMenuItem
-                className="font-mono text-xs uppercase tracking-wider"
+                className="text-sm"
                 onClick={() => onViewMastery(document.id)}
               >
                 <Map className="mr-2 h-4 w-4" />
                 Mastery map
               </DropdownMenuItem>
             )}
-            <DropdownMenuSeparator className="bg-[var(--color-border-default)]" />
+            <DropdownMenuSeparator className="bg-[var(--color-border-subtle)]" />
             <AlertDialogTrigger asChild>
-              <DropdownMenuItem className="font-mono text-xs uppercase tracking-wider text-red-400 focus:text-red-400">
+              <DropdownMenuItem className="text-sm text-red-500">
                 <Trash2 className="mr-2 h-4 w-4" />
                 Delete
               </DropdownMenuItem>
@@ -132,23 +132,23 @@ export function DocumentRow({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <AlertDialogContent className=" rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]">
+        <AlertDialogContent className=" rounded-md border-[var(--color-border-subtle)] bg-[var(--color-surface)] text-[var(--color-text-primary)]">
           <AlertDialogHeader>
-            <AlertDialogTitle>DELETE DOCUMENT?</AlertDialogTitle>
+            <AlertDialogTitle>Delete Document</AlertDialogTitle>
             <AlertDialogDescription className="text-[var(--color-text-secondary)]">
               This will permanently delete &ldquo;{document.originalName}&rdquo;
               and all associated concepts, mastery data, and session history.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="rounded-md border-[var(--color-border-default)] bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)] hover:bg-[var(--color-border-default)]">
-              CANCEL
+            <AlertDialogCancel className="rounded-md border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)] hover:bg-[var(--color-border-subtle)]">
+              Cancel
             </AlertDialogCancel>
             <AlertDialogAction
               className="rounded-md bg-red-600 text-white hover:bg-red-700"
               onClick={() => onDelete(document.id)}
             >
-              DELETE
+              Delete
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

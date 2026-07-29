@@ -52,14 +52,14 @@ function SearchForm({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="e.g. Introduction to Machine Learning, Data Structures in Python..."
-          className="h-11 rounded-none"
+          className="h-11 rounded-[var(--radius-input)]"
           disabled={createExploration.isPending}
         />
       </div>
       <Button
         type="submit"
         disabled={!query.trim() || createExploration.isPending}
-        className="h-11 px-6 rounded-none bg-[var(--color-accent-primary)] text-white shadow-glow hover:brightness-110"
+        className="h-11 px-6 rounded-[var(--radius-button)] bg-[var(--color-accent-primary)] text-white shadow-glow hover:brightness-110"
       >
         {createExploration.isPending ? (
           <Loader2 className="h-4 w-4 animate-spin" />
@@ -118,19 +118,19 @@ function ResourceCard({
   return (
     <div
       className={cn(
-        "rounded-none border p-4 transition-all",
+        "rounded-[var(--radius-card)] border p-4 transition-all",
         STATUS_STYLES[resource.status],
       )}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 mb-1">
-            <h4 className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-primary)] truncate">
+            <h4 className="font-bold text-xs text-[var(--color-text-primary)] truncate">
               {resource.title}
             </h4>
             <span
               className={cn(
-                "inline-flex items-center shrink-0 border px-1.5 py-0.5 font-mono text-[9px] font-bold",
+                "inline-flex items-center shrink-0 border px-1.5 py-0.5 text-xs font-bold",
                 badge.className,
               )}
             >
@@ -141,16 +141,16 @@ function ResourceCard({
             href={resource.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 font-mono text-[10px] text-[var(--color-accent-primary)] hover:underline"
+            className="inline-flex items-center gap-1 text-xs text-[var(--color-accent-primary)] hover:underline"
           >
             <ExternalLink className="h-3 w-3" />
             {new URL(resource.url).hostname}
           </a>
-          <p className="mt-2 font-mono text-[10px] text-[var(--color-text-secondary)] line-clamp-2">
+          <p className="mt-2 text-xs text-[var(--color-text-secondary)] line-clamp-2">
             {resource.description}
           </p>
           {resource.errorMessage && (
-            <p className="mt-2 font-mono text-[10px] text-red-400">
+            <p className="mt-2 text-xs text-red-400">
               Error: {resource.errorMessage}
             </p>
           )}
@@ -222,7 +222,7 @@ function ExplorationDetail({
 
   if (!data) {
     return (
-      <div className="py-20 text-center font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
+      <div className="py-20 text-center text-xs text-[var(--color-text-muted)]">
         Exploration not found.
       </div>
     );
@@ -246,10 +246,10 @@ function ExplorationDetail({
           ← Back
         </Button>
         <div className="flex-1">
-          <h2 className="font-mono text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+          <h2 className="font-bold text-sm text-[var(--color-text-primary)]">
             {exploration.query}
           </h2>
-          <p className="font-mono text-[9px] uppercase tracking-wider text-[var(--color-text-muted)]">
+          <p className="text-xs text-[var(--color-text-muted)]">
             {resources.length} resources found
             {completedCount > 0 && ` · ${completedCount} processed`}
           </p>
@@ -268,7 +268,7 @@ function ExplorationDetail({
       </div>
 
       {(isSearching || isProcessing) && (
-        <div className="flex items-center gap-2 rounded-none border border-amber-500/30 bg-amber-500/5 p-3 font-mono text-[10px] uppercase tracking-wider text-amber-400">
+        <div className="flex items-center gap-2 rounded-[var(--radius-card)] border border-amber-500/30 bg-amber-500/5 p-3 text-xs text-amber-400">
           <Loader2 className="h-4 w-4 animate-spin" />
           {isSearching
             ? "AI is searching the web for resources..."
@@ -280,7 +280,7 @@ function ExplorationDetail({
         <Button
           onClick={() => acceptAll.mutate(explorationId)}
           disabled={acceptAll.isPending}
-          className="w-full rounded-none bg-[var(--color-accent-primary)] text-white shadow-glow hover:brightness-110"
+          className="w-full rounded-[var(--radius-button)] bg-[var(--color-accent-primary)] text-white shadow-glow hover:brightness-110"
         >
           <Check className="mr-2 h-4 w-4" />
           Accept All ({pendingCount} pending)
@@ -298,7 +298,7 @@ function ExplorationDetail({
       </div>
 
       {resources.length === 0 && !isSearching && (
-        <div className="py-16 text-center font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
+        <div className="py-16 text-center text-xs text-[var(--color-text-muted)]">
           No resources found for this query.
         </div>
       )}
@@ -327,7 +327,7 @@ function ExplorationList({
     return (
       <div className="py-20 text-center">
         <Sparkles className="mx-auto h-8 w-8 text-[var(--color-text-muted)] mb-3" />
-        <p className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
+        <p className="text-xs text-[var(--color-text-muted)]">
           No explorations yet. Search for a topic above to get started.
         </p>
       </div>
@@ -348,22 +348,22 @@ function ExplorationList({
         <button
           key={exp.id}
           onClick={() => onSelect(exp.id)}
-          className="w-full rounded-none border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4 text-left transition-all hover:border-[var(--color-accent-primary)]/50"
+          className="w-full rounded-[var(--radius-card)] border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-4 text-left transition-all hover:border-[var(--color-accent-primary)]/50"
         >
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-primary)] truncate">
+              <p className="font-bold text-xs text-[var(--color-text-primary)] truncate">
                 {exp.query}
               </p>
-              <p className="font-mono text-[9px] uppercase tracking-wider text-[var(--color-text-muted)]">
+              <p className="text-xs text-[var(--color-text-muted)]">
                 {new Date(exp.createdAt).toLocaleDateString()}
               </p>
             </div>
             <div className="flex items-center gap-2 shrink-0">
               <span
                 className={cn(
-                  "inline-flex items-center shrink-0 border px-1.5 py-0.5 font-mono text-[9px] font-bold",
-                  statusColor[exp.status] ?? "text-[var(--color-text-muted)] border-[var(--color-border-default)]",
+                  "inline-flex items-center shrink-0 border px-1.5 py-0.5 text-xs font-bold",
+                  statusColor[exp.status] ?? "text-[var(--color-text-muted)] border-[var(--color-border-subtle)]",
                 )}
               >
                 {exp.status}
@@ -386,10 +386,10 @@ export default function ExplorationPage() {
     <div className="space-y-6">
       <div>
         <p className="kl-data-label">Discover</p>
-        <h1 className="font-mono text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+        <h1 className="font-display text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
           Explore
         </h1>
-        <p className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)] mt-1">
+        <p className="text-sm text-[var(--color-text-secondary)] mt-1">
           AI-powered web search to discover learning resources on any topic.
         </p>
       </div>

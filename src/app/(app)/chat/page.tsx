@@ -54,14 +54,14 @@ export default function ChatPage() {
         <button
           type="button"
           onClick={() => setDrawerOpen(true)}
-          className="flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)] transition hover:text-[var(--color-text-secondary)]"
+          className="flex items-center gap-1.5 text-xs font-bold text-[var(--color-text-muted)] transition hover:text-[var(--color-text-secondary)]"
         >
           <PanelLeftOpen className="h-4 w-4" />
           History
         </button>
 
         {activeConversation && (
-          <span className="truncate font-mono text-xs font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+          <span className="truncate text-xs font-bold text-[var(--color-text-primary)]">
             {activeConversation.title}
           </span>
         )}

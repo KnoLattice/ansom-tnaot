@@ -39,14 +39,14 @@ export function ProcessingStatus({ status, errorMessage }: ProcessingStatusProps
         ) : (
           <Loader2 className="h-4 w-4 animate-spin" />
         )}
-        <span className="uppercase tracking-[0.3em] text-white/50">{statusLabel}</span>
+        <span className="font-semibold text-white/50">{statusLabel}</span>
       </div>
       <div className="grid gap-2 sm:grid-cols-4">
         {STAGES.map((label, index) => (
           <div
             key={label}
             className={cn(
-              "rounded-2xl border border-white/10 px-3 py-2 text-center text-[10px] font-semibold uppercase tracking-[0.3em] text-white/60",
+              "rounded-2xl border border-white/10 px-3 py-2 text-center text-xs font-semibold text-white/60",
               index <= stageIndex && !isFailed && "border-white bg-white text-black",
               isFailed && "border-rose-500/40 bg-rose-500/10 text-rose-100",
             )}

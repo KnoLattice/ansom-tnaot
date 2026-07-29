@@ -78,10 +78,10 @@ export function ConceptDetailPanel({
           ref={panelRef}
           role="complementary"
           aria-label={`Details for ${node.title}`}
-          className="flex h-full w-full flex-col overflow-hidden border rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)]"
+          className="flex h-full w-full flex-col overflow-hidden border rounded-md border-[var(--color-border-subtle)] bg-[var(--color-surface)]"
         >
           {/* Header */}
-          <div className="flex items-start justify-between border-b border-[var(--color-border-default)] p-4">
+          <div className="flex items-start justify-between border-b border-[var(--color-border-subtle)] p-4">
             <div className="min-w-0 flex-1">
               <p className="kl-data-label">Concept Detail</p>
               <h3 className="mt-1 text-sm font-semibold leading-snug text-[var(--color-text-primary)]">
@@ -89,7 +89,7 @@ export function ConceptDetailPanel({
               </h3>
               <div className="mt-2 flex items-center gap-2">
                 <MasteryBadge band={node.masteryBand ?? getMasteryBand(node.masteryScore)} />
-                <span className="font-mono text-[10px] font-bold tabular-nums text-[var(--color-text-secondary)]">
+                <span className="text-xs font-bold tabular-nums text-[var(--color-text-secondary)]">
                   {formatMastery(node.masteryScore)}
                 </span>
               </div>
@@ -98,7 +98,7 @@ export function ConceptDetailPanel({
               type="button"
               onClick={onClose}
               aria-label="Close detail panel"
-              className="border border-[var(--color-border-default)] p-1 text-[var(--color-text-muted)] transition hover:text-[var(--color-text-primary)]"
+              className="border border-[var(--color-border-subtle)] p-1 text-[var(--color-text-muted)] transition hover:text-[var(--color-text-primary)]"
             >
               <X className="h-4 w-4" />
             </button>
@@ -120,8 +120,8 @@ export function ConceptDetailPanel({
               {/* History placeholder */}
               <div className="border rounded-md border-[var(--color-border-subtle)] bg-[var(--color-canvas)] p-3">
                 <p className="kl-data-label">Mastery Over Time</p>
-                <p className="mt-2 font-mono text-[10px] text-[var(--color-text-muted)]">
-                  PER-CONCEPT HISTORY COMING SOON
+                <p className="mt-2 text-xs text-[var(--color-text-muted)]">
+                  Per-concept history coming soon
                 </p>
               </div>
 
@@ -135,7 +135,7 @@ export function ConceptDetailPanel({
                         key={prereq.id}
                         type="button"
                         onClick={() => onSelectNode(prereq.id)}
-                        className="inline-flex items-center gap-1 border rounded-md border-[var(--color-border-default)] px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-secondary)] transition hover:text-[var(--color-text-primary)]"
+                        className="inline-flex items-center gap-1 border rounded-md border-[var(--color-border-subtle)] px-2 py-1 text-xs font-bold text-[var(--color-text-secondary)] transition hover:text-[var(--color-text-primary)]"
                       >
                         {prereq.title}
                         <ArrowUpRight className="h-3 w-3" />
@@ -156,7 +156,7 @@ export function ConceptDetailPanel({
                         type="button"
                         onClick={() => onSelectNode(unlock.id)}
                         className={cn(
-                          "inline-flex items-center gap-1 border rounded-md px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-wider transition",
+                          "inline-flex items-center gap-1 border rounded-md px-2 py-1 text-xs font-bold transition",
                           unlock.isLocked
                             ? "border-[var(--color-border-subtle)] text-[var(--color-text-muted)]"
                             : "border-[var(--color-accent-primary)]/30 text-[var(--color-accent-primary)] hover:bg-[var(--color-accent-primary)]/5",
@@ -170,27 +170,27 @@ export function ConceptDetailPanel({
                 </div>
               )}
 
-              <p className="font-mono text-[10px] text-[var(--color-text-muted)]">
-                DEPTH: L{node.graphDepth}
+              <p className="text-xs text-[var(--color-text-muted)]">
+                Depth: L{node.graphDepth}
               </p>
             </div>
           </ScrollArea>
 
           {/* Action footer */}
-          <div className="border-t border-[var(--color-border-default)] p-4">
+          <div className="border-t border-[var(--color-border-subtle)] p-4">
             {node.isLocked ? (
               <div className="space-y-3">
-                <p className="font-mono text-[10px] text-[var(--color-text-muted)]">
+                <p className="text-xs text-[var(--color-text-muted)]">
                   <Lock className="mr-1 inline h-3 w-3" />
-                  COMPLETE PREREQUISITES TO UNLOCK
+                  Complete prerequisites to unlock
                 </p>
                 {prerequisites[0] && (
                   <Button
                     variant="outline"
-                    className="w-full text-[10px]"
+                    className="w-full text-xs"
                     onClick={handleStudyPrerequisite}
                   >
-                    STUDY &ldquo;{prerequisites[0].title}&rdquo;
+                    Study &ldquo;{prerequisites[0].title}&rdquo;
                   </Button>
                 )}
               </div>
@@ -198,7 +198,7 @@ export function ConceptDetailPanel({
               <div className="space-y-2">
                 <Button className="w-full border rounded-lg" onClick={handleStudy}>
                   <PlayCircle className="mr-2 h-4 w-4" />
-                  STUDY CONCEPT
+                  Study Concept
                 </Button>
                 {onAskAI && (
                   <Button
@@ -207,7 +207,7 @@ export function ConceptDetailPanel({
                     onClick={() => onAskAI(node.id, node.title)}
                   >
                     <MessageSquare className="mr-2 h-4 w-4" />
-                    ASK AI
+                    Ask AI
                   </Button>
                 )}
               </div>

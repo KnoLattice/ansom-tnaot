@@ -16,22 +16,27 @@ export function PrimaryAction({
 }: PrimaryActionProps) {
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.15 }}
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: "easeOut", delay: 0.1 }}
       className="flex gap-3"
     >
-      <Button className="flex-1 py-6 text-sm border rounded-md border-[var(--color-border-default)] bg-blue-600" onClick={onStartSession}>
-        <PlayCircle className="mr-2 h-4 w-4" />
-        START SESSION
+      <Button
+        size="lg"
+        className="flex-1 kl-glow-accent"
+        onClick={onStartSession}
+      >
+        <PlayCircle className="mr-2 h-5 w-5" />
+        Start Session
       </Button>
       <Button
         variant="outline"
-        className="py-6 text-sm hover:text-[var(--color-text-primary)]"
+        size="lg"
+        className="flex-1"
         onClick={onChooseStudy}
       >
-        <Crosshair className="mr-2 h-4 w-4" />
-        CHOOSE
+        <Crosshair className="mr-2 h-5 w-5" />
+        Choose
       </Button>
     </motion.div>
   );

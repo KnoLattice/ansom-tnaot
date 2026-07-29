@@ -124,7 +124,7 @@ export function CollectionRow({
         <Badge
           variant="outline"
           className={cn(
-            "shrink-0 rounded-sm border border-[var(--color-border-subtle)] font-mono text-[10px]",
+            "shrink-0 rounded-sm border border-[var(--color-border-subtle)] text-xs",
             collection.overallMastery !== null
               ? "text-[var(--color-accent-primary)]"
               : "text-[var(--color-text-muted)]",
@@ -134,7 +134,7 @@ export function CollectionRow({
         </Badge>
 
         {/* Document count */}
-        <span className="shrink-0 font-mono text-[10px] text-[var(--color-text-muted)]">
+        <span className="shrink-0 text-xs text-[var(--color-text-muted)]">
           {collection.documentCount} doc{collection.documentCount !== 1 ? "s" : ""}
         </span>
 
@@ -144,7 +144,7 @@ export function CollectionRow({
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
-                className="border border-[var(--color-border-default)] bg-[var(--color-canvas)] p-1.5 text-[var(--color-text-muted)] opacity-0 transition hover:text-[var(--color-text-primary)] group-hover:opacity-100"
+                className="border border-[var(--color-border-subtle)] bg-[var(--color-canvas)] p-1.5 text-[var(--color-text-muted)] opacity-0 transition hover:text-[var(--color-text-primary)] group-hover:opacity-100"
                 onClick={(e) => e.stopPropagation()}
               >
                 <MoreVertical className="h-4 w-4" />
@@ -152,10 +152,10 @@ export function CollectionRow({
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="w-44 border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]"
+              className="w-44 border-[var(--color-border-subtle)] bg-[var(--color-surface)] text-[var(--color-text-primary)]"
             >
               <DropdownMenuItem
-                className="font-mono text-xs uppercase tracking-wider"
+                className="text-sm"
                 onClick={(e) => {
                   e.stopPropagation();
                   setIsEditing(true);
@@ -165,10 +165,10 @@ export function CollectionRow({
                 <Pencil className="mr-2 h-4 w-4" />
                 Rename
               </DropdownMenuItem>
-              <DropdownMenuSeparator className="bg-[var(--color-border-default)]" />
+              <DropdownMenuSeparator className="bg-[var(--color-border-subtle)]" />
               <AlertDialogTrigger asChild>
                 <DropdownMenuItem
-                  className="font-mono text-xs uppercase tracking-wider text-red-400 focus:text-red-400"
+                  className="text-sm text-red-500"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <Trash2 className="mr-2 h-4 w-4" />
@@ -178,9 +178,9 @@ export function CollectionRow({
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <AlertDialogContent className="rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]">
+          <AlertDialogContent className="rounded-md border-[var(--color-border-subtle)] bg-[var(--color-surface)] text-[var(--color-text-primary)]">
             <AlertDialogHeader>
-              <AlertDialogTitle>DELETE COLLECTION?</AlertDialogTitle>
+              <AlertDialogTitle>Delete Collection</AlertDialogTitle>
               <AlertDialogDescription className="text-[var(--color-text-secondary)]">
                 Delete &ldquo;{collection.name}&rdquo;? Your{" "}
                 {collection.documentCount} document
@@ -189,14 +189,14 @@ export function CollectionRow({
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel className="rounded-md border-[var(--color-border-default)] bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)] hover:bg-[var(--color-border-default)]">
-                CANCEL
+              <AlertDialogCancel className="rounded-md border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)] hover:bg-[var(--color-border-subtle)]">
+                Cancel
               </AlertDialogCancel>
               <AlertDialogAction
                 className="rounded-md bg-red-600 text-white hover:bg-red-700"
                 onClick={() => onDelete(collection.id)}
               >
-                DELETE
+                Delete
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -207,7 +207,7 @@ export function CollectionRow({
       {expanded && (
         <div className="border-t border-[var(--color-border-subtle)] bg-[var(--color-canvas)]">
           {documents.length === 0 ? (
-            <p className="px-4 py-3 text-center font-mono text-[10px] text-[var(--color-text-muted)]">
+            <p className="px-4 py-3 text-center text-xs text-[var(--color-text-muted)]">
               No documents in this collection
             </p>
           ) : (

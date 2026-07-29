@@ -21,40 +21,25 @@
     background-color: var(--color-canvas);
     color: var(--color-text-primary);
     font-family: var(--font-body, "DM Sans"), system-ui, sans-serif;
-    line-height: 1.5;
+    line-height: 1.6;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Subtle dot grid background — mission control feel */
+  /* Subtle ambient background gradient */
   body::before {
     content: "";
     position: fixed;
     inset: 0;
     pointer-events: none;
     z-index: -1;
-    background-image: radial-gradient(circle, #222222 0.5px, transparent 0.5px);
-    background-size: 24px 24px;
-    opacity: 0.5;
-  }
-
-  /* Thin horizontal scan line at top */
-  body::after {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: var(--color-accent-primary);
-    opacity: 0.3;
-    pointer-events: none;
-    z-index: -1;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -20%, color-mix(in srgb, var(--color-accent-primary) 4%, transparent), transparent);
   }
 
   ::selection {
     background: var(--color-accent-primary);
-    color: #000000;
+    color: #FFFFFF;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -68,7 +53,7 @@
 }
 
 @layer components {
-  /* React Flow overrides — raw data graph */
+  /* React Flow overrides */
   .react-flow__node {
     background: transparent !important;
     border: none !important;
@@ -89,32 +74,29 @@
   }
 
   .react-flow__edge-path {
-    stroke-linecap: square;
+    stroke-linecap: round;
   }
 
-  /* Brutalist panel — opaque, sharp, structural */
+  /* Glass panel — frosted glass with blur and depth */
   .kl-glass-panel {
-    background: var(--panel-bg);
+    background: color-mix(in srgb, var(--panel-bg) calc(var(--panel-opacity) * 100%), transparent);
     border: 1px solid var(--panel-border);
-    border-radius: 0;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    box-shadow: none;
+    border-radius: var(--radius-card);
+    backdrop-filter: blur(var(--panel-blur));
+    -webkit-backdrop-filter: blur(var(--panel-blur));
+    box-shadow: var(--elevation-raised);
   }
 
-  /* Data label — uppercase monospace micro text */
+  /* Data label — friendly sans-serif label */
   .kl-data-label {
-    font-family: var(--font-display, "Space Mono"), monospace;
-    font-size: 0.625rem;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 600;
     color: var(--color-text-muted);
   }
 
-  /* Data value — large monospace readout */
+  /* Data value — large numeric readout */
   .kl-data-value {
-    font-family: var(--font-display, "Space Mono"), monospace;
+    font-family: var(--font-display), sans-serif;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
   }
@@ -122,22 +104,73 @@
   /* Section divider */
   .kl-divider {
     height: 1px;
-    background: var(--color-border-default);
+    background: var(--color-border-subtle);
     border: none;
   }
 
-  /* Card base — brutalist data block */
+  /* Card base — rounded surface with subtle depth */
   .kl-card {
     background: var(--color-surface);
-    border: 1px solid var(--color-border-default);
-    border-radius: 0;
-    padding: 1rem;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-card);
+    padding: 1.25rem;
   }
 
   /* Active/selected state */
   .kl-card-active {
     border-color: var(--color-accent-primary);
-    box-shadow: inset 0 0 0 1px var(--color-accent-primary);
+    box-shadow: 0 0 0 1px var(--color-accent-primary), var(--glow-accent);
+  }
+
+  /* ── Elevation tiers ── */
+  .kl-elevation-1 { box-shadow: var(--elevation-raised); }
+  .kl-elevation-2 { box-shadow: var(--elevation-overlay); }
+  .kl-elevation-3 { box-shadow: var(--elevation-modal); }
+
+  /* ── Glass deep variant ── */
+  .kl-glass-deep {
+    background: color-mix(in srgb, var(--panel-bg) 60%, transparent);
+    backdrop-filter: blur(var(--blur-heavy));
+    -webkit-backdrop-filter: blur(var(--blur-heavy));
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-card);
+  }
+
+  /* ── Accent glow ring ── */
+  .kl-glow-accent {
+    box-shadow: 0 0 0 1px var(--color-border-subtle), var(--glow-accent);
+  }
+
+  /* ── Hover lift for interactive cards ── */
+  .kl-hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .kl-hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--elevation-overlay);
+  }
+  .kl-hover-lift:active {
+    transform: translateY(0);
+    box-shadow: var(--elevation-raised);
+  }
+
+  /* ── Button press scale ── */
+  .kl-press-scale {
+    transition: transform 0.1s ease;
+  }
+  .kl-press-scale:active {
+    transform: scale(0.97);
+  }
+
+  /* ── Staggered entrance animation ── */
+  .kl-stagger-enter {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  .kl-stagger-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.3s ease, transform 0.3s ease;
   }
 
   /* ── Document Summary Markdown ─────────────────────── */
@@ -150,11 +183,10 @@
   }
 
   .kl-summary-prose h1 {
-    font-family: var(--font-mono, monospace);
+    font-family: var(--font-body), sans-serif;
     font-size: 1.35rem;
     font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+    letter-spacing: -0.02em;
     color: var(--color-text-primary);
     border-bottom: 2px solid var(--color-border-default);
     padding-bottom: 0.75rem;
@@ -163,11 +195,9 @@
   }
 
   .kl-summary-prose h2 {
-    font-family: var(--font-mono, monospace);
+    font-family: var(--font-body), sans-serif;
     font-size: 1.05rem;
     font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
     color: var(--color-accent-primary);
     border-left: 3px solid var(--color-accent-primary);
     padding-left: 0.75rem;
@@ -176,7 +206,7 @@
   }
 
   .kl-summary-prose h3 {
-    font-family: var(--font-mono, monospace);
+    font-family: var(--font-body), sans-serif;
     font-size: 0.925rem;
     font-weight: 600;
     color: var(--color-text-primary);
@@ -185,11 +215,9 @@
   }
 
   .kl-summary-prose h4 {
-    font-family: var(--font-mono, monospace);
+    font-family: var(--font-body), sans-serif;
     font-size: 0.8rem;
     font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
     color: var(--color-text-secondary);
     margin-top: 1.5rem;
     margin-bottom: 0.5rem;
@@ -252,8 +280,8 @@
   }
 
   .kl-summary-prose code {
-    font-family: var(--font-mono, monospace);
     font-size: 0.8rem;
+    font-weight: 500;
     color: var(--color-accent-primary);
     background: color-mix(in srgb, var(--color-accent-primary) 10%, transparent);
     padding: 0.15rem 0.4rem;
@@ -292,11 +320,9 @@
   }
 
   .kl-summary-prose th {
-    font-family: var(--font-mono, monospace);
+    font-family: var(--font-body), sans-serif;
     font-size: 0.7rem;
     font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
     text-align: left;
     padding: 0.5rem 0.75rem;
     border-bottom: 2px solid var(--color-border-default);
@@ -383,7 +409,6 @@
   .kl-chat-prose h2,
   .kl-chat-prose h3,
   .kl-chat-prose h4 {
-    font-family: var(--font-mono, monospace);
     font-weight: 600;
     color: var(--color-text-primary);
     margin-top: 1em;
@@ -392,14 +417,11 @@
 
   .kl-chat-prose h1 {
     font-size: 0.95rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: -0.02em;
   }
 
   .kl-chat-prose h2 {
     font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
     color: var(--color-accent-primary);
   }
 
@@ -409,14 +431,12 @@
 
   .kl-chat-prose h4 {
     font-size: 0.775rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
     color: var(--color-text-secondary);
   }
 
   .kl-chat-prose code {
-    font-family: var(--font-mono, monospace);
     font-size: 0.8em;
+    font-weight: 500;
     color: var(--color-accent-primary);
     background: color-mix(in srgb, var(--color-accent-primary) 10%, transparent);
     padding: 0.1em 0.35em;
@@ -460,11 +480,8 @@
   }
 
   .kl-chat-prose th {
-    font-family: var(--font-mono, monospace);
     font-size: 0.65rem;
     font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
     text-align: left;
     padding: 0.35em 0.5em;
     border-bottom: 2px solid var(--color-border-default);

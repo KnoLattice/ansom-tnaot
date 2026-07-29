@@ -19,32 +19,32 @@ export function ContinuityBanner({
   let statusTag: string;
 
   if (isFirstVisit) {
-    statusTag = "NEW";
+    statusTag = "Welcome";
     message = learnerName
-      ? `Welcome, ${learnerName}. Upload a document to initialize your first study session.`
-      : "Welcome. Upload a document to initialize your first study session.";
+      ? `Welcome, ${learnerName}. Upload a document to start your first study session.`
+      : "Welcome. Upload a document to start your first study session.";
   } else if (lastSession) {
     const timeAgo = fromNow(lastSession.endedAt ?? lastSession.startedAt);
     const accuracy = lastSession.accuracyPercent;
     const questions = lastSession.totalInteractions;
-    statusTag = "RETURNING";
+    statusTag = "Returning";
     message = `Last session ${timeAgo}: ${questions} interaction${questions !== 1 ? "s" : ""}${accuracy != null ? ` / ${accuracy}% accuracy` : ""}.`;
   } else {
-    statusTag = "IDLE";
+    statusTag = "Ready";
     message = "No recent sessions. Start one to continue learning.";
   }
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.15 }}
-      className="flex items-start gap-3 border-l-2 border-[var(--color-accent-primary)] bg-[var(--color-surface)] px-4 py-3"
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="kl-glass-panel flex items-center gap-4 p-4"
     >
-      <span className="inline-block shrink-0 border border-[var(--color-accent-primary)] px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-widest text-[var(--color-accent-primary)]">
+      <span className="inline-flex items-center rounded-[var(--radius-badge)] bg-[var(--color-accent-primary)]/10 px-2.5 py-1 text-xs font-semibold text-[var(--color-accent-primary)]">
         {statusTag}
       </span>
-      <p className="text-sm text-[var(--color-text-secondary)]">{message}</p>
+      <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">{message}</p>
     </motion.div>
   );
 }

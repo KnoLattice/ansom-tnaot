@@ -25,9 +25,9 @@ interface ChatInputProps {
 }
 
 const CONTEXT_ICONS = {
-  document: "DOC",
-  session: "SES",
-  concept: "CON",
+  document: "Doc",
+  session: "Ses",
+  concept: "Con",
 } as const;
 
 const SLASH_COMMANDS = [
@@ -40,13 +40,13 @@ function formatRelativeTime(dateStr: string): string {
   const now = new Date();
   const diffMs = now.getTime() - d.getTime();
   const diffMins = Math.floor(diffMs / 60000);
-  if (diffMins < 1) return "JUST NOW";
-  if (diffMins < 60) return `${diffMins}M AGO`;
+  if (diffMins < 1) return "Just now";
+  if (diffMins < 60) return `${diffMins}m ago`;
   const diffHours = Math.floor(diffMins / 60);
-  if (diffHours < 24) return `${diffHours}H AGO`;
+  if (diffHours < 24) return `${diffHours}h ago`;
   const diffDays = Math.floor(diffHours / 24);
-  if (diffDays < 7) return `${diffDays}D AGO`;
-  return d.toLocaleDateString("en-US", { month: "short", day: "numeric" }).toUpperCase();
+  if (diffDays < 7) return `${diffDays}d ago`;
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
 export function ChatInput({
@@ -186,7 +186,7 @@ export function ChatInput({
   };
 
   return (
-    <div className="relative border-t border-[var(--color-border-default)] bg-[var(--color-canvas)] p-3">
+    <div className="relative border-t border-[var(--color-border-subtle)] bg-[var(--color-canvas)] p-3">
       {/* History dropdown */}
       <AnimatePresence>
         {historyOpen && (
@@ -196,12 +196,12 @@ export function ChatInput({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 8 }}
             transition={{ duration: 0.15 }}
-            className="absolute bottom-full left-3 right-3 z-50 mb-2 max-h-64 overflow-hidden rounded-md border border-[var(--color-border-default)] bg-[var(--color-surface)] shadow-xl"
+            className="absolute bottom-full left-3 right-3 z-50 mb-2 max-h-64 overflow-hidden rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-surface)] shadow-xl"
           >
             {/* Header */}
-            <div className="flex items-center gap-2 border-b border-[var(--color-border-default)] px-3 py-2">
+            <div className="flex items-center gap-2 border-b border-[var(--color-border-subtle)] px-3 py-2">
               <Clock className="h-3.5 w-3.5 text-[var(--color-text-muted)]" />
-              <p className="kl-data-label">CONVERSATION HISTORY</p>
+              <p className="kl-data-label">Conversation History</p>
             </div>
 
             {/* Filter input */}
@@ -211,7 +211,7 @@ export function ChatInput({
                 value={historyFilter}
                 onChange={(e) => setHistoryFilter(e.target.value)}
                 placeholder="Filter conversations..."
-                className="w-full bg-transparent font-mono text-xs text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus:outline-none"
+                className="w-full bg-transparent text-xs text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus:outline-none"
                 autoFocus
               />
             </div>
@@ -220,7 +220,7 @@ export function ChatInput({
             <div className="max-h-48 overflow-y-auto">
               {filteredConversations.length === 0 ? (
                 <div className="px-3 py-6 text-center">
-                  <p className="font-mono text-[10px] text-[var(--color-text-muted)]">
+                  <p className="text-xs text-[var(--color-text-muted)]">
                     No conversations yet
                   </p>
                 </div>
@@ -237,7 +237,7 @@ export function ChatInput({
                       <p className="truncate text-xs text-[var(--color-text-secondary)] group-hover:text-[var(--color-text-primary)]">
                         {conv.title}
                       </p>
-                      <p className="font-mono text-[9px] uppercase tracking-wider text-[var(--color-text-muted)]">
+                      <p className="text-xs text-[var(--color-text-muted)]">
                         {conv.scope} — {formatRelativeTime(conv.updatedAt)}
                       </p>
                     </div>
@@ -264,7 +264,7 @@ export function ChatInput({
               key={m.id}
               className="inline-flex items-center gap-1 rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] px-2 py-0.5 text-xs text-[var(--color-text-secondary)]"
             >
-              <span className="font-mono text-[9px] font-bold uppercase tracking-wider text-[var(--color-accent-primary)]">
+              <span className="text-xs font-medium text-[var(--color-accent-primary)]">
                 {CONTEXT_ICONS[m.type]}
               </span>
               <span className="font-medium">{m.label}</span>
@@ -288,7 +288,7 @@ export function ChatInput({
             size="icon"
             variant="ghost"
             onClick={() => setPickerOpen(!pickerOpen)}
-            className="shrink-0 border border-[var(--color-border-default)]"
+            className="shrink-0 border border-[var(--color-border-subtle)]"
           >
             <Plus className="h-4 w-4" />
           </Button>
@@ -311,7 +311,7 @@ export function ChatInput({
             disabled={disabled || blocked}
             rows={1}
             className={cn(
-              "w-full resize-none border border-[var(--color-border-default)] bg-[var(--color-surface)] px-3 py-2 min-h-10 font-mono text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus-visible:outline-none focus-visible:border-[var(--color-accent-primary)] disabled:cursor-not-allowed disabled:opacity-40",
+              "w-full resize-none border border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-3 py-2 min-h-10 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus-visible:outline-none focus-visible:border-[var(--color-accent-primary)] disabled:cursor-not-allowed disabled:opacity-40",
               blocked && "border-[var(--color-destructive)]/50",
               isSlashCommand && "border-[var(--color-accent-primary)]",
             )}
@@ -340,7 +340,7 @@ export function ChatInput({
             initial={{ opacity: 0, y: -4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
-            className="mt-1.5 font-mono text-[10px] text-[var(--color-text-muted)]"
+            className="mt-1.5 text-xs text-[var(--color-text-muted)]"
           >
             Type <span className="text-[var(--color-accent-primary)]">@/h</span> for conversation history
           </motion.div>

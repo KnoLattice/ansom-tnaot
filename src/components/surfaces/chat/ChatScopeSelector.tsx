@@ -25,8 +25,8 @@ export function ChatScopeSelector({
 
       {collections.length > 0 && (
         <div>
-          <p className="mb-1.5 font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
-            COLLECTIONS
+          <p className="mb-1.5 text-xs text-[var(--color-text-muted)]">
+            Collections
           </p>
           <div className="flex flex-wrap gap-1.5">
             {collections.map((col) => (
@@ -35,10 +35,10 @@ export function ChatScopeSelector({
                 type="button"
                 onClick={() => onSelect("collection", col.id)}
                 className={cn(
-                  "inline-flex items-center gap-1.5 border rounded-md px-2.5 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider transition",
+                  "inline-flex items-center gap-1.5 border rounded-md px-2.5 py-1.5 text-xs font-medium transition",
                   activeScope === "collection"
                     ? "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/10 text-[var(--color-accent-primary)]"
-                    : "border-[var(--color-border-default)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]",
+                    : "border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]",
                 )}
               >
                 <FolderOpen className="h-3 w-3" />
@@ -51,8 +51,8 @@ export function ChatScopeSelector({
 
       {documents.length > 0 && (
         <div>
-          <p className="mb-1.5 font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
-            DOCUMENTS
+          <p className="mb-1.5 text-xs text-[var(--color-text-muted)]">
+            Documents
           </p>
           <div className="flex flex-wrap gap-1.5">
             {documents.map((doc) => (
@@ -61,10 +61,10 @@ export function ChatScopeSelector({
                 type="button"
                 onClick={() => onSelect("document", doc.id)}
                 className={cn(
-                  "inline-flex items-center gap-1.5 border rounded-md px-2.5 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider transition",
+                  "inline-flex items-center gap-1.5 border rounded-md px-2.5 py-1.5 text-xs font-medium transition",
                   activeScope === "document"
                     ? "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/10 text-[var(--color-accent-primary)]"
-                    : "border-[var(--color-border-default)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]",
+                    : "border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]",
                 )}
               >
                 <FileText className="h-3 w-3" />
@@ -75,7 +75,7 @@ export function ChatScopeSelector({
         </div>
       )}
 
-      <p className="font-mono text-[10px] text-[var(--color-text-muted)]">
+      <p className="text-xs text-[var(--color-text-muted)]">
         <Lightbulb className="mr-1 inline h-3 w-3" />
         Concept-level chat is available from the mastery map
       </p>

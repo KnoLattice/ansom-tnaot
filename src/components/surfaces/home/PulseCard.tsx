@@ -24,16 +24,16 @@ export function PulseCard({
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.15 }}
-      className="flex flex-col justify-between border rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)] p-4"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: "easeOut", delay: 0.05 }}
+      className="kl-card kl-elevation-1"
     >
       {/* Header label */}
       <p className="kl-data-label">Overall Mastery</p>
 
       {/* Big number readout */}
-      <div className="mt-3 flex items-baseline gap-3">
+      <div className="mt-4 flex items-baseline gap-3">
         <span
           className="kl-data-value text-5xl"
           style={{ color }}
@@ -42,11 +42,11 @@ export function PulseCard({
         </span>
         {weeklyDelta != null && (
           <span
-            className={`font-mono text-xs font-bold tabular-nums ${
+            className={`text-sm font-semibold tabular-nums ${
               weeklyDelta > 0
                 ? "text-[var(--color-accent-secondary)]"
                 : weeklyDelta < 0
-                  ? "text-red-400"
+                  ? "text-red-500"
                   : "text-[var(--color-text-muted)]"
             }`}
           >
@@ -56,25 +56,25 @@ export function PulseCard({
         )}
       </div>
 
-      {/* Progress bar */}
-      <div className="mt-4 h-1.5 w-full rounded-full bg-[var(--color-border-subtle)]">
-        <div
-          className="h-full rounded-full transition-all duration-300"
-          style={{
-            width: `${overallMasteryPercent}%`,
-            backgroundColor: color,
-          }}
+      {/* Progress bar with rounded ends */}
+      <div className="mt-5 h-2 w-full rounded-full bg-[var(--color-border-subtle)] overflow-hidden">
+        <motion.div
+          className="h-full rounded-full"
+          initial={{ width: 0 }}
+          animate={{ width: `${overallMasteryPercent}%` }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          style={{ backgroundColor: color }}
         />
       </div>
 
       {/* Sparkline */}
       {sparklineData.length > 1 && (
-        <div className="mt-3">
+        <div className="mt-4">
           <MasterySparkline data={sparklineData} height={40} />
         </div>
       )}
 
-      <p className="mt-2 font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
+      <p className="mt-3 text-xs text-[var(--color-text-muted)]">
         {trajectory}
       </p>
     </motion.div>

@@ -53,7 +53,7 @@ const AlertDialogTitle = ({
   ...props
 }: AlertDialogPrimitive.AlertDialogTitleProps) => (
   <AlertDialogPrimitive.Title
-    className={cn("font-mono text-base font-bold uppercase tracking-wider", className)}
+    className={cn("text-lg font-semibold", className)}
     {...props}
   />
 );
@@ -77,7 +77,7 @@ const AlertDialogAction = React.forwardRef<
   <AlertDialogPrimitive.Action
     ref={ref}
     className={cn(
-      "inline-flex h-10 items-center justify-center whitespace-nowrap px-5 py-2 font-mono text-sm font-medium uppercase tracking-wider transition-colors",
+      "inline-flex h-10 items-center justify-center whitespace-nowrap px-5 py-2 text-sm font-medium transition-colors",
       "bg-[#F40139] text-white border border-[#F40139] hover:brightness-90",
       "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#F40139]",
       "disabled:pointer-events-none disabled:opacity-40",
@@ -95,7 +95,7 @@ const AlertDialogCancel = React.forwardRef<
   <AlertDialogPrimitive.Cancel
     ref={ref}
     className={cn(
-      "inline-flex h-10 items-center justify-center whitespace-nowrap px-5 py-2 font-mono text-sm font-medium uppercase tracking-wider transition-colors",
+      "inline-flex h-10 items-center justify-center whitespace-nowrap px-5 py-2 text-sm font-medium transition-colors",
       "border border-[var(--color-border-default)] bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)]",
       "hover:bg-[var(--color-border-default)]",
       "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--color-accent-primary)]",

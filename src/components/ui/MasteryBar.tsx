@@ -47,7 +47,7 @@ export function MasteryBar({
         />
       </div>
       {showLabel && (
-        <p className="font-mono text-[10px] font-bold tabular-nums text-[var(--color-text-muted)]">
+        <p className="text-xs font-bold tabular-nums text-[var(--color-text-muted)]">
           {formatMastery(score)}
         </p>
       )}

@@ -41,7 +41,7 @@ export function SessionHeader({
     <div className="flex items-center gap-4 border border-[var(--color-border-default)] bg-[var(--color-surface)] px-4 py-3">
       {/* Concept name */}
       <div className="min-w-0 shrink-0">
-        <p className="truncate font-mono text-xs font-bold uppercase tracking-wider text-[var(--color-accent-primary)]">
+        <p className="truncate text-xs font-semibold text-[var(--color-accent-primary)]">
           {conceptName}
         </p>
       </div>
@@ -73,14 +73,14 @@ export function SessionHeader({
             variant="ghost"
             size="icon"
             aria-label="End session"
-            className="h-8 w-8 shrink-0 border  border-[var(--color-border-default)] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
+            className="h-8 w-8 shrink-0 border border-[var(--color-border-subtle)] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
           >
             <X className="h-4 w-4" />
           </Button>
         </AlertDialogTrigger>
         <AlertDialogContent className=" rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]">
           <AlertDialogHeader>
-            <AlertDialogTitle>END SESSION?</AlertDialogTitle>
+            <AlertDialogTitle>End Session?</AlertDialogTitle>
             <AlertDialogDescription className="text-[var(--color-text-secondary)]">
               Your progress will be saved. You can review your results in the
               summary.
@@ -89,14 +89,14 @@ export function SessionHeader({
           <AlertDialogFooter>
             <AlertDialogCancel
                className="border rounded-md">
-                KEEP STUDYING
+                Keep Studying
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={onEndSession}
               disabled={isSubmitting}
               className="border rounded-md"
             >
-              END SESSION
+              End Session
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

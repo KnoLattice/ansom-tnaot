@@ -206,13 +206,13 @@ export function PdfViewer() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 m-auto flex h-[85vh] w-[min(90vw,1000px)] flex-col rounded-lg border border-[var(--color-border-default)] bg-[var(--color-canvas)] shadow-2xl"
+            className="fixed inset-0 z-50 m-auto flex h-[85vh] w-[min(90vw,1000px)] flex-col rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-canvas)] shadow-2xl"
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-[var(--color-border-default)] px-4 py-3">
               <div className="min-w-0 flex-1">
-                <p className="kl-data-label">SOURCE DOCUMENT</p>
-                <p className="mt-0.5 truncate font-mono text-[10px] text-[var(--color-text-secondary)]">
+                <p className="kl-data-label">Source document</p>
+                <p className="mt-0.5 truncate text-xs text-[var(--color-text-secondary)]">
                   {citationTitle ?? "PDF Viewer"}
                 </p>
               </div>
@@ -221,14 +221,14 @@ export function PdfViewer() {
                 <Button variant="ghost" size="icon" onClick={zoomOut} className="h-7 w-7" title="Zoom out">
                   <ZoomOut className="h-3.5 w-3.5" />
                 </Button>
-                <span className="font-mono text-[10px] tabular-nums text-[var(--color-text-muted)] w-10 text-center">
+                <span className="text-xs tabular-nums text-[var(--color-text-muted)] w-10 text-center">
                   {Math.round(scale * 100 / BASE_SCALE)}%
                 </span>
                 <Button variant="ghost" size="icon" onClick={zoomIn} className="h-7 w-7" title="Zoom in">
                   <ZoomIn className="h-3.5 w-3.5" />
                 </Button>
 
-                <div className="mx-1 h-4 w-px bg-[var(--color-border-default)]" />
+                <div className="mx-1 h-4 w-px bg-[var(--color-border-subtle)]" />
 
                 <Button variant="ghost" size="icon" onClick={close} className="h-7 w-7">
                   <X className="h-4 w-4" />
@@ -238,7 +238,7 @@ export function PdfViewer() {
 
             {/* Page navigation bar */}
             {pages.length > 0 && (
-              <div className="flex items-center justify-between border-b border-[var(--color-border-default)] px-4 py-1.5">
+              <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] px-4 py-1.5">
                 <div className="flex items-center gap-2">
                   <Button
                     variant="ghost"
@@ -249,7 +249,7 @@ export function PdfViewer() {
                   >
                     <ChevronUp className="h-3.5 w-3.5" />
                   </Button>
-                  <span className="font-mono text-[10px] tabular-nums text-[var(--color-text-muted)]">
+                  <span className="text-xs tabular-nums text-[var(--color-text-muted)]">
                     {currentPage} / {pages.length}
                   </span>
                   <Button
@@ -264,7 +264,7 @@ export function PdfViewer() {
                 </div>
 
                 {totalHighlights > 0 && (
-                  <span className="rounded bg-yellow-100 px-1.5 py-0.5 font-mono text-[10px] font-bold text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300">
+                  <span className="rounded bg-yellow-100 px-1.5 py-0.5 text-xs font-bold text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300">
                     {totalHighlights} {totalHighlights === 1 ? "match" : "matches"}
                   </span>
                 )}
@@ -285,8 +285,8 @@ export function PdfViewer() {
 
               {error && (
                 <div className="flex h-full flex-col items-center justify-center gap-2 p-8 text-center">
-                  <p className="font-mono text-sm font-bold uppercase tracking-wider text-red-500">
-                    FAILED TO LOAD PDF
+                  <p className="text-sm font-bold text-red-500">
+                    Failed to load PDF
                   </p>
                   <p className="text-xs text-[var(--color-text-muted)]">{error}</p>
                 </div>
@@ -294,8 +294,8 @@ export function PdfViewer() {
 
               {!loading && !error && pages.length === 0 && (
                 <div className="flex h-full items-center justify-center">
-                  <p className="font-mono text-[10px] text-[var(--color-text-muted)]">
-                    NO DOCUMENT LOADED
+                  <p className="text-xs text-[var(--color-text-muted)]">
+                    No document loaded
                   </p>
                 </div>
               )}
@@ -308,7 +308,7 @@ export function PdfViewer() {
                 return (
                   <div
                     key={page.pageNumber}
-                    className="mx-auto mb-4 overflow-hidden border border-[var(--color-border-default)]"
+                    className="mx-auto mb-4 overflow-hidden border border-[var(--color-border-subtle)]"
                     style={{ width: w, height: h, position: "relative" }}
                   >
                     <PdfPageCanvas

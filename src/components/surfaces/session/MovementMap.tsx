@@ -37,7 +37,7 @@ export function MovementMap({ nodes, nodeTitles }: MovementMapProps) {
               <p className="truncate text-sm font-medium text-[var(--color-text-primary)]">
                 {nodeTitles[node.nodeId] ?? node.nodeId.slice(0, 8)}
               </p>
-              <div className="mt-0.5 flex items-center gap-2 font-mono text-[10px] tabular-nums text-[var(--color-text-muted)]">
+              <div className="mt-0.5 flex items-center gap-2 text-xs tabular-nums text-[var(--color-text-muted)]">
                 <span>{formatMastery(node.masteryBefore)}</span>
                 <span>&rarr;</span>
                 <span className="font-bold text-[var(--color-text-primary)]">
