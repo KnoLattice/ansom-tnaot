@@ -22,31 +22,29 @@ function formatUploadDate(dateStr: string): string {
   const now = new Date();
   const diffMs = now.getTime() - d.getTime();
   const diffMins = Math.floor(diffMs / 60000);
-  if (diffMins < 1) return "JUST NOW";
-  if (diffMins < 60) return `${diffMins}M AGO`;
+  if (diffMins < 1) return "just now";
+  if (diffMins < 60) return `${diffMins}m ago`;
   const diffHours = Math.floor(diffMins / 60);
-  if (diffHours < 24) return `${diffHours}H AGO`;
+  if (diffHours < 24) return `${diffHours}h ago`;
   const diffDays = Math.floor(diffHours / 24);
-  if (diffDays < 7) return `${diffDays}D AGO`;
+  if (diffDays < 7) return `${diffDays}d ago`;
   return d
-    .toLocaleDateString("en-US", { month: "short", day: "numeric" })
-    .toUpperCase();
+    .toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
 function statusLabel(status: string): { text: string; color: string } {
   switch (status) {
     case "completed":
-      return { text: "READY", color: "text-green-400 border-green-500" };
+      return { text: "Ready", color: "text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-500/10" };
     case "processing":
     case "pending":
-      return { text: "PROCESSING", color: "text-yellow-400 border-yellow-500" };
+      return { text: "Processing", color: "text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-500/10" };
     case "failed":
-      return { text: "FAILED", color: "text-red-400 border-red-500" };
+      return { text: "Failed", color: "text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-500/10" };
     default:
       return {
-        text: status.toUpperCase(),
-        color:
-          "text-[var(--color-text-muted)] border-[var(--color-border-default)]",
+        text: status,
+        color: "text-[var(--color-text-muted)] bg-[var(--color-surface-elevated)]",
       };
   }
 }
@@ -88,26 +86,26 @@ export function DocumentsSection({
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.15 }}
-      className="border border-[var(--color-border-subtle)] bg-[var(--color-surface)]"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: "easeOut", delay: 0.15 }}
+      className="kl-card kl-elevation-1 overflow-hidden"
     >
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-[var(--color-border-subtle)] px-4 py-2">
-        <p className="kl-data-label">DOCUMENTS</p>
+      <div className="flex items-center justify-between px-5 py-3">
+        <p className="kl-data-label">Documents</p>
         <button
           type="button"
           onClick={() => router.push("/library")}
-          className="flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-accent-primary)] transition-colors hover:text-[var(--color-text-primary)]"
+          className="flex items-center gap-1 text-xs font-medium text-[var(--color-accent-primary)] transition-colors hover:text-[var(--color-text-primary)]"
         >
-          VIEW ALL <ArrowRight className="h-3 w-3" />
+          View All <ArrowRight className="h-3.5 w-3.5" />
         </button>
       </div>
 
       {/* Document list */}
       {recent.length > 0 ? (
-        <div>
+        <div className="px-5 py-3">
           {recent.map((doc) => {
             const isActive = doc.id === activeDocumentId;
             const status = statusLabel(doc.processingStatus);
@@ -125,35 +123,34 @@ export function DocumentsSection({
                   }
                 }}
                 className={cn(
-                  "flex w-full items-center gap-3 border-b border-[var(--color-border-subtle)] px-4 py-2 text-left transition-colors last:border-b-0",
+                  "flex w-full items-center gap-3 border-b border-[var(--color-border-subtle)] py-3 text-left transition-colors last:border-b-0",
                   doc.processingStatus === "completed"
-                    ? "cursor-pointer hover:bg-[var(--color-border-subtle)]/30"
+                    ? "cursor-pointer hover:opacity-70"
                     : "cursor-default",
-                  isActive &&
-                    "border-l-2 border-l-[var(--color-accent-primary)]",
                 )}
               >
-                <FileText className="h-3.5 w-3.5 shrink-0 text-[var(--color-text-muted)]" />
+                <div className={cn(
+                  "flex h-8 w-8 items-center justify-center rounded-[var(--radius-badge)]",
+                  isActive ? "bg-[var(--color-accent-primary)]/10" : "bg-[var(--color-surface-elevated)]",
+                )}>
+                  <FileText className={cn(
+                    "h-4 w-4",
+                    isActive ? "text-[var(--color-accent-primary)]" : "text-[var(--color-text-muted)]",
+                  )} />
+                </div>
 
                 <div className="min-w-0 flex-1">
-                  <p
-                    className={cn(
-                      "truncate text-xs",
-                      isActive
-                        ? "font-bold text-[var(--color-text-primary)]"
-                        : "font-medium text-[var(--color-text-secondary)]",
-                    )}
-                  >
+                  <p className="truncate text-sm font-medium text-[var(--color-text-primary)]">
                     {doc.originalName}
                   </p>
-                  <p className="font-mono text-[9px] text-[var(--color-text-muted)]">
-                    {sizeMB}MB -- {formatUploadDate(doc.uploadedAt)}
+                  <p className="text-xs text-[var(--color-text-muted)]">
+                    {sizeMB}MB &middot; {formatUploadDate(doc.uploadedAt)}
                   </p>
                 </div>
 
                 <span
                   className={cn(
-                    "shrink-0 border px-1.5 py-0.5 font-mono text-[9px] font-bold",
+                    "shrink-0 rounded-[var(--radius-badge)] px-2 py-0.5 text-xs font-medium",
                     status.color,
                   )}
                 >
@@ -164,8 +161,8 @@ export function DocumentsSection({
           })}
         </div>
       ) : (
-        <div className="px-4 py-3 text-center">
-          <p className="font-mono text-xs text-[var(--color-text-muted)]">
+        <div className="px-5 py-6 text-center">
+          <p className="text-sm text-[var(--color-text-muted)]">
             No documents yet
           </p>
         </div>
@@ -185,7 +182,10 @@ export function DocumentsSection({
         }}
         onDragLeave={() => setIsDragActive(false)}
         className={cn(
-          "flex cursor-pointer items-center justify-center gap-2 border-t border-[var(--color-border-subtle)] px-4 py-2.5 transition-colors bg-blue-600",
+          "flex rounded-lg cursor-pointer items-center justify-center gap-2 border-t border-[var(--color-border-subtle)] px-5 py-3 text-sm font-medium text-white transition-colors",
+          isDragActive
+            ? "bg-[var(--color-accent-primary)]"
+            : "bg-[var(--color-accent-primary)] hover:brightness-110",
         )}
       >
         <input
@@ -200,13 +200,8 @@ export function DocumentsSection({
             e.target.value = "";
           }}
         />
-        <Upload className={cn(
-          "h-3.5 w-3.5",
-          isDragActive ? "text-[var(--color-surface)]" : "text-[var(--color-surface)]",
-        )} />
-        <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-surface)]">
-          {isDragActive ? "DROP TO UPLOAD" : "QUICK UPLOAD"}
-        </span>
+        <Upload className="h-4 w-4" />
+        {isDragActive ? "Drop to upload" : "Quick Upload"}
       </label>
     </motion.div>
   );

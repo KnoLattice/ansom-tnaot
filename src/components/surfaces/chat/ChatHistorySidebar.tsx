@@ -23,11 +23,11 @@ const SCOPE_ICONS: Record<ChatScope, typeof FileText> = {
 };
 
 const SCOPE_LABELS: Record<ChatScope, string> = {
-  concept: "CONCEPTS",
-  document: "DOCUMENTS",
-  collection: "COLLECTIONS",
-  session: "SESSIONS",
-  general: "GENERAL",
+  concept: "Concepts",
+  document: "Documents",
+  collection: "Collections",
+  session: "Sessions",
+  general: "General",
 };
 
 export function ChatHistorySidebar({
@@ -53,9 +53,9 @@ export function ChatHistorySidebar({
   );
 
   return (
-    <div className={cn("flex h-full flex-col border-r border-[var(--color-border-default)]", className)}>
+    <div className={cn("flex h-full flex-col border-r border-[var(--color-border-subtle)]", className)}>
       {/* Header */}
-      <div className="border-b border-[var(--color-border-default)] p-3">
+      <div className="border-b border-[var(--color-border-subtle)] p-3">
         <p className="kl-data-label mb-2">History</p>
         <div className="flex gap-1">
           {(["all", "concept", "document", "collection"] as const).map((s) => (
@@ -64,13 +64,13 @@ export function ChatHistorySidebar({
               type="button"
               onClick={() => setFilter(s)}
               className={cn(
-                "rounded-md px-2 py-1 font-mono text-[9px] font-bold uppercase tracking-wider transition",
+                "rounded-md px-2 py-1 text-xs font-medium transition",
                 filter === s
                   ? "bg-[var(--color-accent-primary)] text-white"
                   : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
               )}
             >
-              {s === "all" ? "ALL" : `${s.slice(0, 4)}.`}
+                {s === "all" ? "All" : `${s.slice(0, 4)}.`}
             </button>
           ))}
         </div>
@@ -84,7 +84,7 @@ export function ChatHistorySidebar({
           </div>
         ) : !filtered?.length ? (
           <div className="py-8 text-center">
-            <p className="font-mono text-[10px] text-[var(--color-text-muted)]">
+            <p className="text-xs text-[var(--color-text-muted)]">
               No conversations yet
             </p>
           </div>
@@ -95,7 +95,7 @@ export function ChatHistorySidebar({
                 const Icon = SCOPE_ICONS[scope];
                 return (
                   <div key={scope} className="mb-3">
-                    <p className="mb-1 px-2 font-mono text-[9px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
+                    <p className="mb-1 px-2 text-xs font-medium text-[var(--color-text-muted)]">
                       {SCOPE_LABELS[scope]}
                     </p>
                     {grouped[scope].map((conv) => (
@@ -114,7 +114,7 @@ export function ChatHistorySidebar({
                           className="flex min-w-0 flex-1 items-center gap-2 text-left"
                         >
                           <Icon className="h-3 w-3 shrink-0 text-[var(--color-text-muted)]" />
-                          <span className="truncate font-mono text-[10px] text-[var(--color-text-secondary)]">
+                          <span className="truncate text-xs text-[var(--color-text-secondary)]">
                             {conv.title}
                           </span>
                         </button>

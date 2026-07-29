@@ -11,10 +11,10 @@ import { formatMastery, getMasteryBand } from "@/lib/utils/mastery";
 export type FilterKey = "all" | "below-mastered" | "mastered" | "locked";
 
 const FILTERS: { key: FilterKey; label: string }[] = [
-  { key: "all", label: "ALL" },
-  { key: "below-mastered", label: "BELOW MASTERED" },
-  { key: "mastered", label: "MASTERED" },
-  { key: "locked", label: "LOCKED" },
+  { key: "all", label: "All" },
+  { key: "below-mastered", label: "Below Mastered" },
+  { key: "mastered", label: "Mastered" },
+  { key: "locked", label: "Locked" },
 ];
 
 type SortKey = "mastery" | "name" | "depth";
@@ -84,7 +84,7 @@ export function ConceptListView({
 
   return (
     <div className="space-y-3">
-      {/* Filter chips — brutalist */}
+      {/* Filter chips */}
       <div className="flex flex-wrap items-center gap-1">
         {FILTERS.map((f) => (
           <button
@@ -92,10 +92,10 @@ export function ConceptListView({
             type="button"
             onClick={() => onFilterChange(f.key)}
             className={cn(
-              "rounded-xl border px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider transition",
+              "rounded-xl border px-3 py-1.5 text-xs font-bold transition",
               filter === f.key
                 ? "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/10 text-[var(--color-accent-primary)]"
-                : "border-[var(--color-border-default)] text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
+                : "border-[var(--color-border-subtle)] text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]",
             )}
           >
             {f.label}
@@ -114,7 +114,7 @@ export function ConceptListView({
       </div>
 
       {/* Table header */}
-      <div className="grid grid-cols-[1fr_120px_100px] items-center gap-2 border-b border-[var(--color-border-default)] px-4 pb-2 font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
+      <div className="grid grid-cols-[1fr_120px_100px] items-center gap-2 border-b border-[var(--color-border-subtle)] px-4 pb-2 text-xs font-bold text-[var(--color-text-muted)]">
         <SortButton
           label="Concept"
           sortKey="name"
@@ -136,8 +136,8 @@ export function ConceptListView({
       {/* Rows */}
       <div className="space-y-0">
         {sortedNodes.length === 0 ? (
-          <p className="py-8 text-center font-mono text-xs text-[var(--color-text-muted)]">
-            NO CONCEPTS MATCH THIS FILTER
+          <p className="py-8 text-center text-xs text-[var(--color-text-muted)]">
+            No concepts match this filter
           </p>
         ) : (
           sortedNodes.map((node) => (
@@ -165,7 +165,7 @@ export function ConceptListView({
                   animated={false}
                   className="flex-1"
                 />
-                <span className="shrink-0 font-mono text-[10px] font-bold tabular-nums text-[var(--color-text-secondary)]">
+                <span className="shrink-0 text-xs font-bold tabular-nums text-[var(--color-text-secondary)]">
                   {formatMastery(node.masteryScore)}
                 </span>
               </div>

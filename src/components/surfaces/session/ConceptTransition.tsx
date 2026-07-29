@@ -40,10 +40,10 @@ export function ConceptTransition({
         >
           <div className="border border-[var(--color-border-default)] bg-[var(--color-surface)] p-8 text-center">
             <p className="kl-data-label">Switching to</p>
-            <h2 className="mt-3 font-mono text-xl font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+            <h2 className="mt-3 text-xl font-semibold text-[var(--color-text-primary)]">
               {conceptName}
             </h2>
-            <p className="mt-3 font-mono text-sm text-[var(--color-text-secondary)]">
+            <p className="mt-3 text-sm text-[var(--color-text-secondary)]">
               Current mastery:{" "}
               <span className="font-bold tabular-nums" style={{ color }}>
                 {formatMastery(masteryScore)}

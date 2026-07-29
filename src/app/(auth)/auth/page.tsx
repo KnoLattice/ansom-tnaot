@@ -26,7 +26,7 @@ function AuthPageContent() {
     <div className="relative min-h-screen overflow-hidden bg-canvas">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--glow-accent),_transparent_55%)]" />
       <div className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col items-center justify-center px-4 py-12">
-        <p className="mb-6 font-mono text-[10px] uppercase tracking-[0.4em] text-[var(--color-text-muted)]">
+        <p className="mb-6 text-xs tracking-[0.15em] text-[var(--color-text-muted)]">
           Knowledge as a living universe
         </p>
         <AuthCard
@@ -58,16 +58,16 @@ function AuthPageContent() {
                 setView(value as "login" | "register" | "onboarding")
               }
             >
-              <TabsList className="grid grid-cols-2 rounded-none bg-[var(--color-surface)] border border-[var(--color-border-default)] p-0 h-10">
+              <TabsList className="grid grid-cols-2 rounded-[var(--radius-card)] bg-[var(--color-surface)] border border-[var(--color-border-default)] p-0 h-10">
                 <TabsTrigger
                   value="login"
-                  className="h-full rounded-none font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)] data-[state=active]:bg-[var(--color-accent-primary)] data-[state=active]:text-white data-[state=active]:shadow-sm"
+                  className="h-full rounded-[var(--radius-button)] text-xs font-bold text-[var(--color-text-muted)] data-[state=active]:bg-[var(--color-accent-primary)] data-[state=active]:text-white data-[state=active]:shadow-sm"
                 >
                   Login
                 </TabsTrigger>
                 <TabsTrigger
                   value="register"
-                  className="h-full rounded-none font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)] data-[state=active]:bg-[var(--color-accent-primary)] data-[state=active]:text-white data-[state=active]:shadow-sm"
+                  className="h-full rounded-[var(--radius-button)] text-xs font-bold text-[var(--color-text-muted)] data-[state=active]:bg-[var(--color-accent-primary)] data-[state=active]:text-white data-[state=active]:shadow-sm"
                 >
                   Register
                 </TabsTrigger>
@@ -100,7 +100,7 @@ export default function AuthPage() {
     <Suspense
       fallback={
         <div className="flex min-h-screen items-center justify-center bg-canvas">
-          <div className="text-xs uppercase tracking-[0.4em] text-text-muted">Loading...</div>
+          <div className="text-xs animate-pulse text-text-muted">Loading...</div>
         </div>
       }
     >

@@ -109,10 +109,10 @@ export function ChatContextPicker({
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 8, scale: 0.95 }}
           transition={{ duration: 0.15 }}
-          className="absolute bottom-full left-0 z-50 mb-2 w-80 overflow-hidden rounded-md border border-[var(--color-border-default)] bg-[var(--color-surface)] shadow-xl"
+          className="absolute bottom-full left-0 z-50 mb-2 w-80 overflow-hidden rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-surface)] shadow-xl"
         >
           {/* Header */}
-          <div className="border-b border-[var(--color-border-default)] px-3 py-2">
+          <div className="border-b border-[var(--color-border-subtle)] px-3 py-2">
             <p className="kl-data-label">Attach Context</p>
           </div>
 
@@ -120,7 +120,7 @@ export function ChatContextPicker({
           <div className="max-h-64 overflow-y-auto">
             {items.length === 0 ? (
               <div className="px-3 py-6 text-center">
-                <p className="font-mono text-[10px] text-[var(--color-text-muted)]">
+                <p className="text-xs text-[var(--color-text-muted)]">
                   No documents or sessions yet
                 </p>
               </div>
@@ -152,7 +152,7 @@ export function ChatContextPicker({
                         "flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-colors",
                         isSelected
                           ? "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]"
-                          : "border-[var(--color-border-default)]",
+                          : "border-[var(--color-border-subtle)]",
                       )}
                     >
                       {isSelected && (
@@ -179,7 +179,7 @@ export function ChatContextPicker({
                         {item.label}
                       </div>
                       {item.subtitle && (
-                        <div className="truncate font-mono text-[9px] uppercase tracking-wider text-[var(--color-text-muted)]">
+                        <div className="truncate text-xs text-[var(--color-text-muted)]">
                           {item.subtitle}
                         </div>
                       )}
@@ -192,14 +192,14 @@ export function ChatContextPicker({
 
           {/* Footer */}
           {selectedItems.length > 0 && (
-            <div className="flex items-center justify-between border-t border-[var(--color-border-default)] px-3 py-2">
-              <span className="font-mono text-[10px] text-[var(--color-text-muted)]">
+            <div className="flex items-center justify-between border-t border-[var(--color-border-subtle)] px-3 py-2">
+              <span className="text-xs text-[var(--color-text-muted)]">
                 {selectedItems.length} selected
               </span>
               <button
                 type="button"
                 onClick={handleAttach}
-                className="flex items-center gap-1 rounded-md bg-[var(--color-accent-primary)] px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-white transition hover:brightness-110"
+                className="flex items-center gap-1 rounded-md bg-[var(--color-accent-primary)] px-2.5 py-1 text-xs font-medium text-white transition hover:brightness-110"
               >
                 <Plus className="h-3 w-3" />
                 Attach

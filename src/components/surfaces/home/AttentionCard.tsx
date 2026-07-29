@@ -12,11 +12,11 @@ interface AttentionCardProps {
 function urgencyLabel(urgency: WeakNode["urgency"]): string {
   switch (urgency) {
     case "critical":
-      return "CRITICAL";
+      return "Critical";
     case "high":
-      return "HIGH";
+      return "High";
     case "medium":
-      return "MEDIUM";
+      return "Medium";
   }
 }
 
@@ -40,11 +40,11 @@ export function AttentionCard({ weakNodes, onStudy }: AttentionCardProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.15 }}
-        className="flex flex-col border rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)] p-4"
+        className="flex flex-col border rounded-md border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-4"
       >
         <p className="kl-data-label">Flagged</p>
-        <p className="mt-4 text-center font-mono text-xs text-[var(--color-text-muted)]">
-          NO FLAGS — ALL CLEAR
+        <p className="mt-4 text-center text-xs text-[var(--color-text-muted)]">
+          No flags — All clear
         </p>
       </motion.div>
     );
@@ -55,11 +55,11 @@ export function AttentionCard({ weakNodes, onStudy }: AttentionCardProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.15 }}
-      className="flex flex-col border border-[var(--color-border-default)] bg-[var(--color-surface)] p-4"
+      className="flex flex-col border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-4"
     >
       <div className="flex items-center justify-between">
         <p className="kl-data-label">Flagged</p>
-        <span className="font-mono text-[10px] font-bold text-orange-400">
+        <span className="text-xs font-bold text-orange-400">
           {flagged.length}
         </span>
       </div>
@@ -77,11 +77,11 @@ export function AttentionCard({ weakNodes, onStudy }: AttentionCardProps) {
                 <p className="truncate text-sm font-medium text-[var(--color-text-primary)]">
                   {node.title}
                 </p>
-                <p className={`font-mono text-[10px] font-bold uppercase tracking-wider ${urgencyColor(node.urgency)}`}>
+                <p className={`text-xs font-bold ${urgencyColor(node.urgency)}`}>
                   {urgencyLabel(node.urgency)}
                 </p>
               </div>
-              <span className="ml-3 shrink-0 font-mono text-xs font-bold tabular-nums text-[var(--color-text-muted)]">
+              <span className="ml-3 shrink-0 text-xs font-bold tabular-nums text-[var(--color-text-muted)]">
                 {Math.round(node.masteryScore * 100)}%
               </span>
             </button>
@@ -92,10 +92,10 @@ export function AttentionCard({ weakNodes, onStudy }: AttentionCardProps) {
       {flagged.length > 1 && (
         <button
           type="button"
-          className="mt-2 self-end font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-accent-primary)] transition-colors hover:text-[var(--color-text-primary)]"
+          className="mt-2 self-end text-xs font-bold text-[var(--color-accent-primary)] transition-colors hover:text-[var(--color-text-primary)]"
           onClick={() => onStudy(flagged.map((n) => n.id))}
         >
-          STUDY ALL [{flagged.length}]
+          Study All [{flagged.length}]
         </button>
       )}
     </motion.div>

@@ -77,7 +77,7 @@ export function CollectionDocumentRow({
         <p className="truncate text-sm text-[var(--color-text-primary)]">
           {document.originalName}
         </p>
-        <p className="font-mono text-[10px] text-[var(--color-text-muted)]">
+        <p className="text-xs text-[var(--color-text-muted)]">
           {dayjs(document.uploadedAt).format("YYYY-MM-DD")} /{" "}
           {fileSizeMB.toFixed(1)}MB
         </p>
@@ -87,7 +87,7 @@ export function CollectionDocumentRow({
       <Badge
         variant="outline"
         className={cn(
-          "shrink-0 rounded-sm border border-[var(--color-border-subtle)] text-[10px]",
+          "shrink-0 rounded-sm border border-[var(--color-border-subtle)] text-xs",
           statusColors[document.processingStatus] ?? "",
         )}
       >
@@ -100,18 +100,18 @@ export function CollectionDocumentRow({
           <DropdownMenuTrigger asChild>
             <button
               type="button"
-              className="border border-[var(--color-border-default)] bg-[var(--color-canvas)] p-1 text-[var(--color-text-muted)] opacity-0 transition hover:text-[var(--color-text-primary)] group-hover:opacity-100"
+              className="border border-[var(--color-border-subtle)] bg-[var(--color-canvas)] p-1 text-[var(--color-text-muted)] opacity-0 transition hover:text-[var(--color-text-primary)] group-hover:opacity-100"
             >
               <MoreVertical className="h-3.5 w-3.5" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
-            className="w-52 border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]"
+            className="w-52 border-[var(--color-border-subtle)] bg-[var(--color-surface)] text-[var(--color-text-primary)]"
           >
             {!isActive && (
               <DropdownMenuItem
-                className="font-mono text-xs uppercase tracking-wider"
+                className="text-sm"
                 onClick={() => onSetActive(document.id)}
               >
                 <Check className="mr-2 h-4 w-4" />
@@ -120,7 +120,7 @@ export function CollectionDocumentRow({
             )}
             {isReady && (
               <DropdownMenuItem
-                className="font-mono text-xs uppercase tracking-wider"
+                className="text-sm"
                 onClick={() => onViewMastery(document.id)}
               >
                 <Map className="mr-2 h-4 w-4" />
@@ -131,7 +131,7 @@ export function CollectionDocumentRow({
             {/* Assign / Move to collection */}
             {otherCollections.length > 0 && (
               <DropdownMenuSub>
-                <DropdownMenuSubTrigger className="font-mono text-xs uppercase tracking-wider">
+                <DropdownMenuSubTrigger className="text-sm">
                   {isUncollected ? (
                     <FolderPlus className="mr-2 h-4 w-4" />
                   ) : (
@@ -139,7 +139,7 @@ export function CollectionDocumentRow({
                   )}
                   {isUncollected ? "Add to collection" : "Move to collection"}
                 </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent className="border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]">
+                <DropdownMenuSubContent className="border-[var(--color-border-subtle)] bg-[var(--color-surface)] text-[var(--color-text-primary)]">
                   {otherCollections.map((col) => (
                     <DropdownMenuItem
                       key={col.id}
@@ -156,7 +156,7 @@ export function CollectionDocumentRow({
             {/* Remove from collection (only if in a collection) */}
             {!isUncollected && (
               <DropdownMenuItem
-                className="font-mono text-xs uppercase tracking-wider"
+                className="text-sm"
                 onClick={() => onAssign(document.id, null)}
               >
                 <X className="mr-2 h-4 w-4" />
@@ -164,9 +164,9 @@ export function CollectionDocumentRow({
               </DropdownMenuItem>
             )}
 
-            <DropdownMenuSeparator className="bg-[var(--color-border-default)]" />
+            <DropdownMenuSeparator className="bg-[var(--color-border-subtle)]" />
             <AlertDialogTrigger asChild>
-              <DropdownMenuItem className="font-mono text-xs uppercase tracking-wider text-red-400 focus:text-red-400">
+              <DropdownMenuItem className="text-sm text-red-500">
                 <Trash2 className="mr-2 h-4 w-4" />
                 Delete
               </DropdownMenuItem>
@@ -174,23 +174,23 @@ export function CollectionDocumentRow({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <AlertDialogContent className="rounded-md border-[var(--color-border-default)] bg-[var(--color-surface)] text-[var(--color-text-primary)]">
+        <AlertDialogContent className="rounded-md border-[var(--color-border-subtle)] bg-[var(--color-surface)] text-[var(--color-text-primary)]">
           <AlertDialogHeader>
-            <AlertDialogTitle>DELETE DOCUMENT?</AlertDialogTitle>
+            <AlertDialogTitle>Delete Document</AlertDialogTitle>
             <AlertDialogDescription className="text-[var(--color-text-secondary)]">
               This will permanently delete &ldquo;{document.originalName}&rdquo;
               and all associated concepts, mastery data, and session history.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="rounded-md border-[var(--color-border-default)] bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)] hover:bg-[var(--color-border-default)]">
-              CANCEL
+            <AlertDialogCancel className="rounded-md border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)] hover:bg-[var(--color-border-subtle)]">
+              Cancel
             </AlertDialogCancel>
             <AlertDialogAction
               className="rounded-md bg-red-600 text-white hover:bg-red-700"
               onClick={() => onDelete(document.id)}
             >
-              DELETE
+              Delete
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

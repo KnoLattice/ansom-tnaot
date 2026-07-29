@@ -59,8 +59,8 @@ export function DocumentSummary({ documentId }: DocumentSummaryProps) {
   if (error) {
     return (
       <div className="flex min-h-[40vh] flex-col items-center justify-center text-center">
-        <p className="font-mono text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
-          UNABLE TO LOAD SUMMARY
+        <p className="text-sm font-bold text-[var(--color-text-primary)]">
+          Unable to load summary
         </p>
         <p className="mt-2 text-sm text-[var(--color-text-secondary)]">
           {error instanceof Error ? error.message : "Something went wrong."}
@@ -73,8 +73,8 @@ export function DocumentSummary({ documentId }: DocumentSummaryProps) {
     return (
       <div className="flex min-h-[40vh] flex-col items-center justify-center text-center px-4">
         <FileText className="h-10 w-10 text-[var(--color-text-muted)]" />
-        <p className="mt-4 font-mono text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
-          NO SUMMARY AVAILABLE
+        <p className="mt-4 text-sm font-bold text-[var(--color-text-primary)]">
+          No summary available
         </p>
         <p className="mt-2 max-w-md text-sm text-[var(--color-text-secondary)]">
           This document was processed before summary generation was available.
@@ -88,17 +88,17 @@ export function DocumentSummary({ documentId }: DocumentSummaryProps) {
           {generating ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              GENERATING...
+              Generating...
             </>
           ) : (
             <>
               <Sparkles className="mr-2 h-4 w-4" />
-              GENERATE SUMMARY
+              Generate Summary
             </>
           )}
         </Button>
         {generating && (
-          <p className="mt-3 font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
+          <p className="mt-3 text-xs text-[var(--color-text-muted)]">
             This may take a minute depending on document size
           </p>
         )}
@@ -106,12 +106,18 @@ export function DocumentSummary({ documentId }: DocumentSummaryProps) {
     );
   }
 
+  const docTitle = data.originalName.replace(/\.[^.]+$/, "");
+  const cleanedSummary = data.summary.trimStart().replace(/^#{1,3}\s+.*\n?/, "");
+
   return (
-    <ScrollArea className="h-[70vh] overflow-hidden">
+    <ScrollArea className="h-[50vh] overflow-hidden">
       <ScrollViewport className="h-full w-full">
         <div className="kl-summary-prose max-w-none overflow-hidden break-words p-6 pb-12">
+          <h2 className="font-display text-xl font-bold tracking-tight text-[var(--color-text-primary)] mb-4">
+            {docTitle}
+          </h2>
           <ReactMarkdown remarkPlugins={[remarkGfm]}>
-            {data.summary}
+            {cleanedSummary}
           </ReactMarkdown>
         </div>
       </ScrollViewport>

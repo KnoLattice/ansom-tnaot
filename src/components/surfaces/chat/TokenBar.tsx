@@ -19,7 +19,7 @@ export function TokenBar({ className, compact = false }: TokenBarProps) {
   return (
     <div
       className={cn(
-        "flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider",
+        "flex items-center gap-2 text-xs",
         compact ? "px-2 py-1" : "px-4 py-2",
         isBlocked
           ? "text-[var(--color-destructive)]"
@@ -43,7 +43,7 @@ export function TokenBar({ className, compact = false }: TokenBarProps) {
         />
       </div>
       <span className="shrink-0 tabular-nums">
-        {usage.remaining.toLocaleString()} LEFT
+        {usage.remaining.toLocaleString()} left
       </span>
     </div>
   );

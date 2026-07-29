@@ -104,40 +104,37 @@ export function LearningPreferencesEditor() {
   return (
     <div className="space-y-8">
       <div className="space-y-4">
-        <Label htmlFor="workspace" className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-secondary)]">
+        <Label htmlFor="workspace" className="text-sm font-medium text-[var(--color-text-secondary)]">
           Workspace name
         </Label>
         <Input
           id="workspace"
           value={workspaceName}
           onChange={(e) => setWorkspaceName(e.target.value)}
-          className="rounded-none"
         />
       </div>
 
-      <div className="h-px bg-[var(--color-border-default)]" />
+      <div className="h-px bg-[var(--color-border-subtle)]" />
 
       <div className="space-y-6">
-        <p className="kl-data-label">
-          Learning preferences
-        </p>
+        <p className="kl-data-label">Learning preferences</p>
         {QUESTIONS.map((q) => (
           <div key={q.key} className="space-y-3">
-            <p className="font-mono text-xs font-bold uppercase tracking-wider text-[var(--color-text-primary)]">{q.question}</p>
+            <p className="text-sm font-semibold text-[var(--color-text-primary)]">{q.question}</p>
             <div className="grid gap-2 sm:grid-cols-3">
               {q.options.map((opt) => (
                 <button
                   key={opt.value}
                   onClick={() => setPreferences((p) => ({ ...p, [q.key]: opt.value }))}
                   className={cn(
-                    "rounded-none border p-3 text-left transition-all",
+                    "rounded-[var(--radius-button)] border p-3 text-left transition-all",
                     preferences[q.key] === opt.value
                       ? "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/10"
-                      : "border-[var(--color-border-default)] bg-[var(--color-surface)] hover:border-[var(--color-accent-primary)]/50",
+                      : "border-[var(--color-border-subtle)] bg-[var(--color-surface)] hover:border-[var(--color-accent-primary)]/50",
                   )}
                 >
-                  <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-primary)]">{opt.label}</p>
-                  <p className="font-mono text-[9px] text-[var(--color-text-secondary)]">{opt.description}</p>
+                  <p className="text-sm font-medium text-[var(--color-text-primary)]">{opt.label}</p>
+                  <p className="text-xs text-[var(--color-text-secondary)]">{opt.description}</p>
                 </button>
               ))}
             </div>
@@ -146,15 +143,11 @@ export function LearningPreferencesEditor() {
       </div>
 
       <div className="flex items-center gap-3">
-        <Button
-          onClick={save}
-          disabled={saving}
-          className="rounded-none bg-[var(--color-accent-primary)] text-white shadow-glow hover:brightness-110"
-        >
+        <Button onClick={save} disabled={saving}>
           {saving ? "Saving..." : "Save preferences"}
         </Button>
         {saved && (
-          <span className="font-mono text-[10px] uppercase tracking-wider text-green-400">Saved</span>
+          <span className="text-xs font-medium text-green-600 dark:text-green-400">Saved</span>
         )}
       </div>
     </div>

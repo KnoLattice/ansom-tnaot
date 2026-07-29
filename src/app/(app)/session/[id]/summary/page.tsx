@@ -47,15 +47,15 @@ export default function SessionSummaryPage({
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 text-center">
         <Spinner />
-        <p className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
-          LOADING SUMMARY...
+        <p className="text-xs text-[var(--color-text-muted)]">
+          Loading Summary...
         </p>
         <button
           type="button"
-          className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-accent-primary)]"
+          className="text-xs font-bold text-[var(--color-accent-primary)]"
           onClick={() => router.push("/")}
         >
-          BACK TO HOME
+          Back to Home
         </button>
       </div>
     );
@@ -125,7 +125,7 @@ export default function SessionSummaryPage({
                 className="border rounded-md border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-4 py-3 text-sm text-[var(--color-text-secondary)]"
               >
                 {nodeTitles[node.nodeId] ?? node.nodeId.slice(0, 8)} —{" "}
-                <span className="font-mono font-bold tabular-nums">
+                <span className="font-bold tabular-nums">
                   {Math.round(node.masteryAfter * 100)}%
                 </span>
               </div>
@@ -153,7 +153,7 @@ export default function SessionSummaryPage({
           }}
         >
           <PlayCircle className="mr-2 h-4 w-4" />
-          STUDY AGAIN
+          Study Again
         </Button>
         <Button
           variant="outline"
@@ -161,7 +161,7 @@ export default function SessionSummaryPage({
           onClick={() => router.push("/")}
         >
           <Home className="mr-2 h-4 w-4" />
-          DONE
+          Done
         </Button>
       </motion.div>
 

@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
 import { Maximize2, Minimize2, X } from "lucide-react";
 import { useChatStore, getScopeKey } from "@/store/chat.store";
 import { useCreateConversation } from "@/lib/hooks";
@@ -77,76 +76,67 @@ export function ChatDrawer() {
   console.log("ChatDrawer conversationId:", conversationId);
 
   return (
-    <AnimatePresence>
+    <>
       {isOpen && (
-        <>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-            className="fixed inset-0 z-40 bg-black/40"
-            onClick={closeChatDrawer}
-          />
-
-          <motion.div
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed inset-y-0 right-0 z-50 flex flex-col border-l border-[var(--color-border-default)] bg-[var(--color-canvas)]"
-            style={{ width: drawerWidth }}
-          >
-            <div className="flex shrink-0 items-center justify-between border-b border-[var(--color-border-default)] px-4 py-3">
-              <div className="flex flex-col">
-                <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
-                  CHAT
-                </p>
-                {pageLabel && (
-                  <p className="font-mono text-[9px] uppercase tracking-wider text-[var(--color-text-muted)]">
-                    {pageLabel}
-                  </p>
-                )}
-              </div>
-
-              <div className="flex items-center gap-1">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={toggleWidth}
-                  className="h-6 w-6"
-                  title={width === "normal" ? "Expand" : "Collapse"}
-                >
-                  {width === "normal" ? (
-                    <Maximize2 className="h-3 w-3" />
-                  ) : (
-                    <Minimize2 className="h-3 w-3" />
-                  )}
-                </Button>
-
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={closeChatDrawer}
-                  className="h-6 w-6"
-                >
-                  <X className="h-3.5 w-3.5" />
-                </Button>
-              </div>
-            </div>
-
-            <ChatPanel
-              conversationId={conversationId}
-              scope={scope}
-              scopeId={scopeId ?? undefined}
-              onCreateConversation={handleCreateConversation}
-              onSelectConversation={handleSelectConversation}
-              onConversationNotFound={handleConversationNotFound}
-              restricted={isSessionPage}
-            />
-          </motion.div>
-        </>
+        <div
+          className="fixed inset-0 z-40 bg-black/40"
+          onClick={closeChatDrawer}
+        />
       )}
-    </AnimatePresence>
+      <div
+        className={`fixed inset-y-0 right-0 z-50 flex flex-col border-l border-[var(--color-border-default)] bg-[var(--color-canvas)] transition-transform duration-300 ease-in-out ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+        style={{ width: drawerWidth }}
+      >
+        <div className="flex shrink-0 items-center justify-between border-b border-[var(--color-border-subtle)] px-5 py-3">
+          <div className="flex flex-col">
+            <p className="font-display text-base font-semibold text-[var(--color-text-primary)]">
+              Chat
+            </p>
+            {pageLabel && (
+              <p className="text-xs text-[var(--color-text-muted)]">
+                {pageLabel}
+              </p>
+            )}
+          </div>
+
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleWidth}
+              className="h-6 w-6"
+              title={width === "normal" ? "Expand" : "Collapse"}
+            >
+              {width === "normal" ? (
+                <Maximize2 className="h-3 w-3" />
+              ) : (
+                <Minimize2 className="h-3 w-3" />
+              )}
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={closeChatDrawer}
+              className="h-6 w-6"
+            >
+              <X className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        </div>
+
+        <ChatPanel
+          conversationId={conversationId}
+          scope={scope}
+          scopeId={scopeId ?? undefined}
+          onCreateConversation={handleCreateConversation}
+          onSelectConversation={handleSelectConversation}
+          onConversationNotFound={handleConversationNotFound}
+          restricted={isSessionPage}
+        />
+      </div>
+    </>
   );
 }

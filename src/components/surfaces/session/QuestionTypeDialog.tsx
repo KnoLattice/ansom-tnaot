@@ -27,31 +27,31 @@ const options: {
 }[] = [
   {
     type: "qcm",
-    label: "MULTIPLE CHOICE",
+    label: "Multiple Choice",
     description: "Pick the correct answer from a set of options. Great for recognition and quick review.",
     icon: ListChecks,
   },
   {
     type: "short_answer",
-    label: "SHORT ANSWER",
+    label: "Short Answer",
     description: "Type your answer in your own words. Better for deeper recall and understanding.",
     icon: PenLine,
   },
   {
     type: "fill_blank",
-    label: "FILL IN THE BLANK",
+    label: "Fill in the Blank",
     description: "Complete the sentence by filling in the missing word or phrase. Tests precise recall.",
     icon: TextCursorInput,
   },
   {
     type: "true_false",
-    label: "TRUE / FALSE",
+    label: "True / False",
     description: "Decide whether each statement is true or false. Fast-paced knowledge check.",
     icon: ToggleLeft,
   },
   {
     type: "matching",
-    label: "MATCHING",
+    label: "Matching",
     description: "Match terms on the left with their definitions on the right. Great for associations.",
     icon: ArrowLeftRight,
   },
@@ -67,7 +67,7 @@ export function QuestionTypeDialog({ open, onSelect, onClose }: QuestionTypeDial
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle>SELECT MODE</DialogTitle>
+          <DialogTitle>Select Mode</DialogTitle>
           <DialogDescription>
             Choose your question format for this session.
           </DialogDescription>
@@ -86,7 +86,7 @@ export function QuestionTypeDialog({ open, onSelect, onClose }: QuestionTypeDial
                   "flex w-full items-start gap-4 border rounded-md p-4 text-left transition",
                   isSelected
                     ? "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5"
-                    : "border-[var(--color-border-default)] bg-[var(--color-canvas)] hover:bg-[var(--color-surface-elevated)]",
+                    : "border-[var(--color-border-subtle)] bg-[var(--color-canvas)] hover:bg-[var(--color-surface-elevated)]",
                 )}
               >
                 <div
@@ -94,7 +94,7 @@ export function QuestionTypeDialog({ open, onSelect, onClose }: QuestionTypeDial
                     "flex h-9 w-9 shrink-0 items-center justify-center border rounded-md",
                     isSelected
                       ? "border-[var(--color-accent-primary)] text-[var(--color-accent-primary)]"
-                      : "border-[var(--color-border-default)] text-[var(--color-text-muted)]",
+                      : "border-[var(--color-border-subtle)] text-[var(--color-text-muted)]",
                   )}
                 >
                   <Icon className="h-4 w-4" />
@@ -102,7 +102,7 @@ export function QuestionTypeDialog({ open, onSelect, onClose }: QuestionTypeDial
                 <div className="min-w-0">
                   <p
                     className={cn(
-                      "font-mono text-xs font-bold uppercase tracking-wider",
+                      "text-xs font-semibold",
                       isSelected ? "text-[var(--color-text-primary)]" : "text-[var(--color-text-secondary)]",
                     )}
                   >
@@ -118,7 +118,7 @@ export function QuestionTypeDialog({ open, onSelect, onClose }: QuestionTypeDial
         </div>
 
         <Button className="mt-4 w-full rounded-md" onClick={() => onSelect(selected)}>
-          START SESSION
+          Start Session
         </Button>
       </DialogContent>
     </Dialog>

@@ -148,10 +148,10 @@ export default function LibraryPage() {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-[var(--color-border-default)] pb-4">
         <div>
-          <h1 className="font-mono text-lg font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+          <h1 className="font-display text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
             My Library
           </h1>
-          <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
+          <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
             {collections.length > 0
               ? `${collections.length} collection${collections.length !== 1 ? "s" : ""}`
               : ""}
@@ -170,14 +170,14 @@ export default function LibraryPage() {
             onClick={() => setShowNewInput(true)}
           >
             <FolderClosed className="mr-2 h-4 w-4" />
-            NEW COLLECTION
+            New Collection
           </Button>
           <Button
             onClick={() => router.push("/upload")}
             className="border rounded-md"
           >
             <FolderUp className="mr-2 h-4 w-4" />
-            UPLOAD
+            Upload
           </Button>
         </div>
       </div>
@@ -229,7 +229,7 @@ export default function LibraryPage() {
       {/* Empty state */}
       {isEmpty ? (
         <div className="flex min-h-[40vh] flex-col items-center justify-center border-2 rounded-lg border-dashed border-[var(--color-border-default)] bg-[var(--color-surface)] p-12 text-center">
-          <p className="font-mono text-sm font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+          <p className="font-bold text-sm text-[var(--color-text-primary)]">
             No documents loaded
           </p>
           <p className="mt-2 max-w-md text-sm text-[var(--color-text-secondary)]">
@@ -241,7 +241,7 @@ export default function LibraryPage() {
             onClick={() => router.push("/upload")}
           >
             <Plus className="mr-2 h-4 w-4" />
-            UPLOAD FIRST DOCUMENT
+            Upload First Document
           </Button>
         </div>
       ) : (
@@ -267,7 +267,7 @@ export default function LibraryPage() {
           {uncollectedDocs.length > 0 && (
             <div className="border rounded-md border-[var(--color-border-subtle)] bg-[var(--color-surface)]">
               <div className="px-4 py-3">
-                <h3 className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
+                <h3 className="font-bold text-xs text-[var(--color-text-muted)]">
                   Uncategorized
                 </h3>
               </div>

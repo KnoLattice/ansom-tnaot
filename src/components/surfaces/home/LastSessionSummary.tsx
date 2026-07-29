@@ -12,22 +12,24 @@ interface LastSessionSummaryProps {
 export function LastSessionSummary({ lastSession }: LastSessionSummaryProps) {
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.15 }}
-      className="flex items-center justify-between border border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-4 py-2.5"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: "easeOut", delay: 0.2 }}
+      className="kl-card kl-elevation-1 flex items-center justify-between"
     >
-      <div className="flex items-center gap-2 text-[var(--color-text-secondary)]">
-        <History className="h-3.5 w-3.5 shrink-0 text-[var(--color-text-muted)]" />
-        <p className="font-mono text-xs">
-          <span className="text-[var(--color-text-muted)]">LAST SESSION:</span>{" "}
-          <span className="font-bold text-[var(--color-text-primary)]">
+      <div className="flex items-center gap-3 text-[var(--color-text-secondary)]">
+        <div className="flex h-8 w-8 items-center justify-center rounded-[var(--radius-badge)] bg-[var(--color-surface-elevated)]">
+          <History className="h-4 w-4 text-[var(--color-text-muted)]" />
+        </div>
+        <p className="text-sm">
+          <span className="text-[var(--color-text-muted)]">Last session:</span>{" "}
+          <span className="font-semibold text-[var(--color-text-primary)]">
             {lastSession.totalInteractions} questions
           </span>
           {lastSession.accuracyPercent != null && (
             <>
               <span className="text-[var(--color-text-muted)]">,</span>{" "}
-              <span className="font-bold text-[var(--color-text-primary)]">
+              <span className="font-semibold text-[var(--color-text-primary)]">
                 {lastSession.accuracyPercent}% accuracy
               </span>
             </>
@@ -36,9 +38,9 @@ export function LastSessionSummary({ lastSession }: LastSessionSummaryProps) {
       </div>
       <Link
         href={`/session/${lastSession.sessionId}/summary`}
-        className="flex shrink-0 items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-accent-primary)] transition-colors hover:text-[var(--color-text-primary)]"
+        className="flex shrink-0 items-center gap-1 text-sm font-medium text-[var(--color-accent-primary)] transition-colors hover:text-[var(--color-text-primary)]"
       >
-        VIEW SUMMARY <ArrowRight className="h-3 w-3" />
+        View Summary <ArrowRight className="h-4 w-4" />
       </Link>
     </motion.div>
   );
