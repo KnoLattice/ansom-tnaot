@@ -74,7 +74,7 @@ export function ThemeSwitcher() {
             />
             <div className="flex flex-col">
               <span>{theme.label}</span>
-              <span className="text-[11px] text-[var(--color-text-muted)]">
+              <span className="text-xs text-[var(--color-text-muted)]">
                 {theme.description}
               </span>
             </div>

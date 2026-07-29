@@ -386,10 +386,10 @@ export default function ExplorationPage() {
     <div className="space-y-6">
       <div>
         <p className="kl-data-label">Discover</p>
-        <h1 className="font-bold text-sm text-[var(--color-text-primary)]">
+        <h1 className="font-display text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
           Explore
         </h1>
-        <p className="text-xs text-[var(--color-text-muted)] mt-1">
+        <p className="text-sm text-[var(--color-text-secondary)] mt-1">
           AI-powered web search to discover learning resources on any topic.
         </p>
       </div>

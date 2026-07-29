@@ -141,10 +141,10 @@ function MasteryMapContent({ docId }: { docId: string }) {
       {/* Header */}
       <div className="flex flex-col gap-4 border-b border-[var(--color-border-default)] pb-4 md:flex-row md:items-start md:justify-between">
         <div>
-          <h1 className="font-bold text-lg text-[var(--color-text-primary)]">
+          <h1 className="font-display text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
             {tab === "summary" ? "Lesson Summary" : "Mastery Map"}
           </h1>
-          <p className="mt-0.5 text-xs text-[var(--color-text-muted)]">
+          <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
             {docName.replace(/\.[^.]+$/, "")} {tab === "mastery" ? `/ ${graphData.nodes.length} concepts` : ""}
           </p>
         </div>

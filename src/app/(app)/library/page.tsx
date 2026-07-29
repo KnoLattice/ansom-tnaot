@@ -148,10 +148,10 @@ export default function LibraryPage() {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-[var(--color-border-default)] pb-4">
         <div>
-          <h1 className="font-bold text-lg text-[var(--color-text-primary)]">
+          <h1 className="font-display text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
             My Library
           </h1>
-          <p className="mt-0.5 text-xs text-[var(--color-text-muted)]">
+          <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
             {collections.length > 0
               ? `${collections.length} collection${collections.length !== 1 ? "s" : ""}`
               : ""}

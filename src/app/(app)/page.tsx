@@ -109,7 +109,7 @@ export default function HomePage() {
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[var(--color-accent-primary)]/10">
               <Upload className="h-6 w-6 text-[var(--color-accent-primary)]" />
             </div>
-            <h2 className="mt-5 font-display text-xl font-bold text-[var(--color-text-primary)]">
+            <h2 className="mt-5 font-display text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
               No documents loaded
             </h2>
             <p className="mt-2 text-sm text-[var(--color-text-secondary)] leading-relaxed">

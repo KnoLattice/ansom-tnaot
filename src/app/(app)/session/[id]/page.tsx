@@ -552,7 +552,7 @@ function SessionContent({ id }: { id: string }) {
         />
       ) : (
         <div className="border border-[var(--color-border-default)] bg-[var(--color-surface)] p-8 text-center">
-          <p className="font-bold text-sm text-[var(--color-text-primary)]">
+          <p className="font-display text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
             Session Complete
           </p>
           <p className="mt-2 text-sm text-[var(--color-text-secondary)]">

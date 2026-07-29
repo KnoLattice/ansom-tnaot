@@ -133,7 +133,7 @@ export default function CollectionDetailPage({
 
       {/* Collection name */}
       <div>
-        <h1 className="font-bold text-lg text-[var(--color-text-primary)]">
+        <h1 className="font-display text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
           {collectionName}
         </h1>
       </div>
@@ -194,7 +194,7 @@ export default function CollectionDetailPage({
           {/* Stats */}
           <div className="flex-1 space-y-4">
             <div>
-              <h2 className="font-bold text-sm text-[var(--color-text-primary)]">
+              <h2 className="font-display text-lg font-semibold text-[var(--color-text-primary)]">
                 Overall Mastery
               </h2>
               <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
@@ -312,7 +312,7 @@ export default function CollectionDetailPage({
                 {doc.processingStatus !== "completed" ? (
                   <Badge
                     variant="outline"
-                    className="shrink-0 rounded-sm border border-[var(--color-border-subtle)] text-[10px] text-yellow-400"
+                    className="shrink-0 rounded-sm border border-[var(--color-border-subtle)] text-xs text-yellow-400"
                   >
                     {doc.processingStatus === "processing"
                       ? "Processing..."
