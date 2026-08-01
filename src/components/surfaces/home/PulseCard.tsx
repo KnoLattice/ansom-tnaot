@@ -56,14 +56,17 @@ export function PulseCard({
         )}
       </div>
 
-      {/* Progress bar with rounded ends */}
-      <div className="mt-5 h-2 w-full rounded-full bg-[var(--color-border-subtle)] overflow-hidden">
+      {/* Progress bar with glow */}
+      <div className="mt-5 h-2.5 w-full overflow-hidden rounded-full bg-[var(--color-border-subtle)]">
         <motion.div
           className="h-full rounded-full"
           initial={{ width: 0 }}
           animate={{ width: `${overallMasteryPercent}%` }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          style={{ backgroundColor: color }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          style={{
+            backgroundColor: color,
+            boxShadow: `0 0 10px 1px ${color}55, 0 0 4px 0px ${color}88`,
+          }}
         />
       </div>
 

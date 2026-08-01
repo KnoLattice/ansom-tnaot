@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Check, FolderClosed, FolderUp, Plus, X } from "lucide-react";
+import { Check, FolderClosed, FolderUp, Library, Plus, UploadCloud, X } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -146,27 +146,32 @@ export default function LibraryPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-[var(--color-border-default)] pb-4">
-        <div>
-          <h1 className="font-display text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
-            My Library
-          </h1>
-          <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
-            {collections.length > 0
-              ? `${collections.length} collection${collections.length !== 1 ? "s" : ""}`
-              : ""}
-            {collections.length > 0 && documents.length > 0 ? " / " : ""}
-            {documents.length > 0
-              ? `${documents.length} document${documents.length !== 1 ? "s" : ""}`
-              : isEmpty
-                ? "Empty"
+      <div className="flex items-center justify-between border-b border-[var(--color-border-default)] pb-5">
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--color-accent-primary)]/10">
+            <Library className="h-4.5 w-4.5 text-[var(--color-accent-primary)]" />
+          </div>
+          <div>
+            <h1 className="font-display text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
+              My Library
+            </h1>
+            <p className="mt-0.5 text-xs text-[var(--color-text-secondary)]">
+              {collections.length > 0
+                ? `${collections.length} collection${collections.length !== 1 ? "s" : ""}`
                 : ""}
-          </p>
+              {collections.length > 0 && documents.length > 0 ? " · " : ""}
+              {documents.length > 0
+                ? `${documents.length} document${documents.length !== 1 ? "s" : ""}`
+                : isEmpty
+                  ? "Empty"
+                  : ""}
+            </p>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
-            className="border rounded-md"
+            className="rounded-lg border"
             onClick={() => setShowNewInput(true)}
           >
             <FolderClosed className="mr-2 h-4 w-4" />
@@ -174,7 +179,7 @@ export default function LibraryPage() {
           </Button>
           <Button
             onClick={() => router.push("/upload")}
-            className="border rounded-md"
+            className="rounded-lg border"
           >
             <FolderUp className="mr-2 h-4 w-4" />
             Upload
@@ -228,16 +233,19 @@ export default function LibraryPage() {
 
       {/* Empty state */}
       {isEmpty ? (
-        <div className="flex min-h-[40vh] flex-col items-center justify-center border-2 rounded-lg border-dashed border-[var(--color-border-default)] bg-[var(--color-surface)] p-12 text-center">
-          <p className="font-bold text-sm text-[var(--color-text-primary)]">
-            No documents loaded
-          </p>
-          <p className="mt-2 max-w-md text-sm text-[var(--color-text-secondary)]">
+        <div className="kl-glass-panel flex min-h-[42vh] flex-col items-center justify-center p-12 text-center">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--color-accent-primary)]/10 ring-1 ring-[var(--color-accent-primary)]/20">
+            <UploadCloud className="h-7 w-7 text-[var(--color-accent-primary)]" />
+          </div>
+          <h2 className="mt-5 font-display text-xl font-bold tracking-tight text-[var(--color-text-primary)]">
+            No documents yet
+          </h2>
+          <p className="mt-2 max-w-sm text-sm leading-relaxed text-[var(--color-text-secondary)]">
             Upload your first study document to get started. We&apos;ll extract
             concepts and build your personal knowledge map.
           </p>
           <Button
-            className="mt-6 border rounded-md"
+            className="mt-7 rounded-lg"
             onClick={() => router.push("/upload")}
           >
             <Plus className="mr-2 h-4 w-4" />
