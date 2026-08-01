@@ -18,10 +18,11 @@
   body {
     min-height: 100vh;
     margin: 0;
+    font-size: 15.5px;
     background-color: var(--color-canvas);
     color: var(--color-text-primary);
     font-family: var(--font-body, "DM Sans"), system-ui, sans-serif;
-    line-height: 1.6;
+    line-height: 1.7;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
   }
@@ -89,8 +90,9 @@
 
   /* Data label — friendly sans-serif label */
   .kl-data-label {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 600;
+    letter-spacing: 0.01em;
     color: var(--color-text-muted);
   }
 

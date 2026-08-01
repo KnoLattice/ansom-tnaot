@@ -30,11 +30,11 @@ function SectionCard({
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.25 }}
-      className="space-y-3 rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-4"
+      className="space-y-3 rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-5"
     >
       <div className="flex items-center gap-2">
         {icon}
-        <p className="kl-data-label">{label}</p>
+        <p className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">{label}</p>
       </div>
       {children}
     </motion.div>
@@ -53,24 +53,24 @@ function NodeCard({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay, duration: 0.2 }}
-      className="border-l-2 border-l-[var(--color-accent-primary)] bg-[var(--color-surface-elevated)] px-4 py-3 space-y-2"
+      className="rounded-lg border-l-2 border-l-[var(--color-accent-primary)] bg-[var(--color-surface-elevated)] px-4 py-3.5 space-y-2.5"
     >
       <p className="text-sm font-semibold text-[var(--color-text-primary)]">
         {node.nodeTitle}
       </p>
-      <p className="text-xs leading-relaxed text-[var(--color-text-secondary)]">
+      <p className="text-sm leading-relaxed text-[var(--color-text-secondary)]">
         {node.assessment}
       </p>
       {node.strengths.length > 0 && (
         <div>
-          <p className="text-xs font-semibold text-green-400">
+          <p className="text-xs font-semibold uppercase tracking-wide text-green-400">
             Strengths
           </p>
-          <ul className="mt-1 space-y-0.5">
+          <ul className="mt-1.5 space-y-1">
             {node.strengths.map((s, i) => (
               <li
                 key={i}
-                className="text-xs text-[var(--color-text-secondary)]"
+                className="text-sm text-[var(--color-text-secondary)]"
               >
                 + {s}
               </li>
@@ -80,14 +80,14 @@ function NodeCard({
       )}
       {node.weaknesses.length > 0 && (
         <div>
-          <p className="text-xs font-semibold text-amber-400">
+          <p className="text-xs font-semibold uppercase tracking-wide text-amber-400">
             Needs Work
           </p>
-          <ul className="mt-1 space-y-0.5">
+          <ul className="mt-1.5 space-y-1">
             {node.weaknesses.map((w, i) => (
               <li
                 key={i}
-                className="text-xs text-[var(--color-text-secondary)]"
+                className="text-sm text-[var(--color-text-secondary)]"
               >
                 - {w}
               </li>
@@ -97,7 +97,7 @@ function NodeCard({
       )}
       {node.sourceReferences && node.sourceReferences.length > 0 && (
         <div>
-          <p className="text-xs font-semibold text-blue-400 flex items-center gap-1.5">
+          <p className="text-xs font-semibold uppercase tracking-wide text-blue-400 flex items-center gap-1.5">
             <BookOpen className="h-3 w-3" />
             Review This Section
           </p>
@@ -108,11 +108,11 @@ function NodeCard({
                   {ref.documentName}
                 </p>
                 {ref.excerpt && (
-                  <blockquote className="border-l-2 border-l-blue-500/40 bg-blue-500/5 px-3 py-2 text-xs italic leading-relaxed text-[var(--color-text-secondary)]">
+                  <blockquote className="rounded-r-md border-l-2 border-l-blue-500/40 bg-blue-500/5 px-3 py-2 text-sm italic leading-relaxed text-[var(--color-text-secondary)]">
                     &ldquo;{ref.excerpt}&rdquo;
                   </blockquote>
                 )}
-                <p className="text-xs leading-relaxed text-[var(--color-text-secondary)]">
+                <p className="text-sm leading-relaxed text-[var(--color-text-secondary)]">
                   {ref.guidance}
                 </p>
               </div>
@@ -126,10 +126,10 @@ function NodeCard({
 
 function LoadingSkeleton() {
   return (
-    <div className="space-y-3 rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-6">
+    <div className="space-y-3 rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-6">
       <div className="flex items-center gap-2">
         <Spinner size="sm" label={false} />
-        <p className="kl-data-label animate-pulse">
+        <p className="text-sm font-medium text-[var(--color-text-muted)] animate-pulse">
           Generating AI analysis...
         </p>
       </div>
@@ -163,8 +163,8 @@ export function AIAnalysisSection({ sessionId }: AIAnalysisSectionProps) {
 
   if (error || !analysis) {
     return (
-      <div className="rounded-md border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-4">
-        <p className="text-xs text-[var(--color-text-muted)]">
+      <div className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-5">
+        <p className="text-sm text-[var(--color-text-muted)]">
           AI analysis unavailable
         </p>
       </div>
@@ -180,13 +180,13 @@ export function AIAnalysisSection({ sessionId }: AIAnalysisSectionProps) {
       <hr className="border-[var(--color-border-subtle)]" />
       <div className="flex items-center gap-2">
         <Brain className="h-4 w-4 text-[var(--color-accent-primary)]" />
-        <p className="kl-data-label">AI Performance Analysis</p>
+        <p className="text-sm font-semibold text-[var(--color-text-secondary)]">AI Performance Analysis</p>
       </div>
 
       {/* Overall Summary */}
       {analysis.overallSummary && (
         <SectionCard
-          icon={<TrendingUp className="h-3.5 w-3.5 text-[var(--color-accent-primary)]" />}
+          icon={<TrendingUp className="h-4 w-4 text-[var(--color-accent-primary)]" />}
           label="Overall Assessment"
           delay={SECTION_DELAY}
         >
@@ -199,11 +199,11 @@ export function AIAnalysisSection({ sessionId }: AIAnalysisSectionProps) {
       {/* Per-Node Breakdown */}
       {hasNodeAnalysis && (
         <SectionCard
-          icon={<Target className="h-3.5 w-3.5 text-[var(--color-accent-primary)]" />}
+          icon={<Target className="h-4 w-4 text-[var(--color-accent-primary)]" />}
           label="Concept Breakdown"
           delay={SECTION_DELAY * 2}
         >
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             {analysis.nodeAnalysis.map((node, i) => (
               <NodeCard
                 key={node.nodeId}
@@ -218,21 +218,21 @@ export function AIAnalysisSection({ sessionId }: AIAnalysisSectionProps) {
       {/* Question Type Insights */}
       {hasTypeInsights && (
         <SectionCard
-          icon={<Brain className="h-3.5 w-3.5 text-[var(--color-accent-primary)]" />}
+          icon={<Brain className="h-4 w-4 text-[var(--color-accent-primary)]" />}
           label="Question Type Insights"
           delay={SECTION_DELAY * 3}
         >
-          <div className="grid gap-2 sm:grid-cols-2">
+          <div className="grid gap-2.5 sm:grid-cols-2">
             {Object.entries(analysis.questionTypeInsights).map(
               ([type, insight]) => (
                 <div
                   key={type}
-                  className="rounded border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] px-3 py-2"
+                  className="rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] px-3.5 py-3"
                 >
-                  <p className="text-xs font-semibold text-[var(--color-accent-primary)]">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-accent-primary)]">
                     {type.replace("_", " ")}
                   </p>
-                  <p className="mt-1 text-xs leading-relaxed text-[var(--color-text-secondary)]">
+                  <p className="mt-1.5 text-sm leading-relaxed text-[var(--color-text-secondary)]">
                     {insight}
                   </p>
                 </div>
@@ -246,22 +246,22 @@ export function AIAnalysisSection({ sessionId }: AIAnalysisSectionProps) {
       <div className="grid gap-3 sm:grid-cols-2">
         {analysis.bloomLevelAnalysis && (
           <SectionCard
-            icon={<TrendingUp className="h-3.5 w-3.5 text-[var(--color-accent-primary)]" />}
+            icon={<TrendingUp className="h-4 w-4 text-[var(--color-accent-primary)]" />}
             label="Cognitive Level"
             delay={SECTION_DELAY * 4}
           >
-            <p className="text-xs leading-relaxed text-[var(--color-text-secondary)]">
+            <p className="text-sm leading-relaxed text-[var(--color-text-secondary)]">
               {analysis.bloomLevelAnalysis}
             </p>
           </SectionCard>
         )}
         {analysis.responseTimeInsights && (
           <SectionCard
-            icon={<Clock className="h-3.5 w-3.5 text-[var(--color-accent-primary)]" />}
+            icon={<Clock className="h-4 w-4 text-[var(--color-accent-primary)]" />}
             label="Response Timing"
             delay={SECTION_DELAY * 4}
           >
-            <p className="text-xs leading-relaxed text-[var(--color-text-secondary)]">
+            <p className="text-sm leading-relaxed text-[var(--color-text-secondary)]">
               {analysis.responseTimeInsights}
             </p>
           </SectionCard>
@@ -271,13 +271,13 @@ export function AIAnalysisSection({ sessionId }: AIAnalysisSectionProps) {
       {/* Improvement Plan */}
       {hasPlan && (
         <SectionCard
-          icon={<Lightbulb className="h-3.5 w-3.5 text-[var(--color-accent-primary)]" />}
+          icon={<Lightbulb className="h-4 w-4 text-[var(--color-accent-primary)]" />}
           label="Improvement Plan"
           delay={SECTION_DELAY * 5}
         >
-          <ol className="space-y-2">
+          <ol className="space-y-2.5">
             {analysis.improvementPlan.map((item, i) => (
-              <li key={i} className="flex gap-3 text-xs leading-relaxed text-[var(--color-text-secondary)]">
+              <li key={i} className="flex gap-3 text-sm leading-relaxed text-[var(--color-text-secondary)]">
                 <span className="font-semibold text-[var(--color-accent-primary)]">
                   {i + 1}.
                 </span>

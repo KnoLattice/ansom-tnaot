@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
-import { Check, X as XIcon, Clock } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Check, X as XIcon, Clock, ThumbsUp, ThumbsDown, AlertCircle, CheckCircle2, XCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -36,9 +36,155 @@ const BADGE_MAP: Record<QuestionType, string> = {
   matching: "MATCH",
 };
 
+const OPTION_LABELS = ["A", "B", "C", "D", "E", "F"];
+
 /** Types that support instant local feedback (correctAnswer sent from backend) */
 const LOCAL_FEEDBACK_TYPES: QuestionType[] = ["qcm", "true_false"];
 
+// ─── Circular SVG Timer ───────────────────────────────────────────────────────
+function CircularTimer({
+  timeLeft,
+  duration,
+}: {
+  timeLeft: number;
+  duration: number;
+}) {
+  const radius = 16;
+  const circumference = 2 * Math.PI * radius;
+  const progress = timeLeft / duration;
+  const offset = circumference * (1 - progress);
+
+  const color =
+    timeLeft <= 10
+      ? "#ef4444"
+      : timeLeft <= Math.floor(duration * 0.4)
+        ? "#f59e0b"
+        : "var(--color-accent-primary)";
+
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = String(timeLeft % 60).padStart(2, "0");
+
+  return (
+    <div className="relative flex shrink-0 items-center justify-center" style={{ width: 44, height: 44 }}>
+      <svg width="44" height="44" className="-rotate-90">
+        {/* Track */}
+        <circle
+          cx="22"
+          cy="22"
+          r={radius}
+          fill="none"
+          stroke="var(--color-border-subtle)"
+          strokeWidth="2.5"
+        />
+        {/* Progress ring */}
+        <motion.circle
+          cx="22"
+          cy="22"
+          r={radius}
+          fill="none"
+          stroke={color}
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          transition={{ duration: 0.5, ease: "linear" }}
+        />
+      </svg>
+      {/* Label */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span
+          className="text-[9px] font-bold tabular-nums leading-none"
+          style={{ color }}
+        >
+          {minutes}:{seconds}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+// ─── Feedback Banner ──────────────────────────────────────────────────────────
+function FeedbackBanner({
+  isCorrect,
+  isTimedOut,
+  evaluatorFeedback,
+  correctAnswer,
+}: {
+  isCorrect: boolean | null;
+  isTimedOut?: boolean;
+  evaluatorFeedback?: string;
+  correctAnswer?: string;
+}) {
+  const state = isTimedOut ? "timeout" : isCorrect ? "correct" : "incorrect";
+
+  const config = {
+    correct: {
+      icon: <CheckCircle2 className="h-5 w-5 shrink-0 text-green-400" />,
+      label: "Correct!",
+      labelColor: "text-green-400",
+      border: "border-green-500/40",
+      bg: "bg-green-500/8",
+      leftBar: "bg-green-500",
+    },
+    incorrect: {
+      icon: <XCircle className="h-5 w-5 shrink-0 text-red-400" />,
+      label: "Incorrect",
+      labelColor: "text-red-400",
+      border: "border-red-500/40",
+      bg: "bg-red-500/8",
+      leftBar: "bg-red-500",
+    },
+    timeout: {
+      icon: <AlertCircle className="h-5 w-5 shrink-0 text-yellow-400" />,
+      label: "Time Expired",
+      labelColor: "text-yellow-400",
+      border: "border-yellow-500/40",
+      bg: "bg-yellow-500/8",
+      leftBar: "bg-yellow-500",
+    },
+  }[state];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -4 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+      className={cn(
+        "relative select-none overflow-hidden rounded-lg border p-4",
+        config.border,
+        config.bg,
+      )}
+    >
+      {/* Left accent bar */}
+      <div className={cn("absolute inset-y-0 left-0 w-1 rounded-l-lg", config.leftBar)} />
+
+      <div className="flex items-start gap-3 pl-2">
+        {config.icon}
+        <div className="min-w-0 flex-1">
+          <p className={cn("text-sm font-semibold", config.labelColor)}>
+            {config.label}
+          </p>
+          {evaluatorFeedback && (
+            <p className="mt-1.5 text-sm leading-relaxed text-[var(--color-text-secondary)]">
+              {evaluatorFeedback}
+            </p>
+          )}
+          {correctAnswer && (state === "incorrect" || state === "timeout") && (
+            <p className="mt-2 text-xs text-[var(--color-text-muted)]">
+              Correct answer:{" "}
+              <span className="font-semibold text-[var(--color-text-primary)]">
+                {correctAnswer}
+              </span>
+            </p>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+// ─── Main Component ───────────────────────────────────────────────────────────
 export function QuestionCard({
   question,
   feedback,
@@ -188,7 +334,6 @@ export function QuestionCard({
   const renderFillBlankContent = () => {
     const parts = question.content.split("___");
     if (parts.length < 2) {
-      // Fallback if no blank marker found
       return (
         <>
           <p className="select-none text-base leading-relaxed text-[var(--color-text-primary)]">
@@ -200,7 +345,7 @@ export function QuestionCard({
             value={blankAnswer}
             onChange={(e) => setBlankAnswer(e.target.value)}
             disabled={hasFeedback}
-            className="border-[var(--color-border-subtle)] bg-[var(--color-canvas)] text-sm"
+            className="mt-3 border-[var(--color-border-default)] bg-[var(--color-canvas)] text-sm focus:border-[var(--color-accent-primary)] focus:ring-1 focus:ring-[var(--color-accent-primary)]/30 transition"
             onKeyDown={(e) => {
               if (e.key === "Enter" && !hasFeedback) handleBlankSubmit();
             }}
@@ -217,12 +362,12 @@ export function QuestionCard({
           value={blankAnswer}
           onChange={(e) => setBlankAnswer(e.target.value)}
           disabled={hasFeedback}
-          placeholder="..."
+          placeholder="___"
           onKeyDown={(e) => {
             if (e.key === "Enter" && !hasFeedback) handleBlankSubmit();
           }}
           className={cn(
-            "mx-1 inline-block w-40 border-b-2 bg-transparent px-1 py-0.5 text-center text-sm outline-none transition",
+            "mx-2 inline-block w-40 rounded-md border-b-2 border-x-0 border-t-0 bg-[var(--color-canvas)] px-2 py-0.5 text-center text-sm outline-none transition focus:border-[var(--color-accent-primary)]",
             hasFeedback && feedback?.isCorrect
               ? "border-green-500 text-green-400"
               : hasFeedback && !feedback?.isCorrect
@@ -237,10 +382,10 @@ export function QuestionCard({
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.15 }}
-      className="space-y-5 border border-[var(--color-border-default)] bg-[var(--color-surface)] p-5"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+      className="kl-card kl-elevation-1 space-y-5"
       onKeyDown={handleKeyDown}
       onContextMenu={(e) => {
         const tag = (e.target as HTMLElement).tagName;
@@ -249,49 +394,49 @@ export function QuestionCard({
       }}
       onDragStart={(e) => e.preventDefault()}
     >
-      {/* Header badges + timer */}
+      {/* ─── Header: badges + timer ─── */}
       <div className="flex select-none flex-wrap items-center gap-2">
-        <Badge variant="outline">{bloomLevelLabel(question.bloomLevel)}</Badge>
-        <Badge variant="outline">{BADGE_MAP[qType] ?? qType.toUpperCase()}</Badge>
+        <Badge variant="outline" className="rounded-full text-[11px] font-semibold tracking-wider uppercase">
+          {bloomLevelLabel(question.bloomLevel)}
+        </Badge>
+        <Badge variant="outline" className="rounded-full text-[11px] font-semibold tracking-wider uppercase">
+          {BADGE_MAP[qType] ?? qType.toUpperCase()}
+        </Badge>
 
         {!hasAnswered && (
-          <div
-            className={cn(
-              "ml-auto flex items-center gap-1.5 border px-2 py-1 text-xs font-semibold tabular-nums",
-              timeLeft <= 10
-                ? "border-red-500 bg-red-500/10 text-red-400"
-                : "border-[var(--color-border-subtle)] text-[var(--color-text-secondary)]",
-            )}
-          >
-            <Clock className="h-3 w-3" />
-            <span>
-              {Math.floor(timeLeft / 60)}:
-              {String(timeLeft % 60).padStart(2, "0")}
-            </span>
+          <div className="ml-auto">
+            <CircularTimer timeLeft={timeLeft} duration={timerDuration} />
+          </div>
+        )}
+
+        {hasAnswered && (
+          <div className="ml-auto flex items-center gap-1.5">
+            <Clock className="h-3.5 w-3.5 text-[var(--color-text-muted)]" />
+            <span className="text-xs text-[var(--color-text-muted)] tabular-nums">Done</span>
           </div>
         )}
       </div>
 
-      {/* ─── Question content + answer area ─── */}
+      {/* ─── Question content ─── */}
 
       {/* Fill in the Blank */}
       {qType === "fill_blank" && renderFillBlankContent()}
 
       {/* All other types: show question text */}
       {qType !== "fill_blank" && (
-        <p className="select-none text-base leading-relaxed text-[var(--color-text-primary)]">
+        <p className="select-none text-[1.05rem] leading-relaxed text-[var(--color-text-primary)]">
           {question.content}
         </p>
       )}
 
-      {/* MCQ options */}
+      {/* ─── MCQ options ─── */}
       {qType === "qcm" && (
         <div
-          className="select-none space-y-1"
+          className="select-none space-y-2"
           role="radiogroup"
           aria-label="Answer options"
         >
-          {question.options?.map((option) => {
+          {question.options?.map((option, idx) => {
             const isSelected = selectedOption === option.text;
             const isCorrectOption =
               !timedOut &&
@@ -300,55 +445,77 @@ export function QuestionCard({
                 (question.correctAnswer ?? "").trim().toLowerCase();
             const isWrongSelected =
               !timedOut && hasAnswered && isSelected && localCorrect === false;
+            const letter = OPTION_LABELS[idx] ?? option.label;
 
             return (
-              <button
+              <motion.button
                 key={option.label}
                 type="button"
                 role="radio"
                 aria-checked={isSelected}
                 onClick={() => handleOptionClick(option.text)}
                 disabled={hasAnswered}
+                whileHover={!hasAnswered ? { scale: 1.005, x: 2 } : {}}
+                whileTap={!hasAnswered ? { scale: 0.995 } : {}}
                 className={cn(
-                  "group flex w-full items-center gap-3 border rounded-md px-4 py-3 text-left text-sm transition",
+                  "group flex w-full items-center gap-3 rounded-lg border px-4 py-3 text-left text-sm transition-all duration-150",
                   !hasAnswered &&
                     !isSelected &&
-                    "border-[var(--color-border-subtle)] bg-[var(--color-canvas)] hover:border-[var(--color-border-default)] hover:bg-[var(--color-surface-elevated)]",
+                    "border-[var(--color-border-subtle)] bg-[var(--color-canvas)] hover:border-[var(--color-accent-primary)]/50 hover:bg-[var(--color-surface-elevated)]",
                   !hasAnswered &&
                     isSelected &&
-                    "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5",
-                  isCorrectOption && "border-green-500 bg-green-500/10",
-                  isWrongSelected && "border-red-500 bg-red-500/10",
+                    "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/8 shadow-[0_0_0_1px_var(--color-accent-primary)]",
+                  isCorrectOption &&
+                    "border-green-500/60 bg-green-500/8 shadow-[0_0_0_1px_rgba(34,197,94,0.3)]",
+                  isWrongSelected &&
+                    "border-red-500/60 bg-red-500/8 shadow-[0_0_0_1px_rgba(239,68,68,0.3)]",
                   hasAnswered &&
                     !isCorrectOption &&
                     !isWrongSelected &&
-                    "opacity-30",
+                    "opacity-25 cursor-not-allowed",
                 )}
               >
-                {hasAnswered && isCorrectOption && (
-                  <Check className="h-4 w-4 shrink-0 text-green-400" />
-                )}
-                {hasAnswered && isWrongSelected && (
-                  <XIcon className="h-4 w-4 shrink-0 text-red-400" />
-                )}
-                <span>
-                  <span className="text-xs font-semibold text-[var(--color-text-muted)]">
-                    {option.label}.
-                  </span>{" "}
-                  <span className="text-[var(--color-text-primary)]">
-                    {option.text}
-                  </span>
+                {/* Letter badge */}
+                <span
+                  className={cn(
+                    "flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-bold transition-all",
+                    !hasAnswered && !isSelected &&
+                      "bg-[var(--color-border-subtle)] text-[var(--color-text-muted)] group-hover:bg-[var(--color-accent-primary)]/20 group-hover:text-[var(--color-accent-primary)]",
+                    !hasAnswered && isSelected &&
+                      "bg-[var(--color-accent-primary)] text-[var(--color-canvas)]",
+                    isCorrectOption &&
+                      "bg-green-500 text-white",
+                    isWrongSelected &&
+                      "bg-red-500 text-white",
+                    hasAnswered && !isCorrectOption && !isWrongSelected &&
+                      "bg-[var(--color-border-subtle)] text-[var(--color-text-muted)]",
+                  )}
+                >
+                  {isCorrectOption ? (
+                    <Check className="h-3.5 w-3.5" />
+                  ) : isWrongSelected ? (
+                    <XIcon className="h-3.5 w-3.5" />
+                  ) : (
+                    letter
+                  )}
                 </span>
-              </button>
+
+                <span className="text-[var(--color-text-primary)]">
+                  {option.text}
+                </span>
+              </motion.button>
             );
           })}
         </div>
       )}
 
-      {/* True/False buttons */}
+      {/* ─── True/False buttons ─── */}
       {qType === "true_false" && (
-        <div className="flex select-none gap-3">
-          {["True", "False"].map((value) => {
+        <div className="grid select-none grid-cols-2 gap-3">
+          {[
+            { value: "True", icon: <ThumbsUp className="h-5 w-5" />, activeColor: "text-green-400", activeBorder: "border-green-500/60 bg-green-500/8 shadow-[0_0_0_1px_rgba(34,197,94,0.3)]" },
+            { value: "False", icon: <ThumbsDown className="h-5 w-5" />, activeColor: "text-red-400", activeBorder: "border-red-500/60 bg-red-500/8 shadow-[0_0_0_1px_rgba(239,68,68,0.3)]" },
+          ].map(({ value, icon, activeColor, activeBorder }) => {
             const isSelected = tfSelected === value;
             const isCorrectOption =
               !timedOut &&
@@ -359,76 +526,81 @@ export function QuestionCard({
               !timedOut && hasAnswered && isSelected && localCorrect === false;
 
             return (
-              <button
+              <motion.button
                 key={value}
                 type="button"
                 onClick={() => handleTFClick(value)}
                 disabled={hasAnswered}
+                whileHover={!hasAnswered ? { scale: 1.02 } : {}}
+                whileTap={!hasAnswered ? { scale: 0.97 } : {}}
                 className={cn(
-                  "flex flex-1 items-center justify-center gap-2 border rounded-md py-4 text-sm font-semibold transition",
+                  "flex flex-col items-center justify-center gap-2 rounded-xl border py-6 text-sm font-semibold transition-all duration-150",
                   !hasAnswered &&
                     !isSelected &&
-                    "border-[var(--color-border-subtle)] bg-[var(--color-canvas)] hover:border-[var(--color-border-default)] hover:bg-[var(--color-surface-elevated)]",
+                    "border-[var(--color-border-subtle)] bg-[var(--color-canvas)] hover:border-[var(--color-accent-primary)]/50 hover:bg-[var(--color-surface-elevated)] text-[var(--color-text-secondary)]",
                   !hasAnswered &&
                     isSelected &&
-                    "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5",
-                  isCorrectOption && "border-green-500 bg-green-500/10 text-green-400",
-                  isWrongSelected && "border-red-500 bg-red-500/10 text-red-400",
+                    "border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/8 shadow-[0_0_0_1px_var(--color-accent-primary)] text-[var(--color-accent-primary)]",
+                  isCorrectOption &&
+                    cn("border-green-500/60 bg-green-500/8 shadow-[0_0_0_1px_rgba(34,197,94,0.3)] text-green-400"),
+                  isWrongSelected &&
+                    cn("border-red-500/60 bg-red-500/8 shadow-[0_0_0_1px_rgba(239,68,68,0.3)] text-red-400"),
                   hasAnswered &&
                     !isCorrectOption &&
                     !isWrongSelected &&
-                    "opacity-30",
+                    "opacity-25 cursor-not-allowed text-[var(--color-text-muted)]",
                 )}
               >
-                {hasAnswered && isCorrectOption && (
-                  <Check className="h-4 w-4 shrink-0" />
+                {isCorrectOption ? (
+                  <Check className="h-5 w-5" />
+                ) : isWrongSelected ? (
+                  <XIcon className="h-5 w-5" />
+                ) : (
+                  icon
                 )}
-                {hasAnswered && isWrongSelected && (
-                  <XIcon className="h-4 w-4 shrink-0" />
-                )}
-                {value}
-              </button>
+                <span>{value}</span>
+              </motion.button>
             );
           })}
         </div>
       )}
 
-      {/* Short Answer textarea */}
+      {/* ─── Short Answer textarea ─── */}
       {qType === "short_answer" && (
-        <Textarea
-          placeholder="Type your answer here..."
-          value={shortAnswer}
-          onChange={(e) => setShortAnswer(e.target.value)}
-          disabled={hasFeedback}
-          className="min-h-[100px] border-[var(--color-border-subtle)] bg-[var(--color-canvas)] text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]"
-        />
+        <div className="space-y-1">
+          <Textarea
+            placeholder="Type your answer here..."
+            value={shortAnswer}
+            onChange={(e) => setShortAnswer(e.target.value)}
+            disabled={hasFeedback}
+            className="min-h-[110px] resize-none rounded-lg border-[var(--color-border-default)] bg-[var(--color-canvas)] text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus:border-[var(--color-accent-primary)] focus:ring-1 focus:ring-[var(--color-accent-primary)]/30 transition"
+          />
+          {!hasFeedback && (
+            <p className="text-right text-xs text-[var(--color-text-muted)]">
+              {shortAnswer.length > 0 ? `${shortAnswer.trim().split(/\s+/).filter(Boolean).length} word${shortAnswer.trim().split(/\s+/).filter(Boolean).length !== 1 ? "s" : ""}` : ""}
+            </p>
+          )}
+        </div>
       )}
 
-      {/* Matching exercise */}
+      {/* ─── Matching exercise ─── */}
       {qType === "matching" && matchingPairs && (
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           {matchingPairs.left.map((leftItem, idx) => {
             const selected = matches[leftItem] ?? "";
-            const showResult = hasFeedback && feedback;
-
-            // After feedback, check if this pair was correct
-            let pairCorrect: boolean | null = null;
-            if (showResult && feedback) {
-              // feedback.correctAnswer contains the full correct pairs text from backend
-              // We check by seeing if the selected matches the original pair ordering
-              // But we just rely on the overall feedback for display
-              pairCorrect = null; // Will be determined below
-            }
 
             return (
-              <div
+              <motion.div
                 key={leftItem}
+                initial={{ opacity: 0, x: -4 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: idx * 0.05, duration: 0.2 }}
                 className="flex items-center gap-3"
               >
-                <div className="flex-1 rounded-md border border-[var(--color-border-default)] bg-[var(--color-canvas)] px-3 py-2 text-sm text-[var(--color-text-primary)]">
+                <div className="flex-1 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-canvas)] px-3 py-2.5 text-sm text-[var(--color-text-primary)]">
                   {leftItem}
                 </div>
-                <span className="text-[var(--color-text-muted)]">&rarr;</span>
+                <span className="text-sm font-bold text-[var(--color-accent-primary)]">→</span>
                 <select
                   value={selected}
                   onChange={(e) =>
@@ -439,8 +611,9 @@ export function QuestionCard({
                   }
                   disabled={hasFeedback}
                   className={cn(
-                    "flex-1 rounded-md border px-3 py-2 text-sm outline-none transition",
+                    "flex-1 rounded-lg border px-3 py-2.5 text-sm outline-none transition",
                     "border-[var(--color-border-default)] bg-[var(--color-canvas)] text-[var(--color-text-primary)]",
+                    "focus:border-[var(--color-accent-primary)] focus:ring-1 focus:ring-[var(--color-accent-primary)]/30",
                     !selected && "text-[var(--color-text-muted)]",
                   )}
                 >
@@ -451,142 +624,101 @@ export function QuestionCard({
                     </option>
                   ))}
                 </select>
-              </div>
+              </motion.div>
             );
           })}
         </div>
       )}
 
       {/* ─── Feedback panels ─── */}
+      <AnimatePresence>
+        {/* Local feedback for QCM and True/False */}
+        {hasLocalFeedback && hasAnswered && (
+          <FeedbackBanner
+            isCorrect={timedOut ? null : localCorrect}
+            isTimedOut={timedOut}
+            correctAnswer={
+              (timedOut || !localCorrect) ? (question.correctAnswer ?? undefined) : undefined
+            }
+          />
+        )}
 
-      {/* Local feedback for QCM and True/False */}
-      {hasLocalFeedback && hasAnswered && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.15 }}
-          className={cn(
-            "select-none border-l-2 p-4",
-            timedOut
-              ? "border-l-yellow-500 bg-yellow-500/5"
-              : localCorrect
-                ? "border-l-green-500 bg-green-500/5"
-                : "border-l-red-500 bg-red-500/5",
-          )}
-        >
-          <p
-            className={cn(
-              "text-xs font-semibold",
-              timedOut
-                ? "text-yellow-400"
-                : localCorrect
-                  ? "text-green-400"
-                  : "text-red-400",
-            )}
-          >
-              {timedOut ? "Time Expired" : localCorrect ? "Correct" : "Incorrect"}
-          </p>
-
-          {(timedOut || !localCorrect) && (
-            <p className="mt-2 text-sm text-[var(--color-text-muted)]">
-              Correct answer:{" "}
-              <span className="font-medium text-[var(--color-text-primary)]">
-                {question.correctAnswer}
-              </span>
-            </p>
-          )}
-        </motion.div>
-      )}
-
-      {/* Server feedback for short_answer, fill_blank, matching */}
-      {!hasLocalFeedback && hasFeedback && feedback && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.15 }}
-          className={cn(
-            "select-none border-l-2 p-4",
-            feedback.isCorrect
-              ? "border-l-green-500 bg-green-500/5"
-              : "border-l-red-500 rounded-r-md bg-red-500/5",
-          )}
-        >
-          <p
-            className={cn(
-              "text-xs font-semibold",
-              feedback.isCorrect ? "text-green-400" : "text-red-400",
-            )}
-          >
-            {feedback.isCorrect ? "Correct" : "Incorrect"}
-          </p>
-          <p className="mt-2 text-sm leading-relaxed text-[var(--color-text-secondary)]">
-            {feedback.evaluatorFeedback}
-          </p>
-          {!feedback.isCorrect && (
-            <p className="mt-2 text-sm text-[var(--color-text-muted)]">
-              Correct answer:{" "}
-              <span className="font-medium text-[var(--color-text-primary)]">
-                {feedback.correctAnswer}
-              </span>
-            </p>
-          )}
-        </motion.div>
-      )}
+        {/* Server feedback for short_answer, fill_blank, matching */}
+        {!hasLocalFeedback && hasFeedback && feedback && (
+          <FeedbackBanner
+            isCorrect={feedback.isCorrect}
+            evaluatorFeedback={feedback.evaluatorFeedback}
+            correctAnswer={!feedback.isCorrect ? (feedback.correctAnswer ?? undefined) : undefined}
+          />
+        )}
+      </AnimatePresence>
 
       {/* ─── Submit / Continue ─── */}
-      <div className="flex justify-end">
+      <div className="flex items-center justify-end gap-2 pt-1">
         {/* QCM and True/False: show Continue after local feedback */}
         {hasLocalFeedback ? (
           hasAnswered && (
-            <Button
-              onClick={onContinue}
-              disabled={isSubmitting}
-              className="rounded-md"
+            <motion.div
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2 }}
             >
-              {isSubmitting ? <Spinner size="sm" /> : "Continue"}
-            </Button>
+              <Button
+                onClick={onContinue}
+                disabled={isSubmitting}
+                className="min-w-[100px] rounded-lg"
+              >
+                {isSubmitting ? <Spinner size="sm" /> : "Continue →"}
+              </Button>
+            </motion.div>
           )
         ) : qType === "fill_blank" ? (
           !hasFeedback ? (
             <Button
               disabled={!blankAnswer.trim() || isSubmitting}
               onClick={handleBlankSubmit}
-              className="rounded-md"
+              className="min-w-[100px] rounded-lg"
             >
               {isSubmitting ? <Spinner size="sm" /> : "Submit"}
             </Button>
           ) : (
-            <Button onClick={onContinue} className="rounded-md">
-              Continue
-            </Button>
+            <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
+              <Button onClick={onContinue} className="min-w-[100px] rounded-lg">
+                Continue →
+              </Button>
+            </motion.div>
           )
         ) : qType === "matching" ? (
           !hasFeedback ? (
             <Button
               disabled={!allMatched || isSubmitting}
               onClick={handleMatchSubmit}
-              className="rounded-md"
+              className="min-w-[100px] rounded-lg"
             >
               {isSubmitting ? <Spinner size="sm" /> : "Submit"}
             </Button>
           ) : (
-            <Button onClick={onContinue} className="rounded-md">
-              Continue
-            </Button>
+            <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
+              <Button onClick={onContinue} className="min-w-[100px] rounded-lg">
+                Continue →
+              </Button>
+            </motion.div>
           )
         ) : /* short_answer */
         !hasFeedback ? (
           <Button
             disabled={!shortAnswer.trim() || isSubmitting}
             onClick={handleShortAnswerSubmit}
-            className="rounded-md"
+            className="min-w-[100px] rounded-lg"
           >
             {isSubmitting ? <Spinner size="sm" /> : "Submit"}
           </Button>
         ) : (
-            <Button onClick={onContinue} className="rounded-md">
-              Continue
-          </Button>
+          <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
+            <Button onClick={onContinue} className="min-w-[100px] rounded-lg">
+              Continue →
+            </Button>
+          </motion.div>
         )}
       </div>
     </motion.div>
